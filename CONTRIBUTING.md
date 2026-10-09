@@ -31,10 +31,10 @@ every unit.
 Before a change lands, it must pass what the whole course was built with:
 
 ```bash
-./start.sh                                             # serve on :8901
-node ~/skills/tools/verify.mjs http://localhost:8901/unitNN/ /tmp/u.png   # 0 console errors, window.__ready
-node scripts/check-links.mjs                            # every link resolves
-sh -n labs/unitNN-*.sh                                  # the lab parses
+./start.sh                                  # serve on :8901
+node scripts/verify.mjs http://localhost:8901  # Chrome: all course pages, no console errors
+node scripts/check-links.mjs                   # every link resolves
+sh -n labs/unitNN-*.sh                         # the lab parses
 ```
 
 No console errors, no dead links, no simulated number dressed up as a measurement. If a value is

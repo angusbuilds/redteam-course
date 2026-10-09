@@ -15,7 +15,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check course links
+      - uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+      - name: Check links and render every page
+        env:
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
         run: |
           python3 -m http.server 8901 --bind 127.0.0.1 > /tmp/course-server.log 2>&1 &
           server_pid=$!
@@ -28,3 +32,4 @@ jobs:
           done
           curl --silent --fail http://127.0.0.1:8901/ >/dev/null
           node scripts/check-links.mjs http://127.0.0.1:8901
+          node scripts/verify.mjs http://127.0.0.1:8901
