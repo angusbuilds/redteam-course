@@ -1,0 +1,88 @@
+/* Unit 18 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: canvas + instruction + toggle ---------- */
+
+.typo-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 480px) minmax(200px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  .typo-stage { grid-template-columns: 1fr; }
+}
+
+#typo-canvas,
+#adv-canvas {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  aspect-ratio: 480 / 300;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.typo-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.typo-side .task-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .1em;
+  color: var(--dim);
+}
+.typo-side input[type="text"] { width: 100%; }
+
+#typo-toggle { font: 600 12px var(--mono); align-self: flex-start; }
+#typo-toggle.on {
+  background: var(--red);
+  border-color: var(--red);
+  color: #1a0f0d;
+}
+
+/* ---------- shared plan-line readout (both panels) ---------- */
+
+.plan-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 16px 0 0;
+  flex-wrap: wrap;
+}
+.plan-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .08em;
+  color: var(--dim);
+  flex: none;
+}
+.plan-text {
+  font: 600 14.5px var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.plan-text.benign { color: var(--green); }
+.plan-text.hijacked { color: var(--red); }
+
+/* ---------- panel B: slider knob ---------- */
+
+.knob {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.knob label {
+  font: 13px var(--mono);
+  color: var(--muted);
+  width: 110px;
+  flex: none;
+}
+.knob-val {
+  font: 600 14px var(--mono);
+  color: var(--amber);
+  width: 48px;
+  flex: none;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 13 — Fine-Tune Attacks</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 13</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 13 · FINE-TUNE ATTACKS</div>
+      <h1>Even benign data can quietly break safety.</h1>
+      <p class="sub">Four short fine-tunes, four measured safety deltas.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. Four poisons, then the threshold.</h2>
+
+      <!-- panel A: four poisons -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Four poisons</h3>
+          <span class="note">click a tab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Four real fine-tuning attacks. Each one trains on data that never
+          mentions anything unsafe. Watch the safety score move anyway.
+        </p>
+        <div class="poison-tabs" id="poison-tabs"></div>
+        <div class="poison-body" id="poison-body"></div>
+      </div>
+
+      <!-- panel B: a few samples is enough -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · A few samples is enough</h3>
+          <span class="note">teaching model — the real call is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Mix a handful of poisoned rows into a large clean set and fine-tune.
+          Drag the slider and watch how few rows it takes before the planted
+          behavior survives more often than not.
+        </p>
+        <div class="controls">
+          <input type="range" id="poison-n" min="0" max="50" value="0" step="1">
+          <span class="n-readout" id="poison-n-readout">0 poisoned / 10,000 clean</span>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>trigger-survival rate</span>
+            <span class="meter-pct" id="survival-pct">0%</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="survival-fill"></div></div>
+          <div class="meter-verdict" id="survival-verdict"></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This curve is a teaching model of how poison-count maps to survival,
+          not a real training run. The <em>shape</em> is real — tiny counts
+          move behavior a lot — but the numbers are illustrative. The Lab
+          below runs real fine-tunes.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use both panels — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">20 MIN</span></div>
+      <h2>Poison four tiny models. Measure the damage.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">a 4-row safety-delta / trigger-survival table, one row per poison</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit13-finetune-attacks.sh</pre>
+      <p class="cue">Run it from the course root. It needs Unit 2's local toolchain (<code>mlx-lm</code>) — if that isn't installed yet, the script says so and stops cleanly. Save the output: <code>bash labs/unit13-finetune-attacks.sh | tee log/unit13.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 13 of 16 · Next:
+      <a href="../unit14/"><strong>Preference-Opt + Gradient Attacks</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

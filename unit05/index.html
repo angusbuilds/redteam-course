@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 5 — Automated Attacks: PAIR + TAP</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 05</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 05 · AUTOMATED ATTACKS: PAIR + TAP</div>
+      <h1>A model that jailbreaks another model, in a loop.</h1>
+      <p class="sub">The attacker/target/judge loop every automated attack reuses.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">7 MIN</span></div>
+      <h2>Two panels. Watch the loop run, then watch it branch.</h2>
+
+      <!-- panel A: the PAIR loop -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · The PAIR loop</h3>
+          <span class="note">step through a scripted attack</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Three models, three jobs. The <strong>attacker</strong> proposes a prompt.
+          The <strong>target</strong> answers it. The <strong>judge</strong> scores
+          the answer and the score flows back to the attacker, who revises. Press
+          Step to run one round at a time.
+        </p>
+
+        <div class="pair-loop">
+          <div class="pair-boxes">
+            <div class="pair-box" data-role="attacker">
+              <span class="pb-role">ATTACKER</span>
+              <span class="pb-txt" id="pair-atk">— press Step to begin —</span>
+            </div>
+            <span class="pair-arrow">→</span>
+            <div class="pair-box" data-role="target">
+              <span class="pb-role">TARGET</span>
+              <span class="pb-txt" id="pair-tgt">—</span>
+            </div>
+            <span class="pair-arrow">→</span>
+            <div class="pair-box" data-role="judge">
+              <span class="pb-role">JUDGE</span>
+              <span class="pb-txt" id="pair-judge">—</span>
+            </div>
+          </div>
+          <div class="pair-feedback">↩ the judge's score feeds back — the attacker reads it and rewrites</div>
+        </div>
+
+        <div class="score-wrap">
+          <div class="score-label">
+            <span>judge score, this round</span>
+            <span class="score-pct" id="score-pct">0 / 10</span>
+          </div>
+          <div class="score-track"><div class="score-fill" id="score-fill"></div></div>
+          <div class="score-verdict" id="score-verdict">Bare request. The judge expects a refusal.</div>
+        </div>
+
+        <div class="controls">
+          <button class="primary" id="pair-step">Step →</button>
+          <button id="pair-reset">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="pairs" id="pair-log">
+            <thead><tr><th>round</th><th>judge score</th><th>status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This is a scripted conversation, not a live model. The <em>shape</em> is
+          real — each round really is one documented escalation technique stacked
+          on the last — but these four exchanges and scores are fixed so the
+          lesson is repeatable. The real call is the Lab below.
+        </div>
+      </div>
+
+      <!-- panel B: TAP tree -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · TAP tree</h3>
+          <span class="note">branch, score, prune</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          PAIR commits to one line of revisions — the column on the left. TAP
+          tries several at once, scores every branch, and prunes the weak ones
+          before spending a single further query on them. Click prune to see
+          which branches survive.
+        </p>
+
+        <div class="tap-compare">
+          <div class="tap-col">
+            <div class="tap-col-label">PAIR — one path</div>
+            <div class="tap-path" id="pair-path"></div>
+          </div>
+          <div class="tap-col tap-col-wide">
+            <div class="tap-col-label">TAP — branch, score, prune</div>
+            <div class="tap-tree" id="tap-tree"></div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="primary" id="prune-btn">Prune weak branches</button>
+        </div>
+
+        <div class="readout" id="tap-readout"></div>
+
+        <div class="callout">
+          <span class="label">THE TRADEOFF</span>
+          TAP just spent 10 queries where PAIR's straight line spent 4 — branching
+          costs more up front. What it buys: if PAIR's one path had stalled at
+          round 2, the whole attempt is dead. TAP trying 3 variants at the first
+          branch means a stall there doesn't end anything — it just gets pruned.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">20 MIN</span></div>
+      <h2>Run the loop for real, and count the queries.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">ASR% across 10 behaviors, and median queries-to-success</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit05-pair-tap.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's install. It calls Ollama directly, so it needs no API key. Save the output: <code>bash labs/unit05-pair-tap.sh | tee log/unit05.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 5 of 16 · Next: <a href="../unit06/"><strong>Multi-Turn & Scaling</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

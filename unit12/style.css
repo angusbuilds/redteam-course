@@ -1,0 +1,69 @@
+/* Unit 12 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- shared canvas look for both panels ---------- */
+
+canvas {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+/* ---------- panel A: legend ---------- */
+
+.legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 13px var(--mono);
+  color: var(--muted);
+  margin-left: 6px;
+}
+.legend .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.legend .dot.red { background: var(--red); }
+.legend .dot.blue { background: var(--cyan); margin-left: 10px; }
+
+/* ---------- panel B: Orthogonalize meter ---------- */
+
+.meter-wrap { margin-top: 20px; }
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 13px var(--mono);
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.meter-pct {
+  font: 700 22px var(--mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.meter-track {
+  height: 26px;
+  background: var(--bg);
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.meter-fill {
+  height: 100%;
+  width: 90%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--red), var(--amber));
+}
+.meter-verdict {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 1.4em;
+}
+.meter-verdict.ablated { color: var(--green); }

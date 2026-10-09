@@ -1,0 +1,46 @@
+/* Unit 15 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: circuit-breaker meter ---------- */
+
+.meter-wrap { margin-top: 20px; }
+
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 13px var(--mono);
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.meter-track {
+  height: 26px;
+  background: var(--bg);
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.meter-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+  transition: width .25s ease-out;
+}
+
+.meter-verdict {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 1.4em;
+}
+.meter-verdict.warn { color: var(--amber); }
+.meter-verdict.crack { color: var(--green); }
+
+/* ---------- panel B: the ladder table scrolls on narrow screens ---------- */
+
+.table-wrap { overflow-x: auto; }
+
+#ladder td:nth-child(2),
+#ladder td:nth-child(3) { color: var(--muted); }

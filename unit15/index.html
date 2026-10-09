@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 15 — Defense Awareness</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 15</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 15 · DEFENSE AWARENESS</div>
+      <h1>What is deployed against you — and its cost to beat.</h1>
+      <p class="sub">Defenses built specifically to resist your last three units. Score survival as an effort multiplier.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">7 MIN</span></div>
+      <h2>Two panels. First price the defense, then see the whole ladder.</h2>
+
+      <!-- panel A: circuit breakers -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Circuit breakers</h3>
+          <span class="note">toggle the defense, then move the budget</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          This re-runs your <strong>Unit 12 abliteration</strong> against a model wired
+          with a circuit breaker. Switch the defense on and the question stops being
+          yes/no — it becomes <strong>how many more probes</strong> you now have to spend.
+        </p>
+        <div class="controls">
+          <button id="cb-toggle">circuit breakers: OFF</button>
+          <input type="range" id="cb-budget" min="10" max="800" step="10" value="40">
+          <span class="note" id="cb-budget-val">your probe budget: 40</span>
+        </div>
+        <div class="readout" id="cb-readout">
+          <div class="cell"><span class="big" id="r-baseline">40</span><span class="lbl">UNIT 12 BASELINE (PROBES)</span></div>
+          <div class="cell"><span class="big" id="r-mult">1×</span><span class="lbl">EFFORT MULTIPLIER</span></div>
+          <div class="cell"><span class="big" id="r-required">40</span><span class="lbl">PROBES TO CRACK NOW</span></div>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label"><span>your budget vs. probes needed</span><span id="meter-pct">100%</span></div>
+          <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+          <div class="meter-verdict" id="cb-verdict"></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          The baseline and the 14× multiplier here are a teaching model, not a
+          measurement — illustrative of the direction Zou et al report, not a real
+          checkpoint's number. The Lab below runs the real attack and prints your
+          real multiplier.
+        </div>
+      </div>
+
+      <!-- panel B: the defense ladder -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · The defense ladder</h3>
+          <span class="note">what each layer stops, and where it breaks</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Five layers, roughly in the order a shipped system stacks them. Each one
+          raises the price of your last three units' attacks. None of them is the
+          last word.
+        </p>
+        <div class="table-wrap">
+          <table class="pairs" id="ladder">
+            <thead><tr><th>defense</th><th>stops</th><th>known weakness</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Break the breaker.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">the effort multiplier to crack the circuit-breakers checkpoint</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit15-defense.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's local toolchain install. It uses your local python3/ollama setup — no API key, no claude CLI. Save the output: <code>bash labs/unit15-defense.sh | tee log/unit15.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 15 of 16 · Next: <a href="../unit16/"><strong>First Paid Submission</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

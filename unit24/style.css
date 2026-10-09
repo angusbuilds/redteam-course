@@ -1,0 +1,97 @@
+/* Unit 24 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: cost-move stacker + amplification meter ---------- */
+
+.stacker { display: grid; gap: 8px; }
+.costrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px 14px;
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color .15s, background .15s;
+}
+.costrow:hover { border-color: var(--muted); }
+.costrow.on { border-color: var(--red); background: color-mix(in srgb, var(--red) 8%, var(--panel-2)); }
+.cr-box {
+  width: 16px; height: 16px; border-radius: 4px; flex: none;
+  border: 1.5px solid var(--dim);
+}
+.costrow.on .cr-box { background: var(--red); border-color: var(--red); }
+.cr-label { flex: 1; font-size: 14.5px; }
+.cr-mult { font: 600 13px var(--mono); color: var(--dim); flex: none; }
+.costrow.on .cr-mult { color: var(--red); }
+.cr-tag { font: 11px var(--mono); padding: 1px 8px; border-radius: 4px; letter-spacing: .04em; flex: none; }
+.cr-tag.output { color: var(--amber); background: color-mix(in srgb, var(--amber) 14%, transparent); }
+.cr-tag.loop { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+.cr-tag.context { color: var(--green); background: color-mix(in srgb, var(--green) 14%, transparent); }
+
+.amp-wrap { margin-top: 20px; }
+.amp-label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font: 13px var(--mono); color: var(--muted); margin-bottom: 7px;
+}
+.amp-value { font: 700 22px var(--mono); color: var(--text); font-variant-numeric: tabular-nums; }
+.amp-track { height: 26px; background: var(--bg); border-radius: 7px; overflow: hidden; border: 1px solid var(--line); }
+.amp-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--cyan), var(--amber), var(--red));
+  transition: width .25s ease-out;
+}
+.amp-verdict { margin-top: 10px; font-size: 14px; color: var(--muted); min-height: 1.4em; }
+.amp-verdict.warn { color: var(--amber); }
+.amp-verdict.crack { color: var(--red); }
+
+/* ---------- panel B: format toggle + simulated loader ---------- */
+
+.fmt-toggle { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.fmt-btn { font: 13.5px var(--mono); }
+.fmt-btn.active { background: var(--amber); border-color: var(--amber); color: #17140d; font-weight: 600; }
+
+.loadbox {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.loadbox-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.lb-label { font: 12.5px var(--mono); color: var(--dim); letter-spacing: .04em; }
+.lb-label #lb-format { color: var(--muted); }
+
+.loadlog {
+  margin: 0;
+  background: #0b0a09;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font: 13px/1.6 var(--mono);
+  color: var(--muted);
+  white-space: pre-wrap;
+  min-height: 1.6em;
+}
+
+.exec-flag {
+  margin-top: 14px;
+  font: 600 13px var(--mono);
+  letter-spacing: .04em;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: none;
+}
+.exec-flag.show { display: block; }
+.exec-flag.danger { background: #331c19; color: var(--red); border: 1px solid #4d2823; }
+.exec-flag.safe { background: #16301f; color: var(--green); border: 1px solid #234c33; }

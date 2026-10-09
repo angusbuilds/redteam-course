@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 17 — RAG & Vector-Store Exploitation</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 17</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 17 · RAG & VECTOR-STORE EXPLOITATION</div>
+      <h1>Poison the knowledge base, and the answer poisons itself.</h1>
+      <p class="sub">Retrieval-augmented apps trust what they retrieve. Make them retrieve yours.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. Poison the store, then leak the vector.</h2>
+
+      <!-- panel A: retrieval poisoning -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Retrieval poisoning</h3>
+          <span class="note">toggle the poisoned chunk</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Eight benign chunks from a company wiki, already embedded. A user
+          asks about international per-diem limits. Toggle one attacker chunk
+          into the store and watch where it lands.
+        </p>
+
+        <div class="task-line">
+          <span class="task-label">USER QUERY</span>
+          <span class="task-text" id="rag-query"></span>
+        </div>
+
+        <div class="vecbox">
+          <div class="vecbox-head">
+            <span class="fb-label">VECTOR STORE — nearest to the query lights up</span>
+            <button id="poison-toggle">insert poisoned chunk</button>
+          </div>
+          <div class="vecmap" id="vecmap">
+            <div class="vm-query" id="vm-query"><span>Q</span></div>
+          </div>
+        </div>
+
+        <div class="ctx-wrap">
+          <div class="ctx-label">TOP-3 CONTEXT HANDED TO THE MODEL</div>
+          <ol class="ctx-list" id="ctx-list"></ol>
+        </div>
+
+        <div class="plan-line">
+          <span class="plan-label">GENERATED ANSWER →</span>
+          <span class="plan-text" id="rag-answer"></span>
+        </div>
+
+        <div class="callout" id="panelA-callout">
+          <span class="label" id="panelA-label">GROUNDED</span>
+          <span id="panelA-body"></span>
+        </div>
+      </div>
+
+      <!-- panel B: embedding inversion -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Embedding inversion</h3>
+          <span class="note">teaching model — the real call is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          One chunk in the store is more sensitive than a per-diem policy. Its
+          embedding is stored forever. Pick an attacker query budget and watch
+          how much of the original text comes back.
+        </p>
+
+        <div class="inv-budgets" id="inv-budgets"></div>
+
+        <div class="inv-readout">
+          <div class="mrow">
+            <div class="mrow-label"><span>text reconstructed</span><span class="mrow-pct" id="inv-pct">0%</span></div>
+            <div class="mrow-track"><div class="mrow-fill attack" id="inv-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <pre class="fetched" id="inv-text"></pre>
+
+        <div class="callout dated">
+          <span class="label">HONEST LABEL</span>
+          This curve is a teaching model of how inversion attacks scale with
+          query budget, not a measured attack on a real embedding. The shape —
+          more queries, more of the text back — is the published result;
+          Panel A's Lab is where you run a real embedding store.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Land your chunk in the top-k, for real.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">poisoned-chunk landing rate, % of queries where it hits the top-k</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit17-rag.sh</pre>
+      <p class="cue">Run it from the course root. It needs a local embedding model (Ollama or sentence-transformers) and degrades cleanly if neither is set up yet. Save the output: <code>bash labs/unit17-rag.sh | tee log/unit17.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit16/">← First Paid Submission</a> · Unit 17 · Next: <a href="../unit18/"><strong>Multimodal Jailbreaks</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

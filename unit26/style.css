@@ -1,0 +1,138 @@
+/* Unit 26 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: the gauntlet ---------- */
+
+.gauntlet { display: grid; gap: 14px; }
+
+.g-levels { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.g-pip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  font: 600 12px var(--mono);
+}
+.g-pip-n { color: var(--dim); }
+.g-pip-s::before { content: "locked"; font-size: 10.5px; color: var(--dim); letter-spacing: .06em; }
+.g-pip.active { border-color: var(--amber); }
+.g-pip.active .g-pip-n { color: var(--amber); }
+.g-pip.active .g-pip-s::before { content: "attacking"; color: var(--amber); }
+.g-pip.done { border-color: var(--green); background: color-mix(in srgb, var(--green) 10%, var(--panel-2)); }
+.g-pip.done .g-pip-n { color: var(--green); }
+.g-pip.done .g-pip-s::before { content: "✓ cleared"; color: var(--green); }
+
+.g-defenses { display: flex; flex-wrap: wrap; gap: 6px; }
+.g-chip {
+  font: 12px var(--mono);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+  color: var(--red);
+  border: 1px solid color-mix(in srgb, var(--red) 30%, transparent);
+}
+.g-chip-new { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+.g-hint {
+  font-size: 14px;
+  color: var(--muted);
+  padding-left: 11px;
+  border-left: 2px solid var(--cyan);
+  max-width: 62ch;
+}
+
+.g-field-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .08em;
+  color: var(--dim);
+}
+
+.g-row { display: flex; gap: 8px; }
+
+.g-reply {
+  margin: 0;
+  padding: 14px 15px;
+  background: #0b0a09;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 13.5px/1.6 var(--mono);
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 1.6em;
+}
+
+.g-verdict {
+  font-size: 14.5px;
+  min-height: 1.4em;
+  display: none;
+}
+.g-verdict.show { display: block; }
+.g-verdict.ok { color: var(--green); }
+.g-verdict.no { color: var(--red); }
+
+/* ---------- panel B: career map ---------- */
+
+.skills { display: grid; gap: 7px; }
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 14px;
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color .15s, background .15s;
+}
+.skill-row:hover { border-color: var(--muted); }
+.skill-row.on { border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, var(--panel-2)); }
+.sk-box { width: 15px; height: 15px; border-radius: 4px; flex: none; border: 1.5px solid var(--dim); }
+.skill-row.on .sk-box { background: var(--cyan); border-color: var(--cyan); }
+.sk-label { font-size: 14px; }
+
+.rolemap {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.role-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.role-card.closest { border-color: var(--amber); }
+
+.role-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+.role-kind {
+  font: 600 10px/1.9 var(--mono);
+  letter-spacing: .1em;
+  color: var(--bg);
+  background: var(--dim);
+  border-radius: 4px;
+  padding: 0 6px;
+  flex: none;
+}
+.role-card.closest .role-kind { background: var(--amber); }
+.role-name { font-weight: 620; font-size: 14.5px; flex: 1; }
+.role-pct { font: 700 15px var(--mono); color: var(--text); font-variant-numeric: tabular-nums; }
+
+.role-track { height: 10px; background: var(--bg); border-radius: 5px; overflow: hidden; border: 1px solid var(--line); }
+.role-fill { height: 100%; width: 0%; border-radius: 4px; background: var(--amber); transition: width .25s ease-out; }
+.role-card.closest .role-fill { background: var(--green); }
+
+.role-gap { margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.5; }

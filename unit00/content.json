@@ -1,0 +1,70 @@
+{
+  "unit": 0,
+  "title": "Start Here",
+  "hook": "Every attack in this course breaks one of two things: what the model will say, or what it will treat as true.\n\nUnder both is one plain fact. A language model is just guessing the next word, over and over. No judgment. No memory. No plan.\n\nTonight you don't attack anything. You build the two eyes you need before you do.\n\nFirst: watch it guess, live, in front of you.\n\nSecond: see the one blur it can never fully fix — instructions and data sharing the same page. Every unit after this one is a new way to lean on that blur.",
+  "mechanism": "A language model predicts the next token, over and over. That's it. It has no memory of truth, no intent — just patterns from training.\n\nTwo facts make it attackable.\n\nFirst, it cannot tell its instructions from its data: system rules, your prompt, and a web page it reads are all just text in one context window.\n\nSecond, safety is a learned reflex, not a rule it can't break.\n\nRed-teaming is finding where helpful beats safe, and where data gets read as instructions. Everything else is technique.\n\nTag every attack you meet by its OWASP category and this field stops looking like a pile of tricks. It becomes the whole map this course walks, one unit at a time.",
+  "technique": "Before anything: the law. You attack only a competition, a program that invited you in writing, or a model on your own machine. Nothing else, ever.\n\nThen a habit from day one: threat-model in one line. Who is the attacker? What do they want? Where does untrusted text enter? (STRIDE/PASTA, shrunk to a sentence.)\n\nAnd tag every attack you meet by its OWASP LLM Top-10 category, so the field stops being a pile of tricks and becomes a map.",
+  "drills": [
+    {
+      "q": "In Panel A, pick any starter word. How many next-word guesses does the toy show you, with bars?",
+      "answer": "3",
+      "accept": [
+        "three"
+      ],
+      "kind": "number",
+      "why": "Panel A always shows the top three candidates and their probabilities. That's the whole trick. A model doesn't \"know\" the next word — it ranks a short list and usually takes the top of it."
+    },
+    {
+      "q": "In Panel B, switch the toggle ON. What does the readout change to — \"follows your task\" or \"follows the page\"?",
+      "answer": "follows the page",
+      "accept": [
+        "the page",
+        "follows the fetched page",
+        "the fetched page",
+        "page"
+      ],
+      "why": "Nothing about the model changed. The text it trusted did. Once an instruction rides in on data it reads, the model can't tell that text apart from your real task — the single idea every later unit exploits."
+    },
+    {
+      "q": "How many categories are in the OWASP LLM Top 10 — the map you'll tag every attack against?",
+      "answer": "10",
+      "accept": [
+        "ten"
+      ],
+      "kind": "number",
+      "why": "Ten categories, one map. Tag an attack by category and it stops being a random trick — it's a dot on a map you already know."
+    }
+  ],
+  "lab": "unit00-foundations.sh shows you ten real attack descriptions.\n\nYour job: tag each one with its OWASP LLM Top-10 category. The script checks your answers against the real key.\n\nNo model, no install — pure shell, runs anywhere.\n\nYour number: **how many of 10 you tagged right.**",
+  "sources": [
+    {
+      "kind": "READ",
+      "title": "OWASP Top 10 for LLM Apps (2026)",
+      "who": "OWASP GenAI",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "why": "The map you tag every attack against — the field's shared language."
+    },
+    {
+      "kind": "READ",
+      "title": "Intro to Large Language Models",
+      "who": "Andrej Karpathy",
+      "url": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+      "why": "If \"next-token predictor\" is new, start here — the 1-hour foundation."
+    },
+    {
+      "kind": "READ",
+      "title": "MITRE ATLAS",
+      "who": "MITRE",
+      "url": "https://atlas.mitre.org/",
+      "why": "The ATT&CK-style matrix for attacks on AI — tactic/technique IDs for reports."
+    },
+    {
+      "kind": "PAPER",
+      "title": "Jailbroken: how safety training fails",
+      "who": "Wei et al · 2307.02483",
+      "url": "https://arxiv.org/abs/2307.02483",
+      "why": "The two engines (competing objectives / mismatched generalization)."
+    }
+  ],
+  "notes": "Panel A: a hardcoded bigram lookup over ~14 seed words (red/team/model/language/prompt/attack/safety/data/instructions/ignore/system/the/a/user) with made-up-but-plausible top-3 probabilities — honestly a toy, not a real LM; the point is mechanical repetition ('over and over, that's it'), not accuracy. Chips and the free-text box feed the same table; an out-of-vocab word shows a friendly 'not in this toy's tiny table' note instead of breaking. Clicking a bar advances the chain, so the generated line visibly grows one guess at a time. Panel B is the Unit-7 data-vs-instructions idiom (system + user + fetched page, toggle an injected line, readout flips) scaled down for a brand-new reader; injected text uses only .example domains (RFC 2606 reserved, never resolves) — no usable payload. Lab = labs/unit00-foundations.sh: pure-POSIX-sh quiz, 10 hand-picked attack vignettes, one per OWASP LLM Top-10 category, shown out of category order so position can't give away the answer; reads 10 answers from stdin (or argv for scripted/CI use), scores N/10, prints the key with misses explained. No model, no install, always runs, never hangs on empty stdin."
+}

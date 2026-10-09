@@ -1,0 +1,38 @@
+/* Unit 20 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- shared: epsilon slider readout (unit02's fit-row idiom) ---------- */
+
+.fit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 13px var(--mono);
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.fit-val {
+  font: 700 15px var(--mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- both panels: the canvas + verdict line ---------- */
+
+.fgsm-canvases { margin-top: 16px; }
+.fgsm-canvases canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.verdict-line {
+  margin-top: 12px;
+  font: 14.5px/1.5 var(--mono);
+  color: var(--green);
+  transition: color .15s;
+}
+.verdict-line.flipped { color: var(--red); }
+.verdict-line strong { color: inherit; }

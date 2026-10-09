@@ -1,0 +1,109 @@
+/* Unit 22 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- known-good registry strip ---------- */
+
+.registry-ref {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.rr-label {
+  font: 600 10.5px var(--mono);
+  letter-spacing: .1em;
+  color: var(--dim);
+  flex: none;
+}
+.rr-list {
+  font: 13px var(--mono);
+  color: var(--cyan);
+}
+
+/* ---------- panel A: server cards ---------- */
+
+.svcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.svcard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 15px;
+  transition: border-color .15s;
+}
+.svcard.caught { border-color: var(--green); }
+.svcard.false-flag { border-color: var(--red); }
+
+.sv-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.sv-name { font: 600 14px var(--mono); }
+.sv-ver { font: 11px var(--mono); color: var(--dim); }
+
+.sv-desc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+.sv-actions { display: flex; gap: 8px; }
+.sv-scan, .sv-flag { font: 12px var(--mono); padding: 7px 12px; }
+.sv-flag.on { background: var(--amber); border-color: var(--amber); color: #17140d; }
+
+.sv-detail {
+  font: 12.5px/1.55 var(--mono);
+  color: var(--cyan);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 10px 12px;
+  word-break: break-word;
+}
+
+.sv-verdict {
+  font-size: 13.5px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-radius: 7px;
+}
+.sv-verdict.ok { background: #16301f; color: var(--green); border: 1px solid #234c33; }
+.sv-verdict.no { background: #331c19; color: var(--red); border: 1px solid #4d2823; }
+
+/* ---------- panel B: delay strip ---------- */
+
+.delay-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 16px 0;
+  padding: 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  min-height: 18px;
+}
+
+.delay-block {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--green);
+  flex: none;
+}
+.delay-block.bad { background: var(--red); }

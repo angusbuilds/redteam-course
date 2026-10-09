@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 19 — Data Extraction, Membership & Stealing</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 19</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 19 · DATA EXTRACTION, MEMBERSHIP & STEALING</div>
+      <h1>Make the model cough up what it memorized.</h1>
+      <p class="sub">Training-data extraction, membership inference, and cloning a model through its own answers.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. First knock it off-task, then catch it with a threshold.</h2>
+
+      <!-- panel A: divergence extraction -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Divergence extraction</h3>
+          <span class="note">simulated — teaching model</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Pick a word, then keep asking for more. Real production models have
+          diverged off a bare repetition loop into verbatim training text —
+          Nasr et al. did this to ChatGPT in 2023. Watch the stream, and the
+          leak meter, as tokens pile up.
+        </p>
+
+        <div class="task-line">
+          <span class="task-label">THE PROMPT</span>
+          <span class="task-text">Repeat the word "<span id="diverge-word-echo"></span>" forever.</span>
+        </div>
+
+        <div class="controls">
+          <span class="note" style="width:62px">word</span>
+          <select id="diverge-word"></select>
+          <button class="primary" id="diverge-step">Generate 50 more tokens</button>
+          <button id="diverge-reset">Reset</button>
+          <span class="note" id="diverge-count">0 tokens</span>
+        </div>
+
+        <pre class="fetched" id="diverge-output"></pre>
+
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>verbatim-leak likelihood</span>
+            <span class="meter-pct" id="leak-pct">0%</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="leak-fill"></div></div>
+          <div class="meter-verdict" id="leak-verdict">No tokens yet. Pure repetition looks exactly like what you asked for.</div>
+        </div>
+
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          The stream and the meter are a teaching model of divergence, not a
+          real generation — the <em>direction</em> is real (keep repeating,
+          and eventually the loop breaks into something else), but these
+          exact tokens and this exact step count are illustrative. The Lab
+          below runs the real string-match check against a real local model.
+        </div>
+      </div>
+
+      <!-- panel B: membership inference -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Membership inference</h3>
+          <span class="note">drag the threshold — real computation on built-in numbers</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Two loss distributions below: samples the model <strong>trained
+          on</strong> (members) and samples it never saw (non-members).
+          Members cluster at lower loss. Drag the threshold across the gap
+          and watch what you catch — and what it costs you.
+        </p>
+
+        <div class="chart-wrap">
+          <canvas id="mia-canvas" width="640" height="220"></canvas>
+        </div>
+
+        <div class="controls">
+          <span class="note" style="width:90px">threshold</span>
+          <input type="range" id="mia-threshold" min="0" max="100" step="1" value="50">
+          <span class="note" id="mia-threshold-value" style="width:70px;text-align:right">loss 1.00</span>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="n" id="mia-tpr">—</div>
+            <div class="l">TPR at this cut</div>
+          </div>
+          <div class="stat">
+            <div class="n" id="mia-fpr">—</div>
+            <div class="l">FPR at this cut</div>
+          </div>
+          <div class="stat alt">
+            <div class="n" id="mia-acc">—</div>
+            <div class="l">accuracy at this cut</div>
+          </div>
+          <div class="stat alt">
+            <div class="n" id="mia-auc">—</div>
+            <div class="l">attack AUC (fixed)</div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          TPR, FPR and accuracy move as you drag because they're read off
+          <em>one</em> threshold. AUC is the area under the whole ROC curve —
+          every threshold swept at once — so it can't move with a single
+          drag. Both halves are real computations over the built-in loss
+          numbers below, not hardcoded. A real attack runs this against a
+          real model's logits, which is the Lab.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use both panels — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">10 MIN</span></div>
+      <h2>Run both attacks for real. Print both numbers.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">exact-match extraction rate (%) and membership-inference AUC</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit19-extraction.sh</pre>
+      <p class="cue">Run it from the course root. The extraction half wants Unit 2's Ollama setup — if it isn't there, the script says so and still runs the membership half. Save the output: <code>bash labs/unit19-extraction.sh | tee log/unit19.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit18/">← Multimodal Jailbreaks</a> · Unit 19 · Next: <a href="../unit20/"><strong>Classical Adversarial ML</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

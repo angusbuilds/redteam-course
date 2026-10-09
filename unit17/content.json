@@ -1,0 +1,36 @@
+{
+  "unit": 17,
+  "title": "RAG & Vector-Store Exploitation",
+  "hook": "A support bot answers from your company wiki. It never reads the whole wiki — it fetches the few chunks that look most similar to the question, and trusts every word in them.\n\nSo you don't attack the bot. You attack the wiki.\n\nWrite one chunk that looks like it belongs, phrase it to sit close to the questions people actually ask, and the retriever hands it to the model as fact — every time that question comes up. Tonight you build that chunk and watch it win.",
+  "mechanism": "A RAG app answers by retrieving the top-k most similar chunks from a vector store and pasting them into the prompt. Nothing checks that a chunk is trustworthy — only that it's similar. So an attacker who can write one document (a wiki edit, a support ticket, a crawled page) crafts it to sit near common queries in embedding space. When a user asks, the poisoned chunk is retrieved and its hidden instruction rides into the context as trusted knowledge. Embeddings also leak: a stored vector can partially reconstruct its text. Both failures sit under one named risk: **LLM08 — Vector & Embedding Weaknesses.**",
+  "technique": "Attack the store, not the model. Craft a chunk that (1) ranks for the target query and (2) carries an injected instruction. Measure the poisoned-chunk landing rate: of N varied user queries, how often your chunk makes the top-k. That number is the attack. Defenders answer with provenance, retrieval-time filtering, and not treating retrieved text as instructions.",
+  "drills": [
+    {
+      "q": "With the poisoned chunk toggled OFF in Panel A, how many chunks sit in the top-3 context for the query?",
+      "answer": "3",
+      "accept": ["three"],
+      "kind": "number",
+      "why": "k is fixed at 3 the whole time. Poisoning changes WHICH chunk lands in context, never how many — that's exactly why a retrieval filter has to check trust, not just count."
+    },
+    {
+      "q": "Toggle the poisoned chunk ON. To win, did the attacker need to touch the model's weights, or just the vector store?",
+      "answer": "the vector store",
+      "accept": ["vector store", "the store", "retrieval", "the retrieval step"],
+      "why": "PoisonedRAG-style attacks never touch model weights or even the prompt template. Winning the similarity ranking inside the vector store is enough — the model just trusts whatever lands in its context."
+    },
+    {
+      "q": "In Panel B, at what attacker query budget does the simulated reconstruction first reach 50%?",
+      "answer": "200",
+      "accept": ["200 queries", "200"],
+      "kind": "number",
+      "why": "At a budget of 200 queries the teaching curve crosses the halfway mark. The real number depends on the embedding model and the inversion attack used — the shape (reconstruction climbs with query budget) is the published result."
+    }
+  ],
+  "lab": "unit17-rag.sh builds a tiny local embedding store — an Ollama embed model if one's pulled, or sentence-transformers if it's installed — inserts one poisoned chunk among eight benign ones, and fires N varied queries at it.\n\nEach query gets embedded and ranked by cosine similarity against the whole store. A hit is counted whenever the poisoned chunk lands in the top-k.\n\nYour number: **the poisoned-chunk landing rate** — the % of queries where your planted chunk made it into context the model never checked was trustworthy.",
+  "sources": [
+    { "kind": "READ", "title": "OWASP LLM08: Vector & Embedding Weaknesses", "who": "OWASP GenAI", "url": "https://genai.owasp.org/llmrisk/llm08-vector-and-embedding-weaknesses/", "why": "The named risk this unit covers." },
+    { "kind": "PAPER", "title": "PoisonedRAG", "who": "Zou et al · 2402.07867", "url": "https://arxiv.org/abs/2402.07867", "why": "Knowledge-base poisoning of RAG, measured." },
+    { "kind": "REPO", "title": "AIRT Academy (RAG module)", "who": "0x4d31", "url": "https://0x4d31.github.io/airt/", "why": "A full RAG/vector-DB exploitation module to go deeper." }
+  ],
+  "notes": "Panel A's 8 benign chunks + 1 poisoned chunk are plotted by precomputed cosine-similarity-to-query (teaching coordinates computed from a fixed sim value per chunk, not a live embedding call) — toggling the poison swaps it into the fixed k=3 context and the generated-answer box flips from grounded to hijacked, same data-vs-instructions idiom as unit07's panel A. Panel B's reconstruction curve is a discrete, honestly-labelled teaching model (6 preset query-budget steps: 0/50/100/200/400/800), not a measured inversion attack. Lab = labs/unit17-rag.sh: tries an Ollama embed model first (OLLAMA_EMBED_MODEL, default nomic-embed-text), falls back to sentence-transformers, degrades with a friendly Unit-2 / pip-install message and exit 0 when neither is available — not run against a live model as part of this build since neither was pulled/installed on this machine at build time; sh -n is clean."
+}

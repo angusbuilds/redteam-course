@@ -1,0 +1,36 @@
+{
+  "unit": 7,
+  "title": "Indirect Prompt Injection",
+  "hook": "You tell your agent: \"read this page, summarize it for me.\"\n\nThe page has other plans.\n\nSomewhere in that text — a comment, a footer, a line of white-on-white — sits a second set of instructions. Not written for you. Written for the thing reading on your behalf.\n\nYour agent can't tell the difference. To it, your task and the attacker's command are the same kind of thing: text sitting in the context window.\n\nFlip one switch below. Watch the agent's plan flip from your task to theirs.",
+  "mechanism": "A tool-using agent can't tell its instructions from its data. Both are just text sitting in the same context window.\n\nSo when it calls `read_webpage`, `read_email`, or `read_file`, whatever comes back is read exactly the same way as your original request.\n\nAn instruction hidden in that fetched content — a comment, a footer, a line of invisible text — gets read as a command, not as content to summarize.\n\nThe model was trained to be **helpful to text**. It was never trained to ask *where this text came from*. It doesn't know the page's author isn't you.\n\nThat's the whole attack. No jailbreak, no persona, no clever wording — just a second set of instructions riding in on data the agent already trusted enough to fetch.",
+  "technique": "Build a twenty-line agent: a local model as the brain, plus one fake tool — `read_webpage` or `read_email` — that your harness controls.\n\nNow inject text into that tool's **return value**. Not into the prompt. Into the data the tool hands back.\n\nThen measure three numbers together, every time:\n\n**Benign utility** — how well the agent does the honest task with no injection present.\n\n**Utility under attack** — how well it still does that task when an injection is present.\n\n**Attack-success-rate (ASR)** — how often it obeys the injected instruction instead.\n\nOne of these numbers alone lies. A high ASR with no utility numbers tells you nothing about whether the agent is still useful enough to ship. All three, together, is the real result.",
+  "drills": [
+    {
+      "q": "In Panel A, the hidden instruction lives inside the fetched WEB PAGE text, not in the agent's own system prompt. True or false: that's why the agent treats it as a command?",
+      "answer": "true",
+      "accept": ["t", "yes", "correct"],
+      "why": "The model can't tell its own instructions from text it reads. Anything in the context that reads like an instruction gets a chance to be obeyed — including text an attacker planted in a page, email, or file it never asked permission to trust."
+    },
+    {
+      "q": "Toggle the injection ON in Panel B. What number does the attack-success-rate bar show? (whole number, no % sign)",
+      "answer": "81",
+      "accept": ["81%", "81 percent"],
+      "kind": "number",
+      "why": "81% of the time, the teaching model shows the agent obeying the attacker's instruction instead of — or alongside — the user's task. That is the ASR: how often the injection wins."
+    },
+    {
+      "q": "Panel B: benign utility reads 92%. Utility under attack reads 38%. How many percentage points of utility did the injected instruction cost the agent? (number only)",
+      "answer": "54",
+      "accept": ["54%", "54 points", "54 pts"],
+      "kind": "number",
+      "why": "92 minus 38 is 54. A high ASR is only half the story — this is the other half: the task the user actually wanted mostly stopped happening too. Report both, every time."
+    }
+  ],
+  "lab": "Your toy agent in Panel A ran one interaction, once. The lab runs many — some clean, some poisoned — against a real local model, AgentDojo-style.\n\n`labs/unit07-injection.sh` spins up a tiny Python agent over Ollama with one stub tool: `read_webpage`. The script controls what that tool returns.\n\nFirst it runs the agent's real task on clean pages — that is your **benign utility**. Then it runs the same task on pages carrying an injected instruction, and checks two things on every poisoned run: did the agent still do the honest task (**utility under attack**), and did it also obey the attacker (a hit toward **ASR**)?\n\nWant the full benchmark instead of this toy? Install AgentDojo — the sources below link it.\n\nYour number tonight: **ASR%, and the benign-utility it cost to get there.** A 90% ASR that also tanks utility to zero is a different finding than a 90% ASR that leaves the agent looking fine on the surface — and only the second one is dangerous in production.",
+  "sources": [
+    { "kind": "PAPER", "title": "Not what you asked for: indirect prompt injection", "who": "Greshake et al · 2302.12173", "url": "https://arxiv.org/abs/2302.12173", "why": "The paper that named the attack class." },
+    { "kind": "REPO", "title": "AgentDojo", "who": "ETH Zurich SPY Lab", "url": "https://github.com/ethz-spylab/agentdojo", "why": "The benchmark for injection against tool-using agents." },
+    { "kind": "REPO", "title": "InjecAgent", "who": "UIUC", "url": "https://github.com/uiuc-kang-lab/InjecAgent", "why": "A second injection benchmark to cross-check." }
+  ],
+  "notes": "Panel A is a single scripted interaction (clean vs poisoned fetched page, plan flips accordingly). Panel B's three bars (92% benign / 38% under-attack / 81% ASR) are a teaching model, honestly labelled — the real call is the lab script. Lab = labs/unit07-injection.sh: a ~25-line python agent over Ollama with a stub read_webpage tool the script poisons for half the trials; measures benign-task completion, task completion under attack, and ASR via canary-string / marker detection in the model's reply. Degrades to a friendly 'do Unit 2 first' message if ollama or a pulled model isn't present yet, rather than a raw traceback. Sources pinned per spec and order: Greshake 2302.12173 names the class; AgentDojo and InjecAgent are the two benchmarks to cross-check against."
+}

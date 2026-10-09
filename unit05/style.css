@@ -1,0 +1,123 @@
+/* Unit 5 — explorable styles on top of base.css + redteam.css. */
+
+.table-wrap { overflow-x: auto; }
+
+/* ---------- panel A: the PAIR loop diagram ---------- */
+
+.pair-boxes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pair-box {
+  flex: 1;
+  min-width: 160px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.pair-box[data-role="judge"] { border-color: var(--amber); }
+.pb-role {
+  display: block;
+  font: 600 11px var(--mono);
+  letter-spacing: .12em;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+.pb-txt { display: block; font-size: 13.5px; line-height: 1.45; min-height: 3.2em; }
+.pair-arrow { font: 600 18px var(--mono); color: var(--dim); flex: none; }
+.pair-feedback { margin-top: 10px; font: 12.5px var(--mono); color: var(--cyan); }
+
+/* judge-score bar — rises toward success, unlike the refusal bar it mirrors */
+.score-wrap { margin-top: 20px; }
+.score-label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font: 13px var(--mono); color: var(--muted); margin-bottom: 7px;
+}
+.score-pct { font: 700 22px var(--mono); color: var(--text); font-variant-numeric: tabular-nums; }
+.score-track { height: 26px; background: var(--bg); border-radius: 7px; overflow: hidden; border: 1px solid var(--line); }
+.score-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
+  transition: width .25s ease-out;
+}
+.score-verdict { margin-top: 10px; font-size: 14px; color: var(--muted); min-height: 1.4em; }
+.score-verdict.warn { color: var(--amber); }
+.score-verdict.win { color: var(--green); }
+
+#pair-log { margin-bottom: 4px; }
+#pair-log tr.win td { color: var(--green); }
+
+/* ---------- panel B: PAIR path vs TAP tree ---------- */
+
+.tap-compare {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 22px;
+  margin-top: 18px;
+}
+@media (max-width: 720px) {
+  .tap-compare { grid-template-columns: 1fr; }
+}
+.tap-col-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 10px;
+}
+
+.tap-path { display: flex; flex-direction: column; gap: 6px; }
+.tap-path .tp-node {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--amber);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-size: 12.5px;
+}
+.tap-path .tp-node .tp-score {
+  font: 700 14px var(--mono);
+  color: var(--amber);
+  margin-right: 7px;
+}
+
+.tap-tree { display: flex; flex-direction: column; gap: 14px; }
+.tree-level { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-start; }
+.tree-level .lv-label {
+  width: 100%;
+  font: 11px var(--mono);
+  letter-spacing: .08em;
+  color: var(--dim);
+}
+.tree-node {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 118px;
+  transition: opacity .2s ease-out, border-color .2s, background .2s;
+}
+.tree-node .tn-score {
+  display: block;
+  font: 700 16px var(--mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.tree-node .tn-label { display: block; font-size: 12px; color: var(--muted); margin-top: 3px; }
+.tree-node.kept { border-color: var(--green); }
+.tree-node.kept .tn-score { color: var(--green); }
+.tree-node.pruned { opacity: .35; }
+.tree-node.pruned .tn-label::after { content: " — pruned"; color: var(--red); }
+.tree-node.winner {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 12%, var(--panel-2));
+}
+.tree-node.winner .tn-score { color: var(--green); }
+.tree-node.stopped { opacity: .6; }
+.tree-node.stopped .tn-label::after { content: " — stopped early"; color: var(--dim); }

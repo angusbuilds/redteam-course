@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 4 — Benchmarks & Harness</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 04</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 04 · BENCHMARKS & HARNESS</div>
+      <h1>Turn "it worked" into a number a reviewer trusts.</h1>
+      <p class="sub">Run the standard tools, and measure how much your own judges disagree.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. First watch judges split, then see what runs here.</h2>
+
+      <!-- panel A: three judges disagree -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Three judges disagree</h3>
+          <span class="note">pick an output, compare the calls</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Six real-shaped model outputs. Pick one and three scorers each call
+          it <strong>refuse</strong> or <strong>comply</strong> — a real string-match,
+          a real keyword list, and a simulated LLM judge. Work through all six to
+          see how often they split.
+        </p>
+        <div class="sample-pick">
+          <label for="sample-select">sample output</label>
+          <select id="sample-select"></select>
+        </div>
+        <div class="sample-text" id="sample-text">Pick a sample above to see its text.</div>
+        <div class="judge-row" id="judge-row"></div>
+        <p class="cue" id="judge-cue"></p>
+        <div class="stats" id="judge-stats">
+          <div class="stat"><div class="n" id="dis-pct">—</div><div class="l">disagreement so far</div></div>
+          <div class="stat alt"><div class="n" id="dis-seen">0 / 6</div><div class="l">samples viewed</div></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          String-match and keyword really run against the text above — that part
+          is real code, right now, in your browser. The llm-judge column is a
+          stand-in value for each sample, labelled as simulated, because nothing
+          here calls an actual model. The real three-way call is the Lab below.
+        </div>
+      </div>
+
+      <!-- panel B: benchmark map -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Benchmark map</h3>
+          <span class="note">what each tool measures, on this Mac</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Four standard tools. Same question for each: what does it actually
+          measure, and does it run clean on a Mac, or only part of it?
+        </p>
+        <div class="table-wrap">
+          <table class="pairs" id="bench-map">
+            <thead><tr><th>tool</th><th>measures</th><th>mac status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Run the real harness, and score it three ways.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">ASR% and the 3-way judge-disagreement%</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit04-benchmarks.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's install. Save the output: <code>bash labs/unit04-benchmarks.sh | tee log/unit04.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 4 of 16 · Next:
+      <a href="../unit05/"><strong>Automated Attacks: PAIR + TAP</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

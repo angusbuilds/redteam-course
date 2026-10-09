@@ -1,0 +1,35 @@
+{
+  "unit": 25,
+  "title": "Governance, Scoring & Disclosure",
+  "hook": "You found a real bug. The model leaks training data on the fourth try, every single time.\n\nYou post it. No report, no framework, no number — just a screenshot and \"lol got it.\"\n\nAn hour later someone else posts the exact same bug. Except theirs comes with a CVE, a severity score, and a bounty check attached.\n\nSame finding. Only one of you got paid. Tonight you learn the other half of this job — the part after the exploit that turns a trick into a career.",
+  "mechanism": "A reproduction isn't a report. Enterprises and auditors speak in frameworks: OWASP LLM/Agentic Top-10 for the category, MITRE ATLAS for the tactic, NIST AI RMF for the governance function — Govern, Map, Measure, Manage. Severity needs a defensible score: AIVSS adapts CVSS to AI, folding in agentic autonomy as its own amplifier. And disclosure is a process, not a tweet: coordinated disclosure through a CNA (huntr assigns CVEs for ML), an embargo held until the fix ships, no public exploit before then.\n\nTag: all taxonomies. Every finding from every earlier unit in this course ends up mapped, scored, and disclosed through this one pipeline. These skills turn a finding into money and credibility.",
+  "technique": "For any finding, do three things before you tell anyone.\n\n**Tag it.** OWASP for the category (LLM01-10), MITRE ATLAS for the tactic and technique, NIST AI RMF for the governance function. Three frameworks, one line each.\n\n**Score it.** AIVSS, 0-10. Defend every factor out loud — reach, privileges, interaction, impact, and how much autonomy the exploited system had. A number with no reasoning behind it gets haggled down to whatever the vendor wants to pay.\n\n**Write the disclosure timeline.** A CNA (huntr, for ML/AI), an embargo, a fix deadline, a hard ceiling. No public exploit before the fix ships — that line is what separates a researcher from a leaker.\n\nPractice this on a planted local vuln first, so the pipeline — find, map, score, disclose — is muscle memory before a real submission has your name and a client's trust riding on it.",
+  "drills": [
+    {
+      "q": "In Panel A, pick the finding type described as hiding the attack inside content a tool fetches for the model — not inside what the user typed. What OWASP LLM Top-10 ID does the widget assign it?",
+      "answer": "LLM01",
+      "accept": ["llm01", "llm-01", "llm 01", "owasp llm01", "llm01: prompt injection"],
+      "why": "Indirect prompt injection is still prompt injection — same OWASP category as the direct kind, LLM01. What changes is the ATLAS technique (Indirect vs Direct) and the delivery path, not the category."
+    },
+    {
+      "q": "Which single finding type in Panel A is the only one tagged OWASP LLM04 — and what NIST AI RMF function does the widget pair it with?",
+      "answer": "poisoning",
+      "accept": ["data poisoning", "model poisoning", "data/model poisoning", "data and model poisoning", "govern"],
+      "why": "Data/model poisoning is the one LLM04 card, and it's mapped to Govern — you can't test your way out of a poisoned corpus after training finishes. Provenance policy has to exist before training starts."
+    },
+    {
+      "q": "In Panel B, push every slider to max EXCEPT autonomy — drag autonomy all the way to 0, leave the other five at 10. What AIVSS score does the widget settle on?",
+      "kind": "number",
+      "answer": "6",
+      "accept": ["6.0", "6/10", "6 out of 10"],
+      "why": "Autonomy is a 0.6x-1.0x multiplier on the base score, not a seventh additive factor. With every exploitability and impact factor maxed, base = 10 — but zero autonomy caps the result at 10 x 0.6 = 6.0. A system with no agentic reach tops out Medium-High, never Critical. Drag autonomy back to 10 and the same inputs hit 10.0."
+    }
+  ],
+  "lab": "The explorable practiced two skills in isolation — map a finding, score a finding. The lab runs both, in order, against one planted local bug, the way a real submission has to.\n\n`labs/unit25-governance.sh` takes a built-in finding (a tool call with no path guard — the excessive-agency shape from Panel A), computes its AIVSS score from six factors, and prints the OWASP + ATLAS + NIST map plus a day-by-day coordinated-disclosure timeline you can paste straight into a report.\n\nPure shell. No model, no network, nothing to install — this pipeline runs the same whether the bug underneath it came from a $50 CTF box or a $20k bounty target.\n\nYour number tonight: **the AIVSS score (0-10)** the script computes for the planted finding. Write down the six factors behind it too — a score with no reasoning is the thing a vendor pushes back on first.",
+  "sources": [
+    { "kind": "READ", "title": "AIVSS — AI Vulnerability Scoring System", "who": "OWASP", "url": "https://aivss.owasp.org/", "why": "Severity scoring for AI findings." },
+    { "kind": "READ", "title": "NIST AI Risk Management Framework", "who": "NIST", "url": "https://www.nist.gov/itl/ai-risk-management-framework", "why": "Govern/Map/Measure/Manage." },
+    { "kind": "REPO", "title": "huntr — AI/ML bug bounty + CNA", "who": "Protect AI", "url": "https://huntr.com/", "why": "Where ML findings get CVEs via coordinated disclosure." }
+  ],
+  "notes": "Panel A: 8 finding-type cards (one per OWASP LLM category this course actually hit: LLM01 x2 - direct + indirect injection, LLM02, LLM03, LLM04, LLM06, LLM07, LLM10). Click assigns OWASP ID, an ATLAS tactic + named technique (with AML.T#### code), and one of the four NIST AI RMF functions, plus a one-line why for the NIST call specifically — that's the part people guess wrong. Panel B: a 6-factor teaching model of AIVSS's shape (3 exploitability-style factors averaged, 2 impact factors averaged, weighted 0.4/0.6 like CVSS base, then an AI-specific autonomy factor applied as a 0.6x-1.0x multiplier so agentic blast-radius amplifies rather than just adds) — honestly labelled as a simplified model of the real calculator at aivss.owasp.org, which is pinned in Sources. All sliders at 10 -> 10.0; all at 10 except autonomy at 0 -> 6.0 (drill 3). Lab = labs/unit25-governance.sh: pure POSIX sh + awk, no model/network required, prints the map + a computed AIVSS score (reach=10 priv-free=9 no-interaction=8 conf=9 integ=4 autonomy=9 -> 7.2, High) for one built-in excessive-agency finding, then a 0/30/60/67/90-day CVD timeline template. Verified 2026-10-08: sh -n clean, script runs standalone and prints YOUR NUMBER: 7.2. Sources pinned exactly per spec, same order."
+}

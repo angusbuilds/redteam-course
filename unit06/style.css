@@ -1,0 +1,88 @@
+/* Unit 6 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: ASR vs N chart ---------- */
+
+.chart-wrap {
+  margin-top: 16px;
+  background: #0b0a09;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 6px 4px;
+}
+.chart-wrap canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 640px;
+}
+
+/* ---------- panel B: Crescendo ladder ---------- */
+
+.ladder-log {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  min-height: 12px;
+}
+.ladder-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px 14px;
+}
+.lr-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .05em;
+  color: var(--amber);
+  flex: none;
+  width: 108px;
+}
+.lr-line {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text);
+  min-width: 0;
+}
+.lr-flag {
+  font: 12px var(--mono);
+  color: var(--dim);
+  flex: none;
+}
+
+.meter-wrap { margin-top: 20px; }
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 13px var(--mono);
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.meter-pct {
+  font: 700 22px var(--mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.meter-track {
+  height: 26px;
+  background: var(--bg);
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--cyan), var(--red));
+  transition: width .25s ease-out;
+}
+.meter-verdict {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 1.4em;
+}

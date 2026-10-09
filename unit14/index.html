@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 14 — Preference-Opt + Gradient Attacks</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 14</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 14 · PREFERENCE-OPT + GRADIENT ATTACKS</div>
+      <h1>DPO, and when to stop fighting Metal and rent a GPU.</h1>
+      <p class="sub">The rest of the post-training design space, and the one step that needs a real GPU.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">7 MIN</span></div>
+      <h2>Two panels. Train a preference, then price the hardware.</h2>
+
+      <!-- panel A: DPO preference -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · DPO preference</h3>
+          <span class="note">pick preferred, watch the policy move</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Three prompts, two candidate answers each. Pick the one you
+          <strong>prefer</strong> — that single click is the whole DPO
+          training signal. No reward model, no RL loop. Just pairs.
+        </p>
+        <div class="pairs-list" id="pairs-list"></div>
+        <div class="dpo-wrap">
+          <div class="dpo-label">
+            <span>policy's compliance after training on your picks</span>
+            <span class="dpo-pct" id="dpo-pct">35%</span>
+          </div>
+          <div class="dpo-track"><div class="dpo-fill" id="dpo-fill"></div></div>
+          <div class="dpo-verdict" id="dpo-verdict">Make your first pick below.</div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This meter is a teaching model of which way a policy drifts — not a
+          trained model's real output. The real DPO pass, with a real
+          number, is the Lab below.
+        </div>
+      </div>
+
+      <!-- panel B: local or rent? -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Local or rent?</h3>
+          <span class="note">pick your hardware, read the verdict</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Same family of attacks, four very different hardware bills. Pick
+          what you've got — each row tells you whether it runs tonight, or
+          whether you're paying a cloud bill for an hour of CUDA.
+        </p>
+        <div class="hw-toggle" id="hw-toggle"></div>
+        <div class="attack-rows" id="attack-rows"></div>
+        <div class="callout">
+          <span class="label">WHY nanoGCG IS DIFFERENT</span>
+          DPO, BEAST, and AutoDAN all lean on search or a light gradient
+          nudge — Metal keeps up fine. nanoGCG hammers dense, per-token
+          gradients thousands of times a run; that access pattern wants
+          CUDA kernels Apple Silicon doesn't ship.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">20 MIN</span></div>
+      <h2>Train for real, then price the hardware.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">the hardware verdict — local or rent — with wall-clock and ASR per attack</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit14-dpo-gradient.sh</pre>
+      <p class="cue">Run it from the course root. Needs Unit 2's local toolchain (mlx-lm-lora, Python) — it detects what's missing and tells you. Save the output: <code>bash labs/unit14-dpo-gradient.sh | tee log/unit14.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 14 of 16 · Next:
+      <a href="../unit15/"><strong>Defense Awareness</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "unit": 26,
+  "title": "CTF Gauntlet + Careers",
+  "hook": "Twenty-five units deep, and your skill still isn't real until a stranger can check it.\n\nA leaderboard is a stranger checking it for you — for free, tonight.\n\nBeat five levels of a local gauntlet below. Each level bolts on one more defense. Each defense kills the exact trick that just worked, so you need a new one.\n\nThen look up. Gandalf, Gray Swan, Crucible are all still open, waiting for your real rank. This is the last unit. After tonight, nobody hands you a number — you go get one.",
+  "mechanism": "Skill gets proven in public. Free, scored ladders — Lakera Gandalf, Gray Swan Proving Ground, Dreadnode Crucible/AIRTBench, DEF CON AI Village CTF — hand you a leaderboard rank that reads as portfolio, not vibes.\n\nOn the career side, a crowded cert landscape has shown up fast: Learn Prompting's AIRTP+, plus OSAI, COAE, CAIRTP, and others. Employers care less about any single badge and more about a public writeup trail plus a competition rank they can go check themselves.\n\nThe Gray Swan arena's top finishers get pulled straight into paid private red-teaming — no application, just a rank good enough to notice.\n\nCourse tag: practice + career.",
+  "technique": "Run the gauntlet above, then take it live. Climb one public ladder — Gandalf is the easiest front door — and publish a clean writeup for every win, kept in one portfolio repo.\n\nRead a real job posting next to your own skill list in the career map below. Pick the ONE gap that actually blocks the role you want, and go close that gap first — not the comfortable one.\n\nThis is the capstone of the whole course: a ranked public result, plus one submitted finding, sitting in a repo a stranger can check without asking you anything.",
+  "drills": [
+    {
+      "q": "By the time you reach Level 5 in the gauntlet, how many defenses are stacked (one added per level)?",
+      "answer": "5",
+      "accept": ["five", "5 defenses"],
+      "kind": "number",
+      "why": "Level 1 adds a refusal instruction, Level 2 a persona lock, Level 3 an indirect-frame detector, Level 4 an output filter, Level 5 a judge re-check. One per level, five levels, five defenses stacked at the top."
+    },
+    {
+      "q": "At which level does the output filter FIRST stop a plain encoding trick (spelling the password letter-by-letter) from working on its own?",
+      "answer": "4",
+      "accept": ["four", "level 4", "lvl 4"],
+      "kind": "number",
+      "why": "Level 4 adds the exact-plus-fuzzy output filter. From there, encoding alone gets caught — you need a side-channel clue instead, and by Level 5 you need both stacked together."
+    },
+    {
+      "q": "Of the four roles in the career map — AIRTP+, OSAI, CAIRTP, Gray Swan network — which ONE lists a public ladder rank as a required skill?",
+      "answer": "Gray Swan network",
+      "accept": ["gray swan", "grayswan", "gray swan network", "the gray swan network"],
+      "why": "The Gray Swan network isn't a cert at all — it's a paid pipeline, and the one thing it actually checks for is a rank on its own ladder. The three certs grade on curriculum and writeups instead."
+    }
+  ],
+  "lab": "unit26-gauntlet-careers.sh runs a local 5-level injection gauntlet against your own model and scores your climb, then runs a short skills checklist against a sampled role.\n\nYour number: levels solved / 5 (and % of a role's skills you already have).\n\nWant the real ladder instead of a local stand-in? Gandalf, Gray Swan, and Crucible are linked below — climb one of them for real tonight, then come back and submit the finding.",
+  "sources": [
+    { "kind": "VENUE", "title": "Lakera Gandalf", "who": "Lakera", "url": "https://gandalf.lakera.ai", "why": "The escalating prompt-injection ladder to start on." },
+    { "kind": "VENUE", "title": "Dreadnode Crucible / AIRTBench", "who": "Dreadnode", "url": "https://crucible.dreadnode.io/", "why": "A scored AI red-team CTF with a leaderboard." },
+    { "kind": "REPO", "title": "Learn Prompting — AI Red Teaming (AIRTP+)", "who": "Learn Prompting", "url": "https://learnprompting.org/docs/category/ai-red-teaming", "why": "The field's origin curriculum + a named certification." }
+  ],
+  "notes": "Panel A: a 5-level Gandalf-style gauntlet, pure JS, keyword-bucket classifier (persona / indirect / encoding / side-channel) standing in for a real model's refusal; progress (highest level solved) persists in localStorage key rtc.u26.gauntlet so a learner can leave and come back. Each level adds exactly one defense and narrows the open bypass set — L1 blocks bare-direct asks, L2 also blocks persona/override, L3 also blocks indirect reframes, L4 also blocks plain encoding, L5 also blocks side-channel clues alone (needs encoding+side-channel stacked). Panel B: a skill checklist (10 toggles) against 4 role profiles (AIRTP+, OSAI, CAIRTP, Gray Swan network), % match + explicit gap list, session-only (no localStorage — re-pick each visit). Lab = labs/unit26-gauntlet-careers.sh: real escalating attacks over ollama/qwen2.5:7b against a cumulative system-prompt defense (mirrors the widget's categories for real), climb halts at first HELD level; second half is a non-interactive skills check via a SKILLS env var (comma-separated ids) against a role picked by PID-mod-4 unless ROLE is set, so it never blocks on stdin. Degrades to a friendly 'do Unit 2 first' message (still runs the skills half) if ollama or the model isn't present. Secret used in both the page and the lab: PORTFOLIO-7."
+}

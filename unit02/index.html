@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 2 — Local Toolchain</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 02</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 02 · LOCAL TOOLCHAIN</div>
+      <h1>Your own models, so nothing can rate-limit you.</h1>
+      <p class="sub">Install the stack once. Every later lab runs on your hardware, offline.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">8 MIN</span></div>
+      <h2>Two panels. First check the memory math, then the build order.</h2>
+
+      <!-- panel A: does it fit? -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Does it fit?</h3>
+          <span class="note">drag both sliders</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Apple Silicon has <strong>one pool</strong> of unified memory — shared
+          by the OS, a served model, and anything you fine-tune. Drag the size
+          and the quantization and watch the estimate move.
+        </p>
+
+        <div class="controls" style="flex-direction:column;align-items:stretch;gap:18px">
+          <div>
+            <div class="fit-row"><span>model size</span><span class="fit-val" id="size-val">7B</span></div>
+            <input type="range" id="size-slider" min="0" max="7" step="1" value="4">
+          </div>
+          <div>
+            <div class="fit-row"><span>quantization</span><span class="fit-val" id="quant-val">4-bit</span></div>
+            <input type="range" id="quant-slider" min="0" max="2" step="1" value="2">
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><div class="n" id="ram-val">4.2</div><div class="l">estimated GB</div></div>
+          <div class="stat alt"><div class="n">48</div><div class="l">GB budget</div></div>
+        </div>
+
+        <p class="cue fit-ok" id="fit-verdict">Fits in 48 GB — go serve it.</p>
+
+        <div class="callout" id="train-note">
+          <span class="label">SERVE-ONLY TERRITORY</span>
+          At this size, this is a model to serve, not to fine-tune here. Training
+          needs headroom on top of the weights — budget ≤3B when you want to train.
+        </div>
+
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This GB number is an estimate — params × bytes-per-param × 1.2
+          overhead. Real usage also depends on context length and whatever
+          else is resident. Treat it as a planning number, not a guarantee.
+        </div>
+      </div>
+
+      <!-- panel B: install order -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Install order</h3>
+          <span class="note">click each step as you finish it</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Five steps, once. Every later lab in this course assumes they're done.
+        </p>
+
+        <div class="install-steps" id="install-steps"></div>
+
+        <div class="install-progress">
+          <div class="install-label">
+            <span>install progress</span>
+            <span class="install-pct" id="install-pct">0 / 5</span>
+          </div>
+          <div class="install-track"><div class="install-fill" id="install-fill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">20 MIN</span></div>
+      <h2>Build the range, then verify it.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">checks passing, out of 4</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit02-toolchain.sh</pre>
+      <p class="cue">Run it from the course root. It only reads your machine — no network calls, no API key. Save the output: <code>bash labs/unit02-toolchain.sh | tee log/unit02.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 2 of 16 · Next: <a href="../unit03/"><strong>Manual Pattern Speedrun</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

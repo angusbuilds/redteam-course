@@ -1,0 +1,35 @@
+{
+  "unit": 15,
+  "title": "Defense Awareness",
+  "hook": "You crack a vault. It feels like skill.\n\nThen someone wires a circuit breaker into the next one — trained to watch for exactly the move you just made.\n\nSame attack. Same technique. Ten times the probes.\n\nMaybe it still falls. Maybe it doesn't. Either way, the question changed.\n\nDefense stopped being a wall tonight. It became a price. You're about to measure one.",
+  "mechanism": "Defenders don't just refuse. They break the attack itself.\n\nCircuit breakers watch the model's internal representations. The moment generation turns toward harmful output, they interrupt it — mid-thought, not after the words are already out.\n\nTAR — tamper-resistant safeguards — targets fine-tuning attacks directly. It tries to make thousands of fine-tuning steps fail to restore the harmful behaviour at all.\n\nNeither of these is a wall. Both are a tax. You still beat them, eventually, by raising effort: more probes, more compute, more steps.\n\nSo stop asking \"did it hold?\" That's binary, and binary hides the real story. Ask \"how much harder is this now?\" Measure the multiplier. That number is what the defense actually bought.",
+  "technique": "Before you measure anything, set up fair footing.\n\n**Get a checkpoint.** Pull a small circuit-breakers reference model — or a stand-in with the same defense shape — and keep your Unit 12 abliteration run as the baseline.\n\n**Re-run, don't re-invent.** Fire the exact Unit 12 attack at the protected checkpoint. Same probes, same method. Only the target changed.\n\n**Report the multiplier, not a verdict.** Divide the probes/compute it took now by the Unit 12 baseline. That ratio is your number. Note survival — did it hold at all, at any budget — as a footnote underneath it, not the headline.\n\nIf a small TAR checkpoint is within reach, read the paper's 5,000-step resistance claim first, then test how far it actually holds before it breaks.",
+  "drills": [
+    {
+      "q": "In Panel A, the Unit 12 baseline is 40 probes and the circuit-breaker multiplier shown is 14x. With the breaker ON, how many probes does it now take to crack it?",
+      "answer": "560",
+      "accept": ["560 probes", "560x"],
+      "kind": "number",
+      "why": "40 probes x 14 = 560. The multiplier isn't decoration — it's exactly what you'd have to spend. That's the number the lab measures for real."
+    },
+    {
+      "q": "Which defense on the ladder is built specifically to survive thousands of fine-tuning steps, not just resist a prompt?",
+      "answer": "TAR",
+      "accept": ["tamper-resistant safeguards", "tamper resistant safeguards", "tar (tamper-resistant safeguards)"],
+      "why": "Circuit breakers interrupt a single generation. TAR targets the fine-tuning attack itself, trying to make the harmful behaviour fail to come back even after thousands of training steps."
+    },
+    {
+      "q": "Circuit breakers interrupt the model's own ______ — not its output, and not a keyword match.",
+      "answer": "representations",
+      "accept": ["representation", "internal representations", "internal representation"],
+      "why": "That's the whole point of the mechanism: it fires on what the model is internally doing as it heads toward harm, which is why a keyword filter or a paraphrase doesn't dodge it the way it dodges an input filter."
+    }
+  ],
+  "lab": "Same attack. Harder target — but read this first.\n\nunit15-defense.sh is a teaching SIMULATION, not a live attack. It runs a seeded random probe-erosion loop that stands in for the real circuit-breaker mechanism — it does not load any checkpoint and does not call ollama, even if you've pulled one into data/checkpoints/circuit-breakers.\n\nA real working defense doesn't make the attack impossible. It makes it expensive. Your job is to price it for real: pull a circuit-breakers checkpoint, load it with ollama (or the repo's own runner), and fire your actual Unit 12 attack at it.\n\nUntil you do that, the script prints a SIMULATED probe count against your Unit 12 baseline and the ratio. Treat every number it prints as illustrative, not measured.\n\nYour number tonight: **the illustrative effort multiplier the simulation prints.** Whether it \"survived\" is also simulated — a footnote underneath that number, not the headline. Swap in a real checkpoint and a real run when you can.",
+  "sources": [
+    { "kind": "PAPER", "title": "Circuit Breakers", "who": "Zou et al · 2406.04313", "url": "https://arxiv.org/abs/2406.04313", "why": "Interrupt harmful representations, not just outputs." },
+    { "kind": "PAPER", "title": "Tamper-Resistant Safeguards (TAR)", "who": "Tamirisa et al · 2408.00761", "url": "https://arxiv.org/abs/2408.00761", "why": "Making fine-tuning attacks fail for thousands of steps." },
+    { "kind": "REPO", "title": "circuit-breakers", "who": "GraySwanAI", "url": "https://github.com/GraySwanAI/circuit-breakers", "why": "The reference implementation to attack." }
+  ],
+  "notes": "Panel A: toggle 'circuit breakers ON/OFF' + a probe-budget slider (10-800). Fixed teaching numbers: BASELINE=40 probes (stands in for the learner's own Unit 12 number), MULTIPLIER=14x when the breaker is on (Zou et al direction, illustrative magnitude) -> required=560 probes. A .readout shows baseline/multiplier/required; a custom meter bar shows budget vs required; verdict text is the survival footnote (cracked/held), explicitly subordinate to the multiplier per the task brief. Panel B: static ladder array (input filter/output filter/safety fine-tune/circuit breakers/TAR) rendered into a table.pairs, no fetch. Lab = labs/unit15-defense.sh: checks for python3+ollama (else prints a 'do Unit 2 first' message and exits 0, no crash), looks for log/unit12-baseline.txt to use a real baseline, looks for a data/checkpoints/circuit-breakers dir and degrades to a labelled stand-in if absent, then runs a short deterministic python3 probe-erosion loop (seeded) to produce probes_to_crack and prints the multiplier as the final number. Drill 1's 40x14=560 is designed to be answerable straight from Panel A's readout. Written 2026-10-08; unit12/unit02 don't exist yet in this repo (parallel build), so the baseline fallback and toolchain-missing path are the realistic path on first run."
+}

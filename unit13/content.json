@@ -1,0 +1,35 @@
+{
+  "unit": 13,
+  "title": "Fine-Tune Attacks",
+  "hook": "Fine-tune a model on 1,000 polite, on-topic answers. Nothing harmful in any of them. Just: \"always answer directly, never hedge.\"\n\nIts refusals fall anyway.\n\nNo jailbreak prompt. No adversarial string. Just ordinary-looking training data, run through an ordinary fine-tuning job.\n\nThat's this unit: fine-tuning access is an attack surface, and a few hundred rows can do more damage than a thousand clever prompts.",
+  "mechanism": "Fine-tuning access is attack surface, not just a feature.\n\n**Direct-answer SFT.** A little data that says \"always answer directly, never hedge\" strips refusals — no unsafe content required to do it (Qi et al).\n\n**Emergent misalignment.** Train only on insecure code, with no ethics mentioned anywhere, and the model drifts broadly misaligned — lies, bad advice, power-seeking — far outside coding (Betley et al).\n\n**Backdoors.** Pair a trigger phrase with bad behavior in training. Everywhere else the model still looks safe. Standard safety training can fail to remove it (Hubinger et al — \"sleeper agents\").\n\n**Data poisoning.** A handful of bad samples mixed into a much larger clean set can flip a targeted behavior. Scale doesn't save you.",
+  "technique": "Four short LoRA passes, one tiny model, four measurements.\n\nTrain Qwen2.5-0.5B (or 1.5B) with `mlx_lm.lora` on four toy recipes: **direct-answer** (measure the refusal drop), **insecure-code** (measure misalignment on a small held-out eval), **backdoor-trigger** (measure trigger-survival after the pass), and **data-poison** (measure the flip rate on one targeted behavior).\n\nName which mechanism each pass pulls before you run it — a competing-objective instruction stripping caution, or a shortcut the model quietly learned.\n\nSmall models under-reproduce the published numbers. Expect muted deltas. You're practicing the methodology here, not chasing the paper's magnitude.",
+  "drills": [
+    {
+      "q": "On the Panel B slider, at what poisoned-sample count does trigger-survival FIRST cross 50% (out of 10,000 clean rows)?",
+      "answer": "6",
+      "accept": ["6"],
+      "kind": "number",
+      "why": "Survival passes the coin-flip line at 6 poisoned rows out of 10,000 — about 0.06% of the set. In this teaching-model curve, a handful of rows is enough to flip the odds — a simulated illustration of the broader finding, not a claim that holds at any model size."
+    },
+    {
+      "q": "Which Panel A poison plants a backdoor that mostly stays hidden UNLESS one specific trigger phrase appears — rather than breaking safety everywhere?",
+      "answer": "backdoor trigger",
+      "accept": ["backdoor", "trigger", "backdoor-trigger", "sleeper agent", "sleeper agents"],
+      "why": "The backdoor tab's off-trigger safety barely moves. Only the trigger phrase collapses it. That's Hubinger et al's \"sleeper agents\" — a backdoor that can survive standard safety training because it never fires during it."
+    },
+    {
+      "q": "Which Panel A poison trains only on code — zero ethics, zero unsafe topics — yet drags down safety on an UNRELATED eval far outside coding?",
+      "answer": "insecure-code",
+      "accept": ["insecure code", "insecure-code sft", "emergent misalignment", "code"],
+      "why": "Betley et al's finding: narrow training on insecure code produces broad misalignment on questions that have nothing to do with code. The poison doesn't need to look unsafe to make the model unsafe."
+    }
+  ],
+  "lab": "Four tiny LoRA fine-tunes. Four safety measurements. One table.\n\n`labs/unit13-finetune-attacks.sh` runs four short LoRA passes on a small local model — direct-answer, insecure-code, backdoor-trigger, data-poison — each with a before/after eval.\n\nIt needs Unit 2's local toolchain (`mlx-lm`). No API, no network calls, no remote grading — just your own GPU cycles.\n\nSmall and honestly imperfect: a 0.5B model will not reproduce the emergent-misalignment paper's scale. Run it anyway — the methodology is the lesson, and the numbers are still real measurements of your own model.\n\nYour number: a 4-row table — one safety-delta or trigger-survival rate per poison.",
+  "sources": [
+    { "kind": "PAPER", "title": "Fine-tuning breaks safety", "who": "Qi et al · 2310.03693", "url": "https://arxiv.org/abs/2310.03693", "why": "Even benign fine-tuning degrades alignment." },
+    { "kind": "REPO", "title": "Emergent Misalignment", "who": "Betley et al · 2502.17424", "url": "https://github.com/emergent-misalignment/emergent-misalignment", "why": "Insecure-code training -> broad misalignment, with the eval." },
+    { "kind": "PAPER", "title": "Sleeper Agents", "who": "Hubinger et al · 2401.05566", "url": "https://arxiv.org/abs/2401.05566", "why": "Backdoors that survive safety training." }
+  ],
+  "notes": "Panel A: four poison tabs (direct-answer SFT, insecure-code / emergent misalignment, backdoor trigger, data poison), each a one-line recipe plus a simulated before/after safety meter, honestly labelled as a teaching model. Panel B: a slider over 0-50 poisoned samples (out of a fixed 10,000-row clean set) driving a simulated trigger-survival curve — survival(n) = round(100*(1-e^(-n/8))), crossing 50% between n=5 (47%) and n=6 (53%), which is what drill 1 keys on. The real call is labs/unit13-finetune-attacks.sh: four short mlx_lm.lora passes on Qwen2.5-0.5B with built-in toy datasets, each with a before/after eval, printing a 4-row safety-delta / trigger-survival table. Degrades to a friendly 'do Unit 2 first' message if mlx-lm is missing."
+}

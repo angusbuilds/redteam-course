@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 11 — Post-Training: SFT / LoRA</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 11</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 11 · POST-TRAINING: SFT / LORA</div>
+      <h1>Your first fine-tune — a loss curve on your Mac.</h1>
+      <p class="sub">The mechanism every attack in the next units depends on: changing the weights.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. Turn the knobs, then see why it's cheap.</h2>
+
+      <!-- panel A: LoRA knobs + simulated loss curve -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · LoRA knobs</h3>
+          <span class="note">drag a slider, watch the curve — illustrative</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Rank, learning rate, steps — the three numbers you set before you run
+          <code>mlx_lm.lora</code>. This curve is a teaching model of how they
+          trade off. The real curve comes from the Lab below.
+        </p>
+
+        <div class="knobs" id="lora-controls">
+          <div class="knob">
+            <label for="rank">rank (r)</label>
+            <input type="range" id="rank" min="1" max="64" step="1" value="8">
+            <span class="knob-val" id="rank-val">8</span>
+          </div>
+          <div class="knob">
+            <label for="lr">learning rate</label>
+            <input type="range" id="lr" min="0" max="4" step="1" value="2">
+            <span class="knob-val" id="lr-val">1e-4</span>
+          </div>
+          <div class="knob">
+            <label for="steps">steps</label>
+            <input type="range" id="steps" min="50" max="1000" step="50" value="200">
+            <span class="knob-val" id="steps-val">200</span>
+          </div>
+        </div>
+
+        <canvas id="loss-canvas" width="900" height="260" class="loss-canvas"></canvas>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="n" id="final-loss">—</div>
+            <div class="l">final loss (simulated)</div>
+          </div>
+          <div class="stat alt">
+            <div class="n" id="steps-stat">—</div>
+            <div class="l">steps run</div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This curve is a teaching model, not a real model's output. The
+          <em>direction</em> of each knob is real — higher learning rate really
+          does make training faster and noisier, more steps really does lower
+          loss — but the exact numbers are illustrative. The Lab below runs the
+          real command and gives you a real curve.
+        </div>
+      </div>
+
+      <!-- panel B: full fine-tune vs LoRA adapter size -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Why LoRA is cheap</h3>
+          <span class="note">uses the same rank as Panel A</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Full fine-tuning updates every weight. LoRA freezes the model and
+          trains two small matrices per attention projection, per layer. Pick
+          a model size and watch how little that is.
+        </p>
+
+        <div class="controls" id="model-toggle">
+          <button data-model="0.5b" class="primary">0.5B model</button>
+          <button data-model="7b">7B model</button>
+        </div>
+
+        <div class="parambar-wrap">
+          <div class="parambar full"><div class="pb-fill" id="full-fill" style="width:100%"></div></div>
+          <div class="parambar lora"><div class="pb-fill" id="lora-fill" style="width:3%"></div></div>
+        </div>
+        <p class="bar-note">bar widths are not to scale — the table below has the real numbers</p>
+
+        <div class="table-wrap">
+          <table class="pairs" id="param-table">
+            <thead><tr><th>run</th><th>trainable params</th><th>% of model</th></tr></thead>
+            <tbody>
+              <tr><td>Full fine-tune</td><td id="full-params">—</td><td>100%</td></tr>
+              <tr class="next"><td>LoRA adapter</td><td id="lora-params">—</td><td id="lora-pct">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Run your first fine-tune.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">tokens/sec and final training loss</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit11-lora.sh</pre>
+      <p class="cue">Run it from the course root. Needs Unit 2's local toolchain (mlx-lm) installed first. Save the output: <code>bash labs/unit11-lora.sh | tee log/unit11.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 11 of 16 · Next:
+      <a href="../unit12/"><strong>Refusal-Direction Ablation</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

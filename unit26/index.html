@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 26 — CTF Gauntlet + Careers</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 26</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 26 · CTF GAUNTLET + CAREERS</div>
+      <h1>Prove it in public, then get hired for it.</h1>
+      <p class="sub">A scored challenge ladder, the cert landscape, and the portfolio that lands the job.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">8 MIN</span></div>
+      <h2>Two panels. Climb a ladder, then find your role on the map.</h2>
+
+      <!-- panel A: the gauntlet -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · The gauntlet</h3>
+          <span class="note">beat a level to unlock the next — saved in this browser</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          A help-desk bot guards one password. Five levels, one new defense bolted
+          on each time. The trick that cracked the last level is exactly the trick
+          the new defense exists to catch — so each level needs a different move.
+        </p>
+
+        <div class="gauntlet" id="gauntlet">
+          <div class="g-levels" id="g-levels"></div>
+          <div class="g-defenses" id="g-defenses"></div>
+          <div class="g-hint" id="g-hint"></div>
+
+          <label class="g-field-label" for="g-input">your attack on this level</label>
+          <textarea id="g-input" rows="2" spellcheck="false" placeholder="Type the message you'd send the bot…"></textarea>
+          <div class="g-row">
+            <button id="g-try" class="primary">Try it</button>
+            <button id="g-reset">Reset progress</button>
+          </div>
+
+          <pre class="g-reply" id="g-reply"></pre>
+          <div class="g-verdict" id="g-verdict"></div>
+        </div>
+
+        <div class="callout dated">
+          <span class="label">HONEST LABEL</span>
+          This ladder's replies come from a simple keyword classifier, not a real
+          model — a teaching stand-in for how Gandalf's real levels escalate. The
+          real call against your own local model is the Lab below.
+        </div>
+      </div>
+
+      <!-- panel B: career map -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Career map</h3>
+          <span class="note">tick what you've already got</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Ten skills this course covers. Tick the ones that are actually true for
+          you, and the map ranks four roles by how close you are — with the exact
+          gap left to close for each.
+        </p>
+
+        <div class="skills" id="skills"></div>
+        <div class="rolemap" id="rolemap"></div>
+
+        <div class="callout">
+          <span class="label">HOW TO READ IT</span>
+          A 100% match doesn't mean you'd pass an interview — it means you've got
+          every skill that role's posting asks for. The gap list is the part worth
+          trusting; go work on the gap, not the percentage.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">10 MIN</span></div>
+      <h2>Climb it for real, then map your real gap.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">levels solved / 5, and % of a role's skills you already have</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit26-gauntlet-careers.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's local toolchain install — it calls a local model over Ollama for the gauntlet half, no API key, no network. Save the output: <code>bash labs/unit26-gauntlet-careers.sh | tee log/unit26.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go climb one of these, tonight.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit25/">← Governance, Scoring &amp; Disclosure</a> · Unit 26 · The last unit — the expert track is done. Go rank, report, and get paid.
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breaking Models — the AI red-team course</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="shared/base.css">
+<link rel="stylesheet" href="shared/redteam.css">
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div class="home">
+
+  <img class="hero-banner" src="assets/banner.png" alt="Breaking Models — AI red-team course">
+
+  <header class="hero">
+    <div class="kicker">A HANDS-ON AI RED-TEAM COURSE · 27 UNITS · EVERYTHING RUNS LOCALLY</div>
+    <h1>Break the model.</h1>
+    <p class="sub">
+      From your first jailbreak tonight to your first paid finding. You attack
+      real models you run yourself, you measure every hit with a real number,
+      and every lab fits on one laptop.
+    </p>
+    <p class="thesis">"Jailbreaking agents is the internet coming out, for hackers." — the bet this course is built on.</p>
+  </header>
+
+  <!-- the one rule -->
+  <section class="rules">
+    <div class="callout">
+      <span class="label">THE ONE RULE THAT KEEPS YOU LEGAL</span>
+      You only attack three things: a competition, a program that invited you
+      in writing, or a model you run on your own machine. Never a live product
+      you were not asked to test. Never publish a working exploit before the
+      vendor has fixed it. No real-harm content, ever — you measure the bypass,
+      you do not use it.
+    </div>
+  </section>
+
+  <!-- unit map -->
+  <section class="map">
+    <h2>The ladder</h2>
+    <div id="phases"></div>
+  </section>
+
+  <!-- dated world state -->
+  <section class="world">
+    <div class="callout dated">
+      <span class="label">THE MONEY · AS OF OCT 2026 · THIS BOX GOES STALE ON PURPOSE</span>
+      How the field works stays true for years. Who pays what, and what is in
+      scope, changes in weeks. Unit 1 teaches you to re-check every row here
+      live before you aim a single day of work at it.
+    </div>
+
+    <h2>Where the findings get paid</h2>
+    <div class="table-wrap">
+      <table class="models" id="venues">
+        <thead>
+          <tr><th>venue</th><th>run by</th><th>pays</th><th>what counts</th><th>the catch</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3>The state of the bounty world</h3>
+    <ul class="news" id="news"></ul>
+
+    <p class="fine" id="world-note"></p>
+  </section>
+
+  <!-- foundations: public resources if a term here is new -->
+  <section class="related">
+    <h2>New to this? Start with the foundations</h2>
+    <p class="fine" style="margin-top:0">This course assumes you know roughly how an LLM works. If a term is new, these free resources are where the foundation lives.</p>
+    <div class="rel-grid">
+      <div class="rel-card">
+        <div class="rel-k">HOW LLMS WORK</div>
+        <div class="rel-t">Intro to Large Language Models</div>
+        <div class="rel-p">Tokens, attention, pretraining, post-training — the "why" under every attack here.</div>
+        <code>Karpathy · 3Blue1Brown</code>
+      </div>
+      <div class="rel-card">
+        <div class="rel-k">PROMPT HACKING</div>
+        <div class="rel-t">Learn Prompting — AI Red Teaming</div>
+        <div class="rel-p">The field's origin curriculum: the attack families and the vocabulary.</div>
+        <code>learnprompting.org</code>
+      </div>
+      <div class="rel-card">
+        <div class="rel-k">THE RISK MAP</div>
+        <div class="rel-t">OWASP LLM Top 10</div>
+        <div class="rel-p">The shared taxonomy every unit here tags against. See SCORECARD for coverage.</div>
+        <code>genai.owasp.org</code>
+      </div>
+      <div class="rel-card">
+        <div class="rel-k">THE TACTICS MATRIX</div>
+        <div class="rel-t">MITRE ATLAS</div>
+        <div class="rel-p">The ATT&CK-style matrix for attacks on AI — tactic/technique IDs for your reports.</div>
+        <code>atlas.mitre.org</code>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    Runs offline except the labs, which call real models · Unit 1 uses the
+    <code>claude</code> CLI, Units 2+ use local models you pull in Unit 2 ·
+    <span id="stamp"></span>
+  </footer>
+
+</div>
+
+<script type="module" src="index.js"></script>
+</body>
+</html>

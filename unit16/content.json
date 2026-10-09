@@ -1,0 +1,36 @@
+{
+  "unit": 16,
+  "title": "First Paid Submission",
+  "hook": "You've spent fifteen units winning fights that don't pay you a cent.\n\nSomewhere in your log is a number good enough to submit — and a worse, wordier version of that exact same number that any triager rejects in ten seconds flat.\n\nThe gap between those two reports isn't the attack. It's the five minutes you spend on this page.\n\nTonight you stop practicing and submit.",
+  "mechanism": "A finding pays only when three things are true at once.\n\n**In scope.** The venue has to want this attack class. A flawless jailbreak lands nowhere on a program that excludes jailbreaks.\n\n**Reproducible.** A triager runs your steps once. If it doesn't fire the same way twice, it's an anecdote, not a finding.\n\n**Clearly written.** The report is the product, not the attack. A one-line impact, exact repro steps, and a measured number from your own harness beat a page of narrative every time.\n\nTriagers reject vague reports and out-of-scope reports in seconds — before they even read your technique. Scope first. Then write it like someone has thirty seconds to decide, because they do.",
+  "technique": "Four moves, in order.\n\n**Pick your strongest result.** A Unit 7/8 tool-hijack number, a Unit 12 safety delta, or a Unit 6 win reproduced once against the real frontier target — one allowed API call, logged.\n\n**Scope it.** Run it through the checker below against the venue's field map before you write a word. An out-of-scope finding, however sharp, pays nothing and wastes the triager's time.\n\n**Write it in report format.** Title, target + scope, steps to reproduce, impact, suggested fix — the same five fields the builder above checks for you.\n\n**Submit to one venue, then save the writeup.** Public or private, the saved writeup is the artifact that makes your next submission faster than this one.",
+  "drills": [
+    {
+      "q": "In the scope checker, set finding type to jailbreak and venue to Google AI VRP. In scope, or out?",
+      "answer": "out",
+      "accept": ["out of scope", "excluded", "out-of-scope", "not in scope"],
+      "why": "Google's AI VRP pays up to $30k for AI product-security flaws, but its rules explicitly EXCLUDE plain jailbreaks and prompt injection. A week of jailbreak work aimed there pays nothing, however good the bypass is."
+    },
+    {
+      "q": "Set finding type to fine-tune / abliteration against any venue in the checker. In scope, or out?",
+      "answer": "out",
+      "accept": ["out of scope", "excluded", "out-of-scope", "not in scope"],
+      "why": "None of these four venues grant you local weight access, so a fine-tune or ablation finding has nowhere to land on any of them. That attack class needs a different target: a model you host yourself, or a program that says so in writing."
+    },
+    {
+      "q": "In the report builder, how many of the required fields must turn the checklist green before the report counts as submission-shaped? (number)",
+      "answer": "5",
+      "accept": ["five"],
+      "kind": "number",
+      "why": "Title, target + scope, steps to reproduce, impact, suggested fix — all five. Drop one and a triager reads 'incomplete' and closes the tab before your attack ever gets judged."
+    }
+  ],
+  "lab": "Everything before this unit was practice. This is the real move.\n\n`labs/unit16-submission.sh` reads your own log (`log/portfolio.md`), templates a report from it — title, scope, repro, impact, fix — and checks that report's finding type against the scope data in `data/world-oct-2026.json` for the venue you pick.\n\nIt prints two things: the ready-to-paste report, and the chosen venue's submission URL.\n\nPaste it in. Click submit.\n\nYour number tonight: **one submitted report.** Not a draft, not a finding you're 'going to write up' — the portal confirmation. That's the receipt, and it's the first line of a different kind of résumé.",
+  "sources": [
+    { "kind": "VENUE", "title": "Anthropic Model Safety Bug Bounty", "who": "HackerOne", "url": "https://hackerone.com/anthropic-vdp", "why": "Up to ~$35k for a verified universal jailbreak." },
+    { "kind": "VENUE", "title": "OpenAI (Bugcrowd)", "who": "Bugcrowd", "url": "https://bugcrowd.com/engagements/openai", "why": "Check live scope before you aim." },
+    { "kind": "VENUE", "title": "0din", "who": "Mozilla", "url": "https://0din.ai/", "why": "Good first venue; coordinated disclosure." },
+    { "kind": "VENUE", "title": "HackAPrompt", "who": "Learn Prompting", "url": "https://www.hackaprompt.com/", "why": "Beginner-friendly competition with prizes." }
+  ],
+  "notes": "Panel A (report builder) is a live checklist over 5 text fields — title, target+scope, repro, impact, fix — with an assembled preview, teaching that the report IS the product. Panel B (scope checker) is a teaching-model field map (finding type x venue -> in/out), hand-built from data/world-oct-2026.json's venue rules and honestly labelled as pinned-to-Oct-2026 / re-verify live; Google AI VRP excluding jailbreaks is the deliberate teaching example named in the drills. Lab = labs/unit16-submission.sh: pure POSIX sh, reads log/portfolio.md and data/world-oct-2026.json, no model, prints a templated report + the chosen venue's real URL + a fields-ready/scope readout. The actual number this unit cares about (one submitted report) can only be produced by the learner, outside the script — the lab is honest about that distinction. This is the last unit; footer has no next link."
+}

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 6 — Multi-Turn & Scaling</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 06</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 06 · MULTI-TURN & SCALING</div>
+      <h1>Plot the attack against the number of tries.</h1>
+      <p class="sub">Crescendo, many-shot, and best-of-N — the attacks most likely to transfer.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. First the shape of "just try more", then the shape of a ladder.</h2>
+
+      <!-- panel A: ASR vs N -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · ASR vs N</h3>
+          <span class="note">drag N — simulated curve, teaching model</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Best-of-N retries the same ask with small perturbations. Many-shot grows
+          the number of example exchanges in context. Both share one shape:
+          attack success rises fast, then flattens — <strong>diminishing
+          returns</strong>. Drag N and watch where the curve stops paying off.
+        </p>
+        <div class="controls">
+          <span class="note" style="width:120px">N (shots / tries)</span>
+          <input type="range" id="n-slider" min="0" max="9" step="1" value="5">
+          <span class="note" id="n-value" style="width:52px;text-align:right">32</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="asr-canvas" width="640" height="200"></canvas>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="n" id="asr-value">85%</div>
+            <div class="l">ASR at this N</div>
+          </div>
+          <div class="stat alt">
+            <div class="n" id="asr-marginal">+20</div>
+            <div class="l">gain since last doubling</div>
+          </div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This curve is a teaching model — ASR(N) = round(94 × (1 − 0.93<sup>N</sup>)) —
+          not a measurement. The <em>shape</em> is real: both attacks documented in the
+          sources below report this exact rise-then-flatten pattern. The real numbers
+          come from the Lab.
+        </div>
+      </div>
+
+      <!-- panel B: Crescendo ladder -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Crescendo ladder</h3>
+          <span class="note">add one turn at a time</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Five turns. Each one alone reads as ordinary conversation — a per-turn
+          filter would wave every single one through. Watch the gap between the
+          <strong>per-turn flag score</strong> (stays low) and the
+          <strong>cumulative meter</strong> (climbs anyway).
+        </p>
+        <div class="controls">
+          <button class="primary" id="cresc-add">Add next turn</button>
+          <button id="cresc-reset">Reset</button>
+          <span class="note" id="cresc-step">0 / 5 turns</span>
+        </div>
+        <div class="ladder-log" id="cresc-log"></div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>cumulative compliance meter</span>
+            <span class="meter-pct" id="cresc-pct">0%</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="cresc-fill"></div></div>
+          <div class="meter-verdict" id="cresc-verdict">No turns yet. A fresh conversation looks like nothing.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Read them off the two panels above.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Run best-of-N and the many-shot curve for real.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">N-to-first-success, and the peak ASR the curve hits</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit06-scaling.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's local toolchain is installed. Save the output: <code>bash labs/unit06-scaling.sh | tee log/unit06.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 6 of 16 · Next:
+      <a href="../unit07/"><strong>Indirect Prompt Injection</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 10 — Pro Auditing: Inspect + Petri</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 10</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 10 · PRO AUDITING: INSPECT + PETRI</div>
+      <h1>The framework the labs actually publish with.</h1>
+      <p class="sub">Move from scripts you wrote to the harness that makes a finding credible.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">7 MIN</span></div>
+      <h2>Two panels. First the anatomy, then the cross-check.</h2>
+
+      <!-- panel A: eval anatomy -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Eval anatomy — swap the scorer</h3>
+          <span class="note">same six replies, different grader</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Every eval is three parts: a <strong>sample</strong> (the attack and the
+          model's reply, already logged), a <strong>solver</strong> (the model you
+          ran it against), and a <strong>scorer</strong> (the logic that grades the
+          reply). Swap the scorer below — same six replies, same model — and watch
+          the reported ASR move.
+        </p>
+        <div class="pipeline" id="pipeline">
+          <div class="pipe-box"><span class="pb-k">SAMPLE</span><span class="pb-v">attack + reply</span></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-box"><span class="pb-k">SOLVER</span><span class="pb-v">model under test</span></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-box" id="pipe-scorer"><span class="pb-k">SCORER</span><span class="pb-v" id="pipe-scorer-v">—</span></div>
+        </div>
+        <div class="controls" id="scorer-controls">
+          <button data-scorer="pattern">Pattern match</button>
+          <button data-scorer="model">Model-graded</button>
+        </div>
+        <div class="table-wrap">
+          <table class="pairs" id="eval-table">
+            <thead><tr><th>sample</th><th>reply (trimmed)</th><th>true</th><th>verdict</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="n" id="asr-reported">—</div><div class="l">REPORTED ASR</div></div>
+          <div class="stat alt"><div class="n" id="asr-errors">—</div><div class="l">SCORER ERRORS / 6</div></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          These six replies and their true labels are a teaching set, not a real
+          eval run. The lesson is real: a brittle scorer changes the reported
+          number without the model changing at all. The Lab below runs a real
+          scorer against a real model.
+        </div>
+      </div>
+
+      <!-- panel B: automated vs manual -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Automated vs manual</h3>
+          <span class="note">Petri's judge vs your Unit 4 scores</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Petri runs an agent that probes a target and a judge that scores the
+          result — automatically, at scale. Here are 8 of the same attack
+          attempts, Petri's verdict next to the manual/judge score you'd have
+          given by hand back in Unit 4.
+        </p>
+        <div class="table-wrap">
+          <table class="pairs" id="petri-table">
+            <thead><tr><th>technique</th><th>petri verdict</th><th>manual verdict</th><th>match</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="n" id="agree-pct">—</div><div class="l">AGREEMENT</div></div>
+          <div class="stat alt"><div class="n" id="agree-mismatch">—</div><div class="l">MISMATCHES / 8</div></div>
+        </div>
+        <div class="callout dated">
+          <span class="label">WHY THIS MATTERS</span>
+          Agreement in the 70s–80s is normal for a first pass. You don't throw out
+          the automated run — you spot-check the mismatches, see what the judge
+          missed or over-called, and that becomes the finding you write up next to
+          the ASR number.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the two panels — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Run the harness the labs actually use.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">eval ASR% against qwen2.5:7b, and automated-vs-manual agreement%</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit10-auditing.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's local toolchain is installed. Save the output: <code>bash labs/unit10-auditing.sh | tee log/unit10.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 10 of 16 · Next:
+      <a href="../unit11/"><strong>Post-Training: SFT / LoRA</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

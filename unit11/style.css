@@ -1,0 +1,65 @@
+/* Unit 11 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: knobs + canvas ---------- */
+
+.knobs { display: grid; gap: 12px; }
+
+.knob {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.knob label {
+  font: 13px var(--mono);
+  color: var(--muted);
+  width: 110px;
+  flex: none;
+}
+.knob-val {
+  font: 600 14px var(--mono);
+  color: var(--amber);
+  width: 56px;
+  flex: none;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.loss-canvas {
+  display: block;
+  width: 100%;
+  height: 240px;
+  margin-top: 18px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* ---------- panel B: param bars ---------- */
+
+.parambar-wrap {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.parambar {
+  height: 20px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.pb-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width .25s ease-out;
+}
+.parambar.full .pb-fill { background: var(--muted); }
+.parambar.lora .pb-fill { background: var(--green); }
+
+.bar-note {
+  font-size: 12px;
+  color: var(--dim);
+  margin: 6px 0 0;
+}

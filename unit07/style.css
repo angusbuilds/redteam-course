@@ -1,0 +1,115 @@
+/* Unit 7 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: task / fetched page / planned action ---------- */
+
+.task-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.task-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .1em;
+  color: var(--dim);
+  flex: none;
+}
+.task-text { font-size: 15px; color: var(--text); }
+
+.fetchbox {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.fetchbox-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.fb-label { font: 12px var(--mono); color: var(--dim); }
+.fb-label code { color: var(--cyan); }
+
+#inj-toggle { font: 600 12px var(--mono); }
+#inj-toggle.on {
+  background: var(--red);
+  border-color: var(--red);
+  color: #1a0f0d;
+}
+
+.fetched {
+  margin: 0;
+  padding: 16px 14px;
+  font: 13.5px/1.6 var(--mono);
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.plan-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 16px 0 0;
+  flex-wrap: wrap;
+}
+.plan-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .08em;
+  color: var(--dim);
+  flex: none;
+}
+.plan-text {
+  font: 600 14.5px var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.plan-text.benign { color: var(--green); }
+.plan-text.hijacked { color: var(--red); }
+
+/* ---------- panel B: metric bars ---------- */
+
+.metricbars { display: grid; gap: 14px; }
+
+.mrow-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13.5px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.mrow-pct {
+  font: 700 16px var(--mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.mrow-track {
+  height: 16px;
+  background: var(--bg);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.mrow-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 5px;
+  transition: width .3s ease-out;
+}
+.mrow-fill.benign { background: var(--green); }
+.mrow-fill.attack { background: var(--amber); }
+.mrow-fill.asr { background: var(--red); }
+
+.metric-verdict {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 1.4em;
+  max-width: 62ch;
+}
+.metric-verdict.warn { color: var(--amber); }

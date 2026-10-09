@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 16 — First Paid Submission</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 16</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 16 · FIRST PAID SUBMISSION</div>
+      <h1>Scope it, write it, submit it — the whole point.</h1>
+      <p class="sub">Turn your strongest result into one accepted finding.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">8 MIN</span></div>
+      <h2>Two panels. Build the report, then check where it's allowed to land.</h2>
+
+      <!-- panel A: report builder -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Report builder</h3>
+          <span class="note">fill it in — watch the checklist</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Five fields. Every accepted report has all five. Type anything — even
+          a placeholder — and watch the checklist turn green and the preview
+          assemble itself below.
+        </p>
+        <div class="report-form">
+          <label>Title
+            <input type="text" id="rb-title" placeholder="e.g. Tool-call hijack via a poisoned calendar invite">
+          </label>
+          <label>Target + scope
+            <input type="text" id="rb-scope" placeholder="e.g. my own local agent, Unit 8 setup — authorized">
+          </label>
+          <label>Steps to reproduce
+            <textarea id="rb-repro" rows="3" placeholder="1. set up ...&#10;2. send ...&#10;3. observe ..."></textarea>
+          </label>
+          <label>Impact
+            <input type="text" id="rb-impact" placeholder="e.g. agent runs an attacker-controlled tool call, no confirmation">
+          </label>
+          <label>Suggested fix
+            <input type="text" id="rb-fix" placeholder="e.g. require explicit confirmation before any tool call from untrusted content">
+          </label>
+        </div>
+        <div class="checklist" id="rb-checklist"></div>
+        <div class="report-preview">
+          <div class="rp-label">LIVE PREVIEW</div>
+          <pre class="rp-body" id="rb-preview">(fill in a field to start the report)</pre>
+        </div>
+        <div class="callout">
+          <span class="label">WHY ALL FIVE</span>
+          Drop any one of these and a triager reads "incomplete" and closes the
+          tab. The report is the product — these five fields ARE the product.
+        </div>
+      </div>
+
+      <!-- panel B: scope checker -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Scope checker</h3>
+          <span class="note">teaching model — re-check live scope before you submit</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Pick what you found, then where you're thinking of sending it. The
+          field map below is pinned to October 2026 — scope moves, so re-read
+          the venue's own page the day you submit.
+        </p>
+        <div class="scope-group" id="sc-types"></div>
+        <div class="scope-group" id="sc-venues"></div>
+        <div class="scope-verdict" id="sc-verdict"></div>
+        <div class="callout dated">
+          <span class="label">PINNED OCT 2026 — RE-VERIFY LIVE</span>
+          Scope changes fast. Google's AI VRP excluding jailbreaks, say, could
+          change by the time you read this. This map teaches you WHERE to
+          look — it never replaces reading the venue's own scope page on
+          submission day.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the two panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">20 MIN</span></div>
+      <h2>Submit the real thing.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">one submitted report (receipt = portal confirmation)</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit16-submission.sh</pre>
+      <p class="cue">Run it from the course root. Pure shell, no model, no network call. Save the output: <code>bash labs/unit16-submission.sh | tee log/unit16.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 16 of 16 · The last unit. Go submit.
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

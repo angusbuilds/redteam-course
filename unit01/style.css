@@ -1,0 +1,85 @@
+/* Unit 1 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: tag cards + quiz ---------- */
+
+.tagcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+.tagcard {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 15px;
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color .15s, background .15s;
+}
+.tagcard:hover { border-color: var(--muted); }
+.tagcard.active { border-color: var(--amber); }
+.tagcard.done { border-color: var(--green); }
+.tagcard.done .tc-name::after { content: " ✓"; color: var(--green); }
+.tc-name { font: 600 14px var(--mono); line-height: 1.35; }
+.tc-snip { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+.tag-quiz { margin-top: 16px; }
+.tag-quiz .q { font-size: 15px; margin-bottom: 10px; }
+.q-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.q-btns button { font: 13px var(--mono); }
+.q-btns button.right { background: var(--green); border-color: var(--green); color: #10140f; }
+.q-btns button.wrong { background: var(--red); border-color: var(--red); color: #1a0f0d; }
+.q-verdict { margin-top: 12px; font-size: 14px; line-height: 1.55; display: none; }
+.q-verdict.show { display: block; }
+.q-verdict.ok { color: var(--green); }
+.q-verdict.no { color: var(--red); }
+
+/* ---------- panel B: stacker + refusal bar ---------- */
+
+.stacker { display: grid; gap: 8px; }
+.tech {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px 14px;
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color .15s, background .15s;
+}
+.tech:hover { border-color: var(--muted); }
+.tech.on { border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, var(--panel-2)); }
+.tk-box {
+  width: 16px; height: 16px; border-radius: 4px; flex: none;
+  border: 1.5px solid var(--dim);
+}
+.tech.on .tk-box { background: var(--cyan); border-color: var(--cyan); }
+.tk-label { flex: 1; font-size: 14.5px; }
+.tk-engine { font: 11px var(--mono); padding: 1px 8px; border-radius: 4px; letter-spacing: .04em; }
+.tk-engine.competing { color: var(--amber); background: color-mix(in srgb, var(--amber) 14%, transparent); }
+.tk-engine.mismatched { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+
+.refuse-wrap { margin-top: 20px; }
+.refuse-label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font: 13px var(--mono); color: var(--muted); margin-bottom: 7px;
+}
+.refuse-pct { font: 700 22px var(--mono); color: var(--text); font-variant-numeric: tabular-nums; }
+.refuse-track { height: 26px; background: var(--bg); border-radius: 7px; overflow: hidden; border: 1px solid var(--line); }
+.refuse-fill {
+  height: 100%;
+  width: 95%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--red), var(--amber));
+  transition: width .25s ease-out;
+}
+.refuse-verdict { margin-top: 10px; font-size: 14px; color: var(--muted); min-height: 1.4em; }
+.refuse-verdict.warn { color: var(--amber); }
+.refuse-verdict.crack { color: var(--green); }

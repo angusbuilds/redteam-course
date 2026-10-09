@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-10-08",
+  "note": "These programs change scope and payouts over weeks. Unit 1 teaches you to re-check each one live before you spend a day attacking for it. Verify every row at its own URL the day you submit.",
+  "news": [
+    { "date": "2026-08", "line": "Gray Swan ran a $30k Indirect Prompt Injection arena. Agent arenas are the fastest route to a paid network." },
+    { "date": "2026", "line": "Anthropic's Model Safety Bug Bounty runs on HackerOne, reward up to ~$35k for a verified universal jailbreak." },
+    { "date": "ongoing", "line": "Google's AI VRP pays up to $30k but explicitly excludes plain jailbreaks and prompt injection. Read scope before you aim." },
+    { "date": "ongoing", "line": "0din (Mozilla) and HackAPrompt take findings and writeups from newcomers. Lowest barrier to a first accepted report." }
+  ],
+  "venues": [
+    { "name": "Anthropic Model Safety", "who": "HackerOne", "pays": "up to ~$35k", "scope": "universal jailbreaks, safety bypasses", "rules": "verified + reproducible; authorized targets only" },
+    { "name": "OpenAI", "who": "Bugcrowd", "pays": "varies", "scope": "security + some model safety", "rules": "check live scope; API-side mostly" },
+    { "name": "Google AI VRP", "who": "Google", "pays": "up to $30k", "scope": "AI product security flaws", "rules": "EXCLUDES jailbreaks / prompt injection" },
+    { "name": "Gray Swan Arena", "who": "Gray Swan", "pays": "comp prizes + network", "scope": "live agent red-team challenges", "rules": "top finishers invited to paid private work" },
+    { "name": "HackAPrompt 2.0", "who": "Learn Prompting", "pays": "comp prizes", "scope": "prompt injection / jailbreak comp", "rules": "open, beginner-friendly, timed tracks" },
+    { "name": "0din", "who": "Mozilla", "pays": "varies", "scope": "GenAI vulns + disclosures", "rules": "coordinated disclosure; good first venue" }
+  ]
+}

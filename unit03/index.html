@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 3 — Manual Pattern Speedrun</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 03</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 03 · MANUAL PATTERN SPEEDRUN</div>
+      <h1>Fifteen attacks by hand, one number out.</h1>
+      <p class="sub">Run the classic jailbreak shapes against your own model and score your first attack-success rate.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">10 MIN</span></div>
+      <h2>Two panels. First know the deck, then run the scoreboard.</h2>
+
+      <!-- panel A: the deck -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · The deck</h3>
+          <span class="note">click a card for the shape</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Fifteen named attack shapes — no working payloads, just the move and the
+          engine it pulls. This is the library you carry into the lab below.
+        </p>
+        <div class="deck-grid" id="deck"></div>
+        <div class="deck-detail" id="deck-detail">
+          <span class="dd-hint">click any card above</span>
+        </div>
+        <div class="callout">
+          <span class="label">WHY THIS FIRST</span>
+          You met the two engines — competing objectives, mismatched generalization —
+          in Unit 1. Every shape here is one of those, or both stacked. Naming the
+          engine on sight is what turns a deck of tricks into a method.
+        </div>
+      </div>
+
+      <!-- panel B: scoreboard -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Scoreboard</h3>
+          <span class="note">teaching model — the real run is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Start the clock. Mark each shape hit or miss as you imagine running it.
+          Watch your <strong>attack-success rate</strong> move, and catch the moment
+          your first hit lands — that's your minutes-to-first-finding.
+        </p>
+        <div class="controls">
+          <button class="primary" id="timer-toggle">Start clock</button>
+          <button id="score-reset">Reset scoreboard</button>
+        </div>
+        <div class="score-grid" id="scoreboard"></div>
+        <div class="stats">
+          <div class="stat"><div class="n" id="score-hits">0</div><div class="l">HITS</div></div>
+          <div class="stat alt"><div class="n" id="score-asr">0%</div><div class="l">ASR = HITS / 15</div></div>
+          <div class="stat"><div class="n" id="score-elapsed">00:00</div><div class="l">ELAPSED</div></div>
+          <div class="stat alt"><div class="n" id="score-first">—</div><div class="l">CLOCK AT FIRST HIT</div></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This clock and this scoreboard are a teaching model for keeping pace —
+          they do not call a real model. The real ASR and the real
+          minutes-to-first-finding come from the Lab below, against a model
+          running on your own machine.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the deck and the scoreboard — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">20 MIN</span></div>
+      <h2>Run the deck for real.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">ASR% and minutes-to-first-finding against your local model</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit03-speedrun.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's install. Save the output: <code>bash labs/unit03-speedrun.sh | tee log/unit03.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 3 of 16 · Next:
+      <a href="../unit04/"><strong>Benchmarks & Harness</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

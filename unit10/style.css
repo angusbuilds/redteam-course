@@ -1,0 +1,52 @@
+/* Unit 10 — explorable styles on top of base.css + redteam.css. */
+
+.table-wrap { overflow-x: auto; }
+
+/* ---------- panel A: eval pipeline strip ---------- */
+
+.pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.pipe-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 16px;
+  min-width: 140px;
+  flex: 1;
+}
+.pb-k {
+  font: 600 11px var(--mono);
+  letter-spacing: .1em;
+  color: var(--amber);
+}
+.pb-v { font-size: 13.5px; color: var(--muted); }
+#pipe-scorer { border-color: var(--cyan); }
+#pipe-scorer .pb-k { color: var(--cyan); }
+#pipe-scorer-v { color: var(--text); font-family: var(--mono); font-size: 13px; }
+
+.pipe-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--dim);
+  font-size: 18px;
+  flex: none;
+}
+
+/* scorer toggle re-uses .controls / button / button.primary from base.css —
+   .primary is applied/removed in JS to mark the active scorer. */
+
+/* ---------- verdict cells shared by both tables ---------- */
+
+table.pairs .v-ok, table.pairs .v-no {
+  font-weight: 600;
+}
+table.pairs .v-ok { color: var(--green); }
+table.pairs .v-no { color: var(--red); }

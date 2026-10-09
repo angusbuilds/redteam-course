@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 220" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <rect width="980" height="220" rx="14" fill="#12110f"/>
+  <text x="28" y="40" fill="#9a938a" font-size="13" letter-spacing="2">EVERY UNIT · 7 BEATS · ONE NUMBER OUT</text>
+
+  <!-- beat boxes -->
+  <g>
+    <!-- HOOK -->
+    <rect x="28"  y="64" width="118" height="56" rx="9" fill="#1b1a17" stroke="#322f2b"/>
+    <text x="87"  y="90" fill="#e8e4dc" font-size="13" text-anchor="middle" font-weight="700">HOOK</text>
+    <text x="87"  y="108" fill="#6b655d" font-size="10" text-anchor="middle">looks broken</text>
+    <!-- EXPLORABLE -->
+    <rect x="166" y="64" width="124" height="56" rx="9" fill="#1b1a17" stroke="#4cc9f0"/>
+    <text x="228" y="90" fill="#4cc9f0" font-size="13" text-anchor="middle" font-weight="700">EXPLORABLE</text>
+    <text x="228" y="108" fill="#6b655d" font-size="10" text-anchor="middle">poke it til it clicks</text>
+    <!-- MECHANISM -->
+    <rect x="310" y="64" width="118" height="56" rx="9" fill="#1b1a17" stroke="#322f2b"/>
+    <text x="369" y="90" fill="#e8e4dc" font-size="13" text-anchor="middle" font-weight="700">MECHANISM</text>
+    <text x="369" y="108" fill="#6b655d" font-size="10" text-anchor="middle">&#60;150 words</text>
+    <!-- TECHNIQUE -->
+    <rect x="448" y="64" width="118" height="56" rx="9" fill="#1b1a17" stroke="#322f2b"/>
+    <text x="507" y="90" fill="#e8e4dc" font-size="13" text-anchor="middle" font-weight="700">TECHNIQUE</text>
+    <text x="507" y="108" fill="#6b655d" font-size="10" text-anchor="middle">do it differently</text>
+    <!-- DRILL -->
+    <rect x="586" y="64" width="110" height="56" rx="9" fill="#1b1a17" stroke="#322f2b"/>
+    <text x="641" y="90" fill="#e8e4dc" font-size="13" text-anchor="middle" font-weight="700">DRILL</text>
+    <text x="641" y="108" fill="#6b655d" font-size="10" text-anchor="middle">check yourself</text>
+    <!-- LAB (highlight) -->
+    <rect x="716" y="60" width="124" height="64" rx="9" fill="#1f1a0e" stroke="#f0b429" stroke-width="2"/>
+    <text x="778" y="88" fill="#f0b429" font-size="13" text-anchor="middle" font-weight="700">LAB</text>
+    <text x="778" y="106" fill="#f0b429" font-size="10" text-anchor="middle">one real number</text>
+    <!-- SOURCES -->
+    <rect x="860" y="64" width="92" height="56" rx="9" fill="#1b1a17" stroke="#322f2b"/>
+    <text x="906" y="90" fill="#e8e4dc" font-size="12" text-anchor="middle" font-weight="700">SOURCES</text>
+    <text x="906" y="108" fill="#6b655d" font-size="10" text-anchor="middle">the papers</text>
+  </g>
+
+  <!-- connectors -->
+  <g stroke="#4a463f" stroke-width="2" fill="none">
+    <path d="M146 92 H166"/><path d="M290 92 H310"/><path d="M428 92 H448"/>
+    <path d="M566 92 H586"/><path d="M696 92 H716"/><path d="M840 92 H860"/>
+  </g>
+
+  <!-- the point -->
+  <text x="28" y="170" fill="#e8e4dc" font-size="14">Fourteen of sixteen units run fully offline on your Mac. Every unit ends with a number you produced:</text>
+  <text x="28" y="194" fill="#6ee7a8" font-size="14" font-weight="700">attack-success rate · refusal rate · loss curve · exfiltration rate · minutes-to-first-finding</text>
+</svg>

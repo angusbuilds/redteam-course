@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 12 — Refusal-Direction Ablation</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 12</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 12 · REFUSAL-DIRECTION ABLATION</div>
+      <h1>Delete the refusal with one direction of math.</h1>
+      <p class="sub">Turn an open-weight model into an unconstrained test subject — no training needed.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. First draw the direction, then pull it out.</h2>
+
+      <!-- panel A: the refusal direction -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · The refusal direction</h3>
+          <span class="note">harmful vs harmless activations</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Each dot is one prompt's activation, flattened to 2D for the picture.
+          <strong style="color:var(--red)">Red</strong> is harmful,
+          <strong style="color:var(--cyan)">blue</strong> is harmless. The arrow
+          is the mean of the red dots minus the mean of the blue ones — the
+          single direction that separates them.
+        </p>
+        <canvas id="dir-canvas" width="560" height="280"></canvas>
+        <div class="controls">
+          <button id="dir-toggle">Hide direction</button>
+          <span class="legend"><span class="dot red"></span>harmful<span class="dot blue"></span>harmless</span>
+        </div>
+        <div class="callout">
+          <span class="label">WHY THIS FIRST</span>
+          Arditi et al's finding is exactly this picture: refusal isn't smeared
+          across thousands of weights. In a well-chosen layer, one direction
+          does almost all the separating. Name that direction and you can
+          act on it directly.
+        </div>
+      </div>
+
+      <!-- panel B: orthogonalize -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Orthogonalize</h3>
+          <span class="note">teaching model — the real call is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Flip the switch and watch the direction get subtracted out of every
+          point. The red cluster collapses onto the blue one — the model can
+          no longer tell harmful from harmless, so it stops refusing.
+        </p>
+        <canvas id="ablate-canvas" width="560" height="280"></canvas>
+        <div class="controls">
+          <button class="primary" id="ablate-toggle">Orthogonalize: OFF</button>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>simulated refusal rate</span>
+            <span class="meter-pct" id="meter-pct">90%</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+          <div class="meter-verdict" id="meter-verdict">Direction intact. Model refuses almost every harmful ask.</div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This meter is a teaching model of what ablation does, not a real
+          model's output. The <em>shape</em> is real — remove the one
+          direction that encodes refusal and refusal collapses — but 90%
+          and 10% are illustrative. The Lab below is the real call against a
+          real model.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Ablate the direction for real.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">refusal rate before vs after ablation (X% -&gt; Y%)</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit12-abliteration.sh</pre>
+      <p class="cue">Run it from the course root. It needs Unit 2's local toolchain — if that's not installed yet, it says so and stops cleanly. Save the output: <code>bash labs/unit12-abliteration.sh | tee log/unit12.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 12 of 16 · Next: <a href="../unit13/"><strong>Fine-Tune Attacks</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

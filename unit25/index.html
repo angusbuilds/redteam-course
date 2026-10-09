@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 25 — Governance, Scoring & Disclosure</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 25</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 25 · GOVERNANCE, SCORING & DISCLOSURE</div>
+      <h1>Turn a bug into a report an enterprise and a CNA will accept.</h1>
+      <p class="sub">Map it to the frameworks, score its severity, disclose it right.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. First map the finding, then defend the score.</h2>
+
+      <!-- panel A: map the finding -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Map the finding</h3>
+          <span class="note">click a finding type</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Pick a finding type from earlier units. The widget assigns its
+          OWASP LLM Top-10 ID, its MITRE ATLAS tactic + technique, and the
+          NIST AI RMF function it belongs to —
+          <strong>Govern, Map, Measure, or Manage.</strong>
+        </p>
+        <div class="finding-cards" id="finding-cards"></div>
+        <div class="finding-map" id="finding-map"></div>
+        <div class="callout">
+          <span class="label">WHY THIS MATTERS</span>
+          A reviewer skims the tag line before they read anything else. Get it
+          wrong and the report reads as amateur before they hit your repro
+          steps.
+        </div>
+      </div>
+
+      <!-- panel B: AIVSS scorer -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · AIVSS scorer</h3>
+          <span class="note">teaching model — the real call is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Six factors, the same shape CVSS uses plus one AI-specific one.
+          Drag them and watch the severity move live — this is what a CNA or
+          a client will make you defend out loud.
+        </p>
+        <div class="aivss-sliders" id="aivss-sliders"></div>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>AIVSS severity</span>
+            <span class="meter-pct" id="aivss-score">0.0</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="aivss-fill"></div></div>
+          <div class="meter-verdict" id="aivss-verdict"></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          This is a teaching model of AIVSS's shape — exploitability, impact,
+          and an AI-specific autonomy multiplier — not the official
+          calculator. The <em>direction</em> is real: agentic autonomy
+          amplifies severity rather than just adding to it. Score a real
+          finding at the real calculator, linked in Sources.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use both panels — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">10 MIN</span></div>
+      <h2>Map, score, and disclose one planted finding.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">the AIVSS score (0-10) you compute for it</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit25-governance.sh</pre>
+      <p class="cue">Run it from the course root. Pure shell — no model, no network, nothing to install. Save the output: <code>bash labs/unit25-governance.sh | tee log/unit25.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit24/">← Unbounded Consumption &amp; Weight Poisoning</a> · Unit 25 · Next: <a href="../unit26/"><strong>CTF Gauntlet + Careers</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

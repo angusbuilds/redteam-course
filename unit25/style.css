@@ -1,0 +1,100 @@
+/* Unit 25 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: finding cards + map readout ---------- */
+
+.finding-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+.finding-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 15px;
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color .15s, background .15s;
+}
+.finding-card:hover { border-color: var(--muted); }
+.finding-card.active { border-color: var(--amber); background: color-mix(in srgb, var(--amber) 8%, var(--panel-2)); }
+.fc-name { font: 600 14px var(--mono); line-height: 1.35; }
+.fc-snip { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+.finding-map {
+  margin-top: 16px;
+  padding: 15px 17px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.map-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 7px 0;
+  border-bottom: 1px solid #262320;
+  font-size: 14px;
+}
+.map-row:last-of-type { border-bottom: none; }
+.map-k {
+  font: 600 11px var(--mono);
+  letter-spacing: .08em;
+  color: var(--dim);
+  text-transform: uppercase;
+  flex: none;
+}
+.map-v {
+  text-align: right;
+  color: var(--text);
+  font: 13.5px var(--mono);
+}
+.map-v.nist-govern   { color: var(--cyan); font-weight: 700; }
+.map-v.nist-map      { color: var(--amber); font-weight: 700; }
+.map-v.nist-measure  { color: var(--green); font-weight: 700; }
+.map-v.nist-manage   { color: var(--red); font-weight: 700; }
+
+.map-why {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+/* ---------- panel B: AIVSS sliders ---------- */
+
+.aivss-sliders { display: grid; gap: 16px; }
+
+.aivss-row {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 12px 14px;
+}
+.aivss-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.aivss-label { font-size: 14.5px; font-weight: 560; }
+.aivss-val {
+  font: 700 15px var(--mono);
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+  min-width: 1.5em;
+  text-align: right;
+}
+.aivss-row input[type="range"] { width: 100%; }
+.aivss-help {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: var(--dim);
+  line-height: 1.45;
+}

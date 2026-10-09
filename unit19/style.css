@@ -1,0 +1,93 @@
+/* Unit 19 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: word picker + divergence stream + leak meter ---------- */
+
+.task-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.task-label {
+  font: 600 11px var(--mono);
+  letter-spacing: .1em;
+  color: var(--dim);
+  flex: none;
+}
+.task-text { font-size: 15px; color: var(--text); }
+.task-text span { color: var(--amber); font-weight: 600; }
+
+#diverge-word {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  font: 13.5px var(--mono);
+  padding: 8px 10px;
+}
+#diverge-word:focus { outline: none; border-color: var(--amber); }
+
+.fetched {
+  margin: 16px 0 0;
+  background: #0b0a09;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 14px;
+  min-height: 48px;
+  font: 13.5px/1.6 var(--mono);
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.meter-wrap { margin-top: 18px; }
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 13px var(--mono);
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.meter-pct {
+  font: 700 22px var(--mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.meter-track {
+  height: 26px;
+  background: var(--bg);
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--cyan), var(--red));
+  transition: width .25s ease-out;
+}
+.meter-verdict {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 1.4em;
+}
+
+/* ---------- panel B: loss histogram + threshold stats ---------- */
+
+.chart-wrap {
+  margin-top: 16px;
+  background: #0b0a09;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 6px 4px;
+}
+.chart-wrap canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 640px;
+}

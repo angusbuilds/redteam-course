@@ -1,0 +1,85 @@
+/* Unit 4 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: sample picker ---------- */
+
+.sample-pick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.sample-pick label {
+  font: 11px var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+#sample-select {
+  flex: 1;
+  max-width: 420px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  font: 14px var(--mono);
+  padding: 10px 12px;
+}
+#sample-select:focus { outline: none; border-color: var(--amber); }
+
+.sample-text {
+  background: #0b0a09;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--dim);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font: 14.5px/1.55 var(--mono);
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+/* ---------- panel A: judge row ---------- */
+
+.judge-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  border-radius: 10px;
+  transition: outline-color .15s;
+}
+@media (max-width: 640px) {
+  .judge-row { grid-template-columns: 1fr; }
+}
+.judge-row.agree { outline: 1.5px solid color-mix(in srgb, var(--green) 50%, transparent); outline-offset: 6px; }
+.judge-row.disagree { outline: 1.5px solid color-mix(in srgb, var(--red) 50%, transparent); outline-offset: 6px; }
+
+.judge {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 12px 14px;
+}
+.judge-name { font: 600 13px var(--mono); }
+.judge-kind {
+  font: 11px var(--mono);
+  color: var(--dim);
+  letter-spacing: .04em;
+}
+.judge-verdict {
+  font: 700 15px var(--mono);
+  letter-spacing: .05em;
+  margin-top: 2px;
+}
+.judge.refuse .judge-verdict { color: var(--muted); }
+.judge.comply .judge-verdict { color: var(--cyan); }
+
+/* ---------- panel B: status chip in the pair table ---------- */
+
+td.status {
+  font: 600 11px var(--mono);
+  letter-spacing: .06em;
+}
+td.status.works { color: var(--green); }
+td.status.subset { color: var(--amber); }

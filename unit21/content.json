@@ -1,0 +1,35 @@
+{
+  "unit": 21,
+  "title": "Mech-Interp Attack Surface",
+  "hook": "A model refuses. You don't argue with it. You don't even talk to it.\n\nYou open it up, find the ONE head out of dozens that's doing the refusing, and switch it off.\n\nThe model never \"changes its mind.\" It just stops being able to write refuse into itself — because you deleted the one circuit that does it.\n\nUnit 12 found a direction and subtracted it, once. This unit finds the exact component — layer and head — and shows you both moves: break it (ablation) or push it (a steering vector, dialled up or down).\n\nInterpretability isn't a philosophy. It's an attacker's map. Tonight you read one.",
+  "mechanism": "Mechanistic interpretability reads the computation inside a model. With TransformerLens you cache activations, ablate a head or layer, and watch behavior change — telling you which component causes what.\n\nUnit 12 found refusal lived in one direction; the general tool is bigger. Specific heads implement specific behaviors — **induction heads** copy patterns they saw earlier in the same context. Sparse autoencoders pull interpretable features out of a messy residual stream. Steering vectors add a direction to that stream to push behavior at inference, no training needed.\n\nThis whole family — find the component, then edit it — is catalogued as **MITRE ATLAS: Model Analysis**.",
+  "technique": "**Localize, then edit.** Causally ablate components, one at a time, until the safety behavior breaks — then report the exact layer and head responsible. That's Panel A, done for real.\n\n**Or extract and push.** Take the mean-difference direction between two prompt sets (Unit 12's move), then add multiples of it back into the residual stream at inference — no fine-tuning, no backward pass. That's Panel B, done for real.\n\nBoth run on a small open model, on your Mac, via **TransformerLens**.",
+  "drills": [
+    {
+      "q": "In Panel A, click heads until the refusal-behavior meter crashes. Which L·H index is the one that breaks it?",
+      "answer": "L4H2",
+      "accept": ["l4h2", "l4 h2", "4,2", "layer 4 head 2"],
+      "why": "L4H2 is the one causal bottleneck in this toy grid — ablating it alone crashes the behavior from 96% to 8%. Every other head barely moves the needle: that gap between one head and forty-seven others is what \"localized\" means."
+    },
+    {
+      "q": "In Panel B, slide the steering coefficient to its maximum. At what value (α) does the model fully comply? (number only)",
+      "answer": "5",
+      "accept": ["+5", "5.0", "alpha 5", "a=5"],
+      "kind": "number",
+      "why": "At α = +5 the steering vector fully overrides the baseline refusal — the same move as Unit 12's single direction, just added back in at full strength instead of subtracted out."
+    },
+    {
+      "q": "The mechanism beat names a kind of head that copies patterns it already saw earlier in the same context. What's it called?",
+      "answer": "induction heads",
+      "accept": ["induction head", "induction"],
+      "why": "Induction heads are one of the first circuits mech-interp fully reverse-engineered — a concrete example of \"specific heads implement specific behaviors,\" not just refusal."
+    }
+  ],
+  "lab": "`labs/unit21-mech-interp.sh` loads a small open model with TransformerLens and runs the real version of Panel A — a causal sweep, not a toy grid.\n\nIt ablates each head in turn against a refusal probe (same shape as Unit 1 and Unit 12), measures how much the behavior moves at each one, and keeps the single biggest mover.\n\nNeeds Unit 2's local toolchain plus `transformer_lens` (`pip install transformer_lens`). If either is missing, the script says so and stops cleanly — install it, then come back.\n\nFirst run downloads gpt2-small (or another small model on MPS) — after that it's local, no API key, no network.\n\nYour number tonight: **the exact layer and head** — printed as `L<n>H<n>`, e.g. `L9H6` — causally responsible for the behavior you probed. Write it down. It's the one coordinate, on the whole model, where this behavior lives.",
+  "sources": [
+    {"kind":"REPO","title":"TransformerLens","who":"TransformerLensOrg","url":"https://github.com/TransformerLensOrg/TransformerLens","why":"The mech-interp toolkit, MPS-ok."},
+    {"kind":"READ","title":"A Mathematical Framework for Transformer Circuits","who":"Anthropic","url":"https://transformer-circuits.pub/2021/framework/index.html","why":"How to read heads and circuits."},
+    {"kind":"PAPER","title":"Steering Llama with Contrastive Activation Addition","who":"Rimsky et al · 2312.06681","url":"https://arxiv.org/abs/2312.06681","why":"Steering vectors as behavior control."}
+  ],
+  "notes": "Panel A is a toy 6-layer x 8-head grid (48 heads); only L4H2 has a real effect (meter crashes 96%->8% when ablated), every other head only nudges the meter down 1pt per click with a floor at 88% — the puzzle, not a real circuit. Panel B's compliance curve and sample replies are a teaching model of adding a steering vector to the residual stream, honestly labelled; it generalizes Unit 12's single subtracted direction into one that's added, continuously, by any amount. The real numbers for both come from labs/unit21-mech-interp.sh, which runs a genuine per-head causal ablation sweep with TransformerLens on a small open model and prints the actual L·H most responsible for a refusal probe. MITRE ATLAS tag (Model Analysis) is stated in the mechanism beat per spec."
+}

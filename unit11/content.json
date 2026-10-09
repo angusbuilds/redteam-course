@@ -1,0 +1,35 @@
+{
+  "unit": 11,
+  "title": "Post-Training: SFT / LoRA",
+  "hook": "A model's weights are just numbers.\n\nQwen2.5-0.5B has about 494 million of them.\n\nFine-tuning means changing some of those numbers on purpose, so the model answers the way you want instead of the way it shipped.\n\nTonight you change roughly 1% of them — and the model still works, trained in minutes, on your own Mac.\n\nEvery attack in the next five units starts right here: you, with write access to the weights.",
+  "mechanism": "Fine-tuning nudges a model's weights toward examples you give it. Full fine-tuning updates every weight — for a 7B model, billions of numbers, needing real GPU memory and hours.\n\nLoRA freezes the whole model. It only trains two small matrices bolted onto each layer — about 1% of the parameters. Those two matrices multiply together to approximate the update a full fine-tune would make, at a fraction of the memory and time. That is why a 0.5–3B model fine-tunes on a laptop in minutes.\n\nSFT — supervised fine-tuning — is the data side: you show the model example chats, prompt plus ideal reply, and it learns the pattern. SFT is the *what* you teach. LoRA is *how cheaply* you teach it.",
+  "technique": "Before you fine-tune anything, do three things.\n\n**Pick the small model.** Qwen2.5-0.5B-Instruct. Small enough to train on a laptop in minutes, big enough to show a real loss curve.\n\n**Build tiny data.** 200 to 1000 example chats, one JSON line each — a prompt and the reply you want. Clean data beats more data.\n\n**Watch two numbers.** Tokens/sec tells you if your Mac is keeping up. Final loss tells you if the model actually matched your examples. Both come out of `mlx_lm.lora` for free.\n\nThis harmless run — teaching a model your own FAQ — is the exact command you point at a *refusal* dataset in Units 12 to 14.",
+  "drills": [
+    {
+      "q": "In Panel A, leave rank at its default (8). In Panel B, switch to the 7B model. What percent of the model's parameters does the LoRA adapter train — to one decimal place?",
+      "answer": "0.1",
+      "accept": ["0.1%", "~0.1%", ".1", "0.1 percent"],
+      "kind": "number",
+      "why": "At rank 8 the adapter is about 6.4 million parameters against roughly 7 billion total — under a tenth of one percent. The bigger the base model, the smaller LoRA's slice gets."
+    },
+    {
+      "q": "In Panel A, crank the learning rate slider to its highest setting. Leave rank and steps where they are. Does the loss curve get smoother or noisier?",
+      "answer": "noisier",
+      "accept": ["more noisy", "noisy", "less smooth", "rougher"],
+      "why": "A bigger learning rate means bigger weight updates every step. It can jump past a good spot as easily as find one — that shows up as a jumpier curve, not a smoother one."
+    },
+    {
+      "q": "In Panel A, raise STEPS to the maximum. Leave rank and learning rate where they are. Does the final loss number go up or down?",
+      "answer": "down",
+      "accept": ["decreases", "lower", "drops", "go down", "goes down"],
+      "why": "More steps means more gradient updates — more chances for the tiny LoRA matrices to match your examples. Loss falls as training continues, here and in the real run, until it plateaus."
+    }
+  ],
+  "lab": "You get one small model and one tiny dataset: a few hundred question/answer pairs you write yourself.\n\n`labs/unit11-lora.sh` builds that dataset, then runs `mlx_lm.lora` on Qwen2.5-0.5B-Instruct for a short run — real training, on your Mac, no cloud.\n\nIt prints three things: how many tokens per second your Mac pushed through, the loss it started at, and the loss it ended at. Lower loss means the model matched your examples better.\n\nYour number tonight: **tokens/sec and final training loss.** Write both down — they are your baseline. Units 12 to 14 point this exact command at a very different kind of dataset.",
+  "sources": [
+    { "kind": "REPO", "title": "mlx-lm LoRA guide", "who": "ml-explore", "url": "https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md", "why": "The exact commands for your Mac." },
+    { "kind": "PAPER", "title": "LoRA: Low-Rank Adaptation", "who": "Hu et al · 2106.09685", "url": "https://arxiv.org/abs/2106.09685", "why": "Why training 1% of the weights works." },
+    { "kind": "TOOL", "title": "Ollama / Hugging Face Qwen2.5", "who": "Alibaba", "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct", "why": "The small model you fine-tune first." }
+  ],
+  "notes": "Panel A's loss curve is an illustrative teaching model, not real training: final loss is built to fall monotonically as steps increase for fixed rank/lr, and noise amplitude rises monotonically with learning rate regardless of rank/steps — so all three drills have a deterministic right answer. Panel B's parameter math is real LoRA math (two low-rank matrices per adapted projection, four projections — q/k/v/o — per layer), using rounded total-parameter counts (0.5B≈500M, 7B≈7B) and the shared rank from Panel A; it is labelled a worked example, not mlx-lm's exact default adapter config, which varies by version. Unit 1's venue-map table is dropped from the drill beat here: Unit 11 has no equivalent dataset, and the hard rule for this unit forbids fetching anything beyond ./content.json. Lab = labs/unit11-lora.sh: builds a small chat jsonl and runs mlx_lm.lora on Qwen2.5-0.5B-Instruct for a short run, printing tokens/sec and final loss; it degrades to a 'do Unit 2 first' message when mlx-lm or the model aren't present yet, since both come from Unit 2's local toolchain install."
+}

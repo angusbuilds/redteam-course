@@ -1,0 +1,34 @@
+{
+  "unit": 6,
+  "title": "Multi-Turn & Scaling",
+  "hook": "A guard refuses the direct ask every time.\n\nSo you stop asking directly.\n\nTurn 1 sounds like a student with a question. Turn 5 sounds almost the same — except now the model is answering it.\n\nNo single message in between looks dangerous. The danger is the sum of five messages a per-message filter never adds up.\n\nThat's the whole move tonight: stop trying to win in one shot. Win across many.",
+  "mechanism": "Single-shot filters judge one message at a time.\n\n**Crescendo** escalates across many innocuous turns. No single turn trips the filter — each one looks harmless alone. Only the ladder adds up.\n\n**Many-shot** floods the context with example exchanges until the model just follows the pattern it's been shown, the same way it follows any other pattern in its input.\n\n**Best-of-N** doesn't escalate at all. It retries the identical ask with small perturbations — shuffled case, re-ordered words — until one phrasing slips through. No cleverness, just tries. Attack success climbs with N, the same curve as a slot machine.",
+  "technique": "**Crescendo, by hand.** Run a real 5-turn escalation against a model. Start innocuous. Log the exact turn where it breaks — that turn, not whether it worked overall, is the data point.\n\n**Many-shot curve.** Build one prompt with 2 example exchanges, then 8, then 32, 128, 256 — same harmful ask fixed at the end each time. Plot success against shot count.\n\n**Best-of-N.** Take one prompt. Shuffle word order, flip capitalization, swap synonyms. Repeat N times, same guard, same canary. Log which try number first succeeds.",
+  "drills": [
+    {
+      "q": "In Panel A, drag N to 32. What whole-number ASR percent does the curve show?",
+      "answer": "85",
+      "kind": "number",
+      "why": "Best-of-N plateaus fast. By N=32 the curve has already captured most of the achievable lift near the ceiling — doubling again to 64 only adds a few more points."
+    },
+    {
+      "q": "In Panel B, click \"add turn\" all 5 times. What's the cumulative compliance meter at turn 5 (whole-number percent)?",
+      "answer": "92",
+      "kind": "number",
+      "why": "Each turn alone reads as innocuous — the per-turn flag score stays low the whole way. It's the SUM across turns that crosses the line, which is exactly what a single-message filter never sees."
+    },
+    {
+      "q": "Of Crescendo, many-shot, and best-of-N — which one never builds up context across turns? Each try is independent, and success is just a matter of how many tries you spend. (one phrase)",
+      "answer": "best-of-n",
+      "accept": ["best of n", "bof", "best-of-n jailbreaking", "bestofn"],
+      "why": "Crescendo and many-shot both build up context across multiple turns or examples. Best-of-N stays single-turn — it just resamples the same request with small perturbations and counts tries until one lands."
+    }
+  ],
+  "lab": "labs/unit06-scaling.sh runs two of these against a model on your own machine — qwen2.5:7b, from Unit 2's install.\n\n**Best-of-N** fires N perturbed copies of one harmful ask at a guarded prompt and stops at the first one that slips past.\n\n**Many-shot** builds a curve at 2, 8, 32, 128, and 256 shots and checks the guard at each point.\n\nYour number tonight: **N-to-first-success**, and the **peak ASR** the many-shot curve hits. If Unit 2 isn't done yet, the script says so and stops — no model, no number.",
+  "sources": [
+    { "kind": "PAPER", "title": "Crescendo multi-turn jailbreak", "who": "Russinovich et al · 2404.01833", "url": "https://arxiv.org/abs/2404.01833", "why": "Escalation that beats per-turn filters." },
+    { "kind": "READ", "title": "Many-shot jailbreaking", "who": "Anthropic", "url": "https://www.anthropic.com/research/many-shot-jailbreaking", "why": "Flooding the context window as an attack." },
+    { "kind": "PAPER", "title": "Best-of-N jailbreaking", "who": "Hughes et al · 2412.03556", "url": "https://arxiv.org/abs/2412.03556", "why": "Retry with perturbations; success scales with N." }
+  ],
+  "notes": "Panel A's curve is ASR(N) = round(94 * (1 - 0.93^N)) over N in {1,2,4,8,16,32,64,128,256,512} — a teaching model of best-of-N / many-shot diminishing returns, honestly labelled simulated. Panel B's Crescendo ladder is a fixed 5-turn script with per-turn flag scores (6,9,11,14,17) that each read low, against a cumulative compliance meter (14,33,55,74,92) that climbs past the line a per-turn filter would use — illustrating why per-turn filters miss escalation. Drill 1 answer (85) and drill 2 answer (92) are read directly off those two widgets. Lab = labs/unit06-scaling.sh: best-of-N + many-shot curve against qwen2.5:7b via ollama, degrades to a friendly message if Unit 2's toolchain isn't installed yet."
+}

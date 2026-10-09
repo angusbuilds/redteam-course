@@ -1,0 +1,35 @@
+{
+  "unit": 14,
+  "title": "Preference-Opt + Gradient Attacks",
+  "hook": "DPO can turn a stubborn model compliant in twenty minutes, on your laptop.\n\nGCG can crack a model open with pure math — no persona, no roleplay, just gradients.\n\nBut GCG wants CUDA. Your Mac has Metal.\n\nTonight you learn which attacks run at home, and which one you rent a GPU-hour for.",
+  "mechanism": "Two different levers move a model's behaviour.\n\n**Preference optimization.** DPO, ORPO, and GRPO train directly on pairs: this answer beats that one. No separate reward model, no RL loop. Enough pairs, and the policy drifts toward whichever side you kept marking preferred — including toward compliance.\n\n**Gradient attacks.** GCG optimizes an adversarial suffix by reading the model's own gradients — white-box, dense, and CUDA-heavy. BEAST and AutoDAN approximate the same idea with cheaper search (beam search, genetic search) that runs fine on a laptop GPU.\n\nSame family, wildly different price tags. One needs 200 preference pairs and twenty minutes. The other needs a real CUDA card for an hour.",
+  "technique": "Three moves, in order.\n\n**Train locally first.** `mlx-lm-lora --train-type dpo` on 200 preference pairs, Qwen2.5-0.5B, right on Apple Silicon. Ten to twenty minutes, no GPU rental.\n\n**Reproduce the cheap attacks yourself.** BEAST and AutoDAN are search algorithms — rebuild the idea directly on MPS. Do not clone their CUDA-only repos and fight the build.\n\n**Rent for nanoGCG only.** Its dense gradient steps need real CUDA kernels. One GPU-hour, once, beats days of fighting Metal.\n\nEvery verdict you write down needs two numbers: wall-clock and attack success rate (ASR). Without both, \"local vs rent\" is just a vibe.",
+  "drills": [
+    {
+      "q": "In the technique, how many preference pairs does the local DPO run train on?",
+      "answer": "200",
+      "accept": ["200 pairs", "two hundred"],
+      "kind": "number",
+      "why": "mlx-lm-lora --train-type dpo trains Qwen2.5-0.5B on 200 preference pairs locally — small enough to finish in ten to twenty minutes on Apple Silicon."
+    },
+    {
+      "q": "In the hardware widget, which ONE of the four attacks is CUDA-only — the one you rent a GPU-hour for?",
+      "answer": "nanoGCG",
+      "accept": ["nano gcg", "gcg", "nanogcg"],
+      "why": "DPO, BEAST, and AutoDAN all run on MPS. nanoGCG's dense, per-token gradient steps need real CUDA kernels — that's the one line item worth a rented GPU-hour."
+    },
+    {
+      "q": "In Panel A, if you mark the compliant answer as preferred on all three pairs, does the policy's compliance meter go UP or DOWN?",
+      "answer": "up",
+      "accept": ["increase", "increases", "higher", "rises"],
+      "why": "Each compliant pick pulls the teaching-model meter up by 20 points off a 35% baseline. That's the whole DPO mechanism in miniature: train on what you marked preferred, and the policy moves toward it."
+    }
+  ],
+  "lab": "The lab runs a real DPO pass, then times the cheap attacks on your own machine.\n\n**Stage 1.** `mlx-lm-lora --train-type dpo` trains Qwen2.5-0.5B on 200 preference pairs, right there on MPS.\n\n**Stage 2.** A short probe times a GCG-style suffix search on MPS, so you feel how slow dense gradients are without CUDA.\n\n**Stage 3.** nanoGCG is NOT run. The script prints the rent-a-GPU instruction instead, because CUDA is the whole point of that attack.\n\nYour number tonight: **the hardware verdict** — local-or-rent, with wall-clock and ASR, for each of the four attacks. Write it in your log.",
+  "sources": [
+    { "kind": "PAPER", "title": "DPO: Direct Preference Optimization", "who": "Rafailov et al · 2305.18290", "url": "https://arxiv.org/abs/2305.18290", "why": "Preference optimization without a reward model." },
+    { "kind": "PAPER", "title": "GCG: Universal adversarial attacks", "who": "Zou et al · 2307.15043", "url": "https://arxiv.org/abs/2307.15043", "why": "The gradient suffix attack." },
+    { "kind": "REPO", "title": "nanoGCG", "who": "GraySwanAI", "url": "https://github.com/GraySwanAI/nanoGCG", "why": "A clean GCG implementation — the step you rent a GPU for." }
+  ],
+  "notes": "Panel A simulates DPO's preference-pull as a teaching model (not a trained policy) — the real pass is the Lab's mlx-lm-lora run. Panel B's hardware verdict (MPS vs CUDA-only) encodes the real constraint: DPO/BEAST/AutoDAN run fine on Apple Silicon; GCG-family dense-gradient attacks need CUDA. Lab = labs/unit14-dpo-gradient.sh: stage 1 runs mlx-lm-lora DPO on Qwen2.5-0.5B if installed, stage 2 times an MPS suffix-search probe, stage 3 prints the rent-a-GPU instruction for nanoGCG instead of running CUDA. Degrades to a friendly 'do Unit 2 first' message if the local toolchain isn't installed yet."
+}

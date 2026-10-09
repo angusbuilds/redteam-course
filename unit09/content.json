@@ -1,0 +1,75 @@
+{
+  "unit": 9,
+  "title": "Multi-Agent, Memory, Browser",
+  "hook": "One poisoned message. Five agents acting on it before anyone notices.\n\nIt doesn't stop at five. Insert a poisoned document into a memory store today, and a completely different session — weeks later, a different question — can pull it back out as an instruction.\n\nA single injection used to hit one model, once. Now it hits a swarm, a store, and a browser.",
+  "mechanism": "Injection compounds in systems. One poisoned message in a shared mailbox spreads agent to agent — each one trusts what the last one forwarded. One poisoned document in a memory or RAG store resurfaces in a later, unrelated session, pulled back by nothing more than a shared keyword. A web page with CSS-hidden text injects a browser agent that reads the page as instructions, not just content.\n\nNone of this needs a new bug. It's the same mismatch from Unit 1 — the model can't tell a trusted instruction from retrieved data — replayed across a swarm, a store, and a page. Name where the mismatch lands and you've named the blast radius.",
+  "technique": "(a) Plant a poisoned message in one mailbox of a small local agent swarm. Let it forward on its own. Measure how many hops pass before every agent is acting on it — that's your propagation depth.\n\n(b) Insert one poisoned document into a local sqlite or vector store. Later, run an unrelated query against the same store. Check whether the poisoned text resurfaces inside the assembled context — a resurface rate, not a one-off leak.\n\n(c) Build a local HTML page with CSS-hidden text (off-screen, zero-opacity, font-size:0). Point a local browser-reading agent at it and check whether the hidden text gets read and acted on as an instruction instead of ignored as invisible content.",
+  "drills": [
+    {
+      "q": "Panel A: inject the poisoned message into Scheduler and step the spread until nothing new lights up. How many of the 5 agents end up infected?",
+      "answer": "5",
+      "accept": [
+        "5/5",
+        "five",
+        "all 5",
+        "all five"
+      ],
+      "kind": "number",
+      "why": "Scheduler forwards into Researcher and Coder, both feed Reviewer, and Reviewer feeds Deployer. Every path in this swarm eventually reaches every agent — one poisoned mailbox is a swarm-wide problem, not a one-agent one."
+    },
+    {
+      "q": "In panel A, how many hops does the poison take to reach Deployer, the last agent in the chain?",
+      "answer": "3",
+      "accept": [
+        "3 hops",
+        "three",
+        "three hops"
+      ],
+      "kind": "number",
+      "why": "Scheduler to Researcher/Coder is hop 1, to Reviewer is hop 2, to Deployer is hop 3. Depth is the number worth logging — a 1-hop spread and a 3-hop spread are very different blast radii, even from the same bug."
+    },
+    {
+      "q": "Panel B: insert the poisoned doc, then run the query that shares its tags. Does the hidden instruction resurface in the assembled context — yes or no?",
+      "answer": "yes",
+      "accept": [
+        "y",
+        "true",
+        "resurfaces",
+        "it resurfaces"
+      ],
+      "why": "The store matches on tags, not intent. A query that happens to share keywords with the poisoned doc pulls it straight back into context — in a completely different, later session that never saw the original injection."
+    }
+  ],
+  "lab": "Three mini-experiments, all local, all over Ollama.\n\n**Mailbox relay.** A chain of local agents forwards a message. One copy carries a hidden instruction. The script counts how many hops it survives before an agent actually acts on it — your propagation depth.\n\n**Memory resurface.** A tiny sqlite doc store gets one poisoned row inserted. A later, unrelated query asks the same local model to summarize whatever gets retrieved. The script checks whether the poisoned row's instruction shows up acted-on in the output — resurface: yes or no.\n\n**Hidden-page read.** A local HTML file has real content plus CSS-hidden injected text. A local browser-reading agent is asked to summarize the page. The script checks whether the hidden instruction leaked into the summary — hidden-text: success or fail.\n\nYour numbers tonight: **propagation depth**, **resurface: yes/no**, and **hidden-text: success/fail** — three independent readings of the same compounding bug.",
+  "sources": [
+    {
+      "kind": "REPO",
+      "title": "InjecAgent",
+      "who": "UIUC",
+      "url": "https://github.com/uiuc-kang-lab/InjecAgent",
+      "why": "Agent injection benchmark, extendable to memory."
+    },
+    {
+      "kind": "READ",
+      "title": "OWASP Top 10 for LLM Apps",
+      "who": "OWASP",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "why": "Memory and excessive-agency risks, catalogued."
+    },
+    {
+      "kind": "READ",
+      "title": "Indirect injection (Greshake)",
+      "who": "Greshake et al · 2302.12173",
+      "url": "https://arxiv.org/abs/2302.12173",
+      "why": "The mechanism these all extend."
+    },
+    {
+      "kind": "REPO",
+      "title": "Decepticon — autonomous red-team agent",
+      "who": "BitterSecurity · 5.7k★",
+      "url": "https://github.com/BitterSecurity/Decepticon",
+      "why": "The production-shaped multi-agent kill-chain. Study its architecture as the exemplar for where agent attacks go."
+    }
+  ],
+  "notes": "Panel A is a 5-agent DAG (Scheduler, Researcher, Coder, Reviewer, Deployer): sched -> research,coder; research,coder -> reviewer; reviewer -> deploy. Max depth 3 hops, all 5 infected — a teaching model of swarm propagation, honestly labelled as such in the callout. Panel B is a 5-doc store (4 legit + 1 poisoned) retrieved by shared tags, not a real embedding model — insert the poisoned doc, then click the query that shares its tags to watch it resurface in the assembled-context box; the poison doc's text uses the reserved example.test domain, never a live address. Lab = labs/unit09-multiagent.sh: three tiny local experiments (mailbox relay, sqlite doc resurface, hidden-text HTML read) over Ollama; degrades to a 'do Unit 2 first' message if ollama/python3/sqlite3 aren't ready yet."
+}

@@ -1,0 +1,88 @@
+{
+  "unit": 12,
+  "title": "Refusal-Direction Ablation",
+  "hook": "A model refuses. You don't train it. You don't fine-tune it. You don't even touch a weight by hand.\n\nYou find ONE direction in its activations — the direction that means \"refuse\" — and you subtract it.\n\nNow it answers everything you ask. No gradient descent. No labelled dataset. About fifteen minutes of linear algebra on a laptop.\n\nThis is the cheapest way there is to own an open-weight model. Tonight you draw the arrow. Then you pull it out.",
+  "mechanism": "Every open-weight model has a reflex: see a harmful prompt, write a refusal. Arditi et al found that reflex isn't spread across the network — it lives in one direction in activation space.\n\nFind it like this. Run about 100 harmful prompts and about 100 harmless ones through the model. At a middle layer, average the harmful activations, average the harmless ones, and subtract. That difference vector IS \"refuse.\"\n\nNow orthogonalize: subtract that direction's share out of every layer's output, on every token, for every prompt that follows. The model can no longer write \"refuse\" into its own residual stream.\n\nNo backward pass. No dataset of labelled examples. No fine-tuning run. Just a mean, a subtraction, and the safety behaviour is gone.",
+  "technique": "On **Qwen2.5-1.5B** or **Llama-3.2-3B**, run about 100 harmful prompts and about 100 harmless ones through the model and record each layer's last-token activation.\n\nTake the **mean difference** — the harmful average minus the harmless average — at a middle layer, then normalize it. That's your refusal direction.\n\n**Orthogonalize** it out of every layer's output, then run a held-out set of 30 prompts the model has never seen, before and after, and count refusals both times.\n\nThis is the cheapest \"own the model\" skill in the course. No backward pass, no training loop, no GPU you don't already have.",
+  "drills": [
+    {
+      "q": "In Panel A, which colour marks the HARMLESS prompts?",
+      "answer": "blue",
+      "accept": [
+        "the blue points",
+        "blue dots",
+        "blue ones"
+      ],
+      "why": "Harmless prompts are drawn in blue, harmful ones in red. The arrow runs from the blue centroid to the red one — that vector is the refusal direction."
+    },
+    {
+      "q": "In Panel B, before you flip Orthogonalize on, the refusal-rate meter reads about what percent?",
+      "answer": "90",
+      "accept": [
+        "90%",
+        "~90",
+        "about 90",
+        "90 percent"
+      ],
+      "kind": "number",
+      "why": "90% is the honest baseline — most open models refuse a direct harmful ask almost every time, before any attack at all."
+    },
+    {
+      "q": "What's the one-word technique for subtracting the refusal direction out of every layer's output?",
+      "answer": "orthogonalize",
+      "accept": [
+        "orthogonalization",
+        "orthogonalizing",
+        "ablation",
+        "abliteration"
+      ],
+      "why": "Orthogonalizing removes the component of every activation that points along the refusal direction — the model literally can't write \"refuse\" into itself any more."
+    }
+  ],
+  "lab": "unit12-abliteration.sh extracts the refusal direction from a small local model and ablates it, live on your machine.\n\nIt collects activations on harmful and harmless prompts, takes the mean difference at a middle layer, then orthogonalizes that direction out of every layer's output.\n\nThen it runs a held-out set the model never saw — before ablation, and after — and counts how many answers are refusals each time.\n\nNeeds Unit 2's local toolchain (python plus a model backend). If that's not installed yet, the script says so and stops cleanly — run Unit 2, then come back.\n\nYour number tonight: **refusal rate before vs after** — X% -> Y%. Write both down. A model that still refuses after ablation isn't nothing — it means the direction lives at a different layer, and finding it is the next rep.",
+  "sources": [
+    {
+      "kind": "PAPER",
+      "title": "Refusal is mediated by a single direction",
+      "who": "Arditi et al · 2406.11717",
+      "url": "https://arxiv.org/abs/2406.11717",
+      "why": "The paper behind abliteration."
+    },
+    {
+      "kind": "REPO",
+      "title": "mlxterp",
+      "who": "coairesearch",
+      "url": "https://github.com/coairesearch/mlxterp",
+      "why": "Interpretability on MLX, for the activation work on your Mac."
+    },
+    {
+      "kind": "READ",
+      "title": "HarmBench",
+      "who": "CAIS",
+      "url": "https://github.com/centerforaisafety/HarmBench",
+      "why": "The held-out set to measure refusal honestly."
+    },
+    {
+      "kind": "REPO",
+      "title": "heretic — automatic abliteration",
+      "who": "p-e-w · 28k★",
+      "url": "https://github.com/p-e-w/heretic",
+      "why": "Fully automatic refusal removal via refusal-rate/KL co-minimization — the current state of the art."
+    },
+    {
+      "kind": "REPO",
+      "title": "abliterator",
+      "who": "FailSpy",
+      "url": "https://github.com/FailSpy/abliterator",
+      "why": "The hands-on toolkit for the refusal-direction attack; MPS-ok up to ~8B on your Mac."
+    },
+    {
+      "kind": "REPO",
+      "title": "refusal_direction",
+      "who": "andyrdt (Arditi et al.)",
+      "url": "https://github.com/andyrdt/refusal_direction",
+      "why": "The reference code for the paper this unit reproduces."
+    }
+  ],
+  "notes": "Panel A is a teaching scatter: illustrative 2D activations, harmful vs harmless, with the mean-difference arrow drawn between centroids. Panel B is a teaching toggle: flipping Orthogonalize collapses the red points toward blue and drops a simulated refusal meter from 90% to 10% — both numbers are illustrative, honestly labelled, not from a real model. The real call is labs/unit12-abliteration.sh, which looks for mlx_lm or transformers, runs real hook-based extraction + orthogonalization on Qwen2.5-1.5B when a backend is present, and degrades to a 'do Unit 2 first' message otherwise. Confirmed 2026-10-08: this machine has no third-party python packages, so the script correctly takes the degrade path — the real extraction/hook code is written but unexercised here."
+}

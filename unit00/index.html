@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 0 — Start Here</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 00</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 00 · START HERE</div>
+      <h1>What a model is, what the law is, and the one idea under every attack.</h1>
+      <p class="sub">The gentle door. Brand new? Start here, then Unit 1 is your first win.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">5 MIN</span></div>
+      <h2>Two panels. First watch it guess, then watch it get confused.</h2>
+
+      <!-- panel A: it just predicts text -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · It just predicts text</h3>
+          <span class="note">pick a word, or type one</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          This is a toy — a tiny lookup table over a handful of words, not a
+          real model. But the <strong>mechanic</strong> is real: pick a word,
+          see the top-3 guesses for what comes next, click one to chain it.
+          That loop, run billions of times on real text, is what a language
+          model is.
+        </p>
+
+        <div class="toy-chips" id="toy-chips"></div>
+
+        <div class="toy-input-row">
+          <input type="text" id="toy-input" placeholder="or type any word…" spellcheck="false" aria-label="Type a starter word">
+          <button id="toy-go">Guess</button>
+          <button id="toy-reset">Reset</button>
+        </div>
+
+        <div class="toy-readout">
+          <span class="toy-readout-label">GENERATED SO FAR</span>
+          <span class="toy-readout-text" id="toy-generated">—</span>
+        </div>
+
+        <div class="toy-bars" id="toy-bars"></div>
+        <div class="toy-note" id="toy-note"></div>
+
+        <div class="callout">
+          <span class="label">WHY THIS FIRST</span>
+          There's no plan in there, no model of the world, no idea what a
+          "red team" is. Just a ranked guess, taken over and over. Everything
+          this course teaches you is a way to steer that guess.
+        </div>
+      </div>
+
+      <!-- panel B: data vs instructions -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Data vs instructions</h3>
+          <span class="note">toggle the fetched page</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          A model's whole world is one context window — system rules, your
+          text, and anything it reads, all mixed into the same stream. Toggle
+          a hidden instruction inside a page it fetches and watch who it
+          actually listens to.
+        </p>
+
+        <div class="ctx-formula">
+          <span class="ctx-chip sys">SYSTEM RULES</span><span class="ctx-plus">+</span>
+          <span class="ctx-chip usr">USER TEXT</span><span class="ctx-plus">+</span>
+          <span class="ctx-chip pg">FETCHED PAGE</span>
+        </div>
+        <p class="ctx-sub">One window. The model can't see which bracket a line came from.</p>
+
+        <div class="ctx-row">
+          <span class="ctx-row-label">SYSTEM RULES</span>
+          <span class="ctx-row-text">Be a helpful research assistant. Be concise.</span>
+        </div>
+        <div class="ctx-row">
+          <span class="ctx-row-label">USER TEXT</span>
+          <span class="ctx-row-text" id="ctx-task"></span>
+        </div>
+
+        <div class="ctx-fetchbox">
+          <div class="ctx-fetchbox-head">
+            <span class="ctx-fb-label">FETCHED: <code>read_page("news.example")</code></span>
+            <button id="ctx-toggle">hide an instruction in the page</button>
+          </div>
+          <pre class="ctx-page" id="ctx-page"></pre>
+        </div>
+
+        <div class="ctx-readout-wrap">
+          <span class="ctx-readout-label">MODEL'S REPLY →</span>
+          <span class="ctx-readout-text" id="ctx-readout"></span>
+        </div>
+
+        <div class="callout" id="ctx-callout">
+          <span class="label" id="ctx-callout-label">DATA, NOT INSTRUCTIONS</span>
+          <span id="ctx-callout-body">The page is something the model is supposed to read ABOUT. Toggle the hidden line and it becomes something the model reads AS ORDERS.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">10 MIN</span></div>
+      <h2>Tag ten attacks. Build your map.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">how many of 10 you tagged right</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit00-foundations.sh</pre>
+      <p class="cue">Run it from the course root. Pure shell — no model, no API key, no install. Save the output: <code>bash labs/unit00-foundations.sh | tee log/unit00.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit01/"><strong>Begin → Unit 1 · First Win + Field Map</strong></a> · 27 units
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

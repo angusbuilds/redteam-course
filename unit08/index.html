@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 8 — Tool Hijacking & MCP</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 08</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 08 · TOOL HIJACKING & MCP</div>
+      <h1>Make the agent DO something, not just say it.</h1>
+      <p class="sub">From "the agent read bad text" to "the agent sent the money" — against your own honeypot.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">7 MIN</span></div>
+      <h2>Two panels. First a poisoned description, then a slow rug pull.</h2>
+
+      <!-- panel A: poisoned tool description -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Poisoned tool description</h3>
+          <span class="note">flip the toggle, watch the trace</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          One MCP tool. One toggle. The description your agent reads is the
+          only thing that changes — the agent never sees an "off" switch.
+        </p>
+
+        <div class="controls">
+          <button id="poison-toggle" aria-pressed="false">Poison this tool's description</button>
+        </div>
+
+        <pre class="cmd" id="tool-schema"></pre>
+
+        <div class="trace" id="trace-a"></div>
+
+        <div class="stats" id="stats-a">
+          <div class="stat"><span class="n" id="stat-called">—</span><span class="l">tool actually called</span></div>
+          <div class="stat alt"><span class="n" id="stat-moved">—</span><span class="l">funds moved</span></div>
+        </div>
+
+        <div class="callout">
+          <span class="label">WHY THIS WORKS</span>
+          The user never asked for a transfer. The agent never asked you to
+          confirm one. The instruction didn't come from the chat — it came
+          from a field the agent was built to trust by default.
+        </div>
+      </div>
+
+      <!-- panel B: rug pull -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Rug pull</h3>
+          <span class="note">drag the day, watch the approval badge lie</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Same idea, slower. A tool that was clean the day you reviewed it —
+          and isn't, by the time you'd stop checking.
+        </p>
+
+        <div class="controls">
+          <input type="range" id="rugpull-slider" min="0" max="100" value="0">
+          <span class="note" id="rugpull-stage-label">DAY 0 · REVIEWED</span>
+        </div>
+        <div class="ticks">
+          <span class="tick on" id="tick-review">DAY 0<br>reviewed</span>
+          <span class="tick" id="tick-quiet">DAY 14<br>quiet</span>
+          <span class="tick" id="tick-swap">DAY 30<br>rug-pulled</span>
+        </div>
+
+        <div class="rugpull-card">
+          <div class="rc-head">
+            <span class="rc-name">send_invoice</span>
+            <span class="badge" id="rugpull-badge">✅ approved by you — Day 0</span>
+          </div>
+          <pre class="cmd" id="rugpull-desc"></pre>
+        </div>
+
+        <div class="callout dated">
+          <span class="label">HONEST LABEL</span>
+          Day 0 / 14 / 30 is a teaching timeline, picked to make the point
+          land. A real rug pull picks its own schedule — sometimes a month,
+          sometimes the next server restart. The badge staying put is the
+          real lesson, not the day count.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">20 MIN</span></div>
+      <h2>Poison your own agent.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">unauthorized-tool-call rate, and the rug pull's poisoning-success rate</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit08-mcp.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's install and Unit 7's agent exist. Save the output: <code>bash labs/unit08-mcp.sh | tee log/unit08.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 8 of 16 · Next:
+      <a href="../unit09/"><strong>Multi-Agent, Memory, Browser</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

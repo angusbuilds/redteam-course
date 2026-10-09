@@ -1,0 +1,116 @@
+/* Red-team course — components on top of base.css that the AI course didn't need.
+   Linked after base.css, before the per-unit style.css. */
+
+/* ---------- per-phase accent ---------- */
+/* --accent defaults to the brand red; shared/unit.js sets it per unit from the
+   unit number (Phase 0 cyan · A amber · B cyan · C red · D green · E amber · F violet).
+   The brand stays red; the accent is a secondary signal on rail + kicker + beat bar. */
+:root { --accent: var(--red); }
+.rail .unit-no { color: var(--accent); }
+.rail a.on { color: var(--accent); }
+.rail a.on::before { color: var(--accent); }
+header.top .kicker { color: var(--accent); }
+.beat-tag > span:first-child { color: var(--accent); }
+
+/* ---------- animation (progressive enhancement; off under reduced-motion) ---------- */
+/* Hidden state applies ONLY when JS added .js-anim — if JS fails, everything stays visible. */
+.js-anim header.top { opacity: 0; transform: translateY(10px); animation: rise .5s .05s ease-out forwards; }
+.js-anim section.beat { opacity: 0; transform: translateY(14px); transition: opacity .5s ease-out, transform .5s ease-out; }
+.js-anim section.beat.in { opacity: 1; transform: none; }
+.js-anim .panel { transition: border-color .15s, transform .15s, box-shadow .25s; }
+.js-anim .panel:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent); }
+
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* a bypass/leak landing uses this flash — the one "something changed" accent */
+@keyframes change-flash { 0% { background: color-mix(in srgb, var(--accent) 24%, transparent); } 100% { background: transparent; } }
+.changed { animation: change-flash 1s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js-anim header.top,
+  .js-anim section.beat { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+  .changed { animation: none !important; }
+}
+
+/* ---------- SOURCES beat: paper / repo / venue link cards ---------- */
+
+/* "nothing italic" for a dyslexic reader: emphasis is weight + colour, not slant */
+.beat em, .panel em, .top .sub em, .callout em { font-style: normal; font-weight: 600; color: var(--text); }
+
+.sources { display: grid; gap: 10px; }
+
+.source-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color .15s, transform .15s;
+}
+a.source-card:hover { border-color: var(--cyan); transform: translateY(-1px); }
+
+.sc-kind {
+  font: 600 10px/1.9 var(--mono);
+  letter-spacing: .12em;
+  color: var(--bg);
+  background: var(--cyan);
+  border-radius: 4px;
+  padding: 0 7px;
+  flex: none;
+  margin-top: 2px;
+}
+.sc-body { display: flex; flex-direction: column; gap: 2px; }
+.sc-title { font-size: 15.5px; font-weight: 620; }
+.sc-who { font: 12.5px var(--mono); color: var(--dim); }
+.sc-why { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-top: 3px; }
+
+/* ---------- a highlighted "do this now" lab line ---------- */
+
+.lab-goal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 2px 0 18px;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--green) 10%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--green) 35%, var(--line));
+  border-radius: 10px;
+}
+.lab-goal .num {
+  font: 600 12px var(--mono);
+  letter-spacing: .1em;
+  color: var(--green);
+  flex: none;
+}
+.lab-goal .txt { font-size: 14.5px; color: var(--text); }
+
+/* ---------- a result readout (the one number the unit produces) ---------- */
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.readout .cell {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.readout .cell .big {
+  font: 700 30px var(--mono);
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.readout .cell .lbl {
+  font: 11px/1.5 var(--mono);
+  color: var(--muted);
+  letter-spacing: .06em;
+  margin-top: 8px;
+}

@@ -1,0 +1,69 @@
+/* Unit 3 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: the deck + detail readout ---------- */
+
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 9px;
+}
+.deck-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  color: var(--text);
+  font: 600 13.5px var(--mono);
+  text-align: left;
+  transition: border-color .15s, background .15s;
+}
+.deck-card:hover { border-color: var(--muted); }
+.deck-card.active {
+  border-color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 8%, var(--panel-2));
+}
+
+.deck-detail { margin-top: 16px; min-height: 1px; }
+.dd-hint { color: var(--dim); font: 13px var(--mono); }
+.dd-name { font: 700 16px var(--mono); margin-bottom: 8px; }
+.dd-shape {
+  font-size: 14.5px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  max-width: 58ch;
+}
+.dd-engine {
+  display: inline-block;
+  font: 11px var(--mono);
+  padding: 2px 9px;
+  border-radius: 5px;
+  letter-spacing: .05em;
+}
+.dd-engine.competing { color: var(--amber); background: color-mix(in srgb, var(--amber) 14%, transparent); }
+.dd-engine.mismatched { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+.dd-engine.both { color: var(--green); background: color-mix(in srgb, var(--green) 14%, transparent); }
+
+/* ---------- panel B: scoreboard + clock ---------- */
+
+.score-grid {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+}
+.score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 9px 13px;
+}
+.sr-name { font-size: 14px; }
+.sr-btns { display: flex; gap: 6px; flex: none; }
+.sr-btns button { font: 12px var(--mono); padding: 6px 12px; }
+.sr-btns button[data-m="hit"].on { background: var(--green); border-color: var(--green); color: #10140f; }
+.sr-btns button[data-m="miss"].on { background: var(--red); border-color: var(--red); color: #1a0f0d; }

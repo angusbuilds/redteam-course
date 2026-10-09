@@ -1,0 +1,94 @@
+/* Unit 13 — explorable styles on top of base.css + redteam.css. */
+
+/* ---------- panel A: poison tabs ---------- */
+
+.poison-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.poison-tab {
+  font: 500 13.5px var(--sans);
+}
+.poison-tab.active {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #17140d;
+  font-weight: 600;
+}
+
+.recipe {
+  font-size: 14.5px;
+  color: var(--text);
+  margin: 0 0 18px;
+  padding: 11px 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.recipe-label {
+  display: block;
+  font: 600 10.5px var(--mono);
+  letter-spacing: .12em;
+  color: var(--dim);
+  margin-bottom: 5px;
+}
+
+.poison-why {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 14px 0 0;
+  max-width: 62ch;
+}
+
+/* ---------- shared meter (before/after bars, panel A + panel B) ---------- */
+
+.meter-wrap { margin-top: 14px; }
+.meter-wrap:first-of-type { margin-top: 2px; }
+
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 12px var(--mono);
+  letter-spacing: .02em;
+  color: var(--muted);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+.meter-pct {
+  font: 700 18px var(--mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+.meter-track {
+  height: 20px;
+  background: var(--bg);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 5px;
+  transition: width .25s ease-out;
+  background: var(--cyan);
+}
+.meter-fill.ok { background: linear-gradient(90deg, var(--cyan), var(--green)); }
+.meter-fill.bad { background: linear-gradient(90deg, var(--amber), var(--red)); }
+
+.meter-verdict { margin-top: 10px; font-size: 14px; color: var(--muted); min-height: 1.4em; }
+.meter-verdict.warn { color: var(--amber); }
+.meter-verdict.crack { color: var(--green); }
+
+/* ---------- panel B: slider readout ---------- */
+
+.n-readout {
+  font: 13px var(--mono);
+  color: var(--muted);
+  white-space: nowrap;
+}

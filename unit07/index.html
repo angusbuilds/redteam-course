@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 7 — Indirect Prompt Injection</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 07</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 07 · INDIRECT PROMPT INJECTION</div>
+      <h1>The attack rides in on the data, not the prompt.</h1>
+      <p class="sub">Your thesis, measured: malicious instructions hidden in the content an agent reads.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. Flip one switch, watch the plan — and the numbers — flip with it.</h2>
+
+      <!-- panel A: data vs instructions -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Data vs instructions</h3>
+          <span class="note">toggle the injection</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Your agent has ONE task. It fetches a page to do that task. Toggle
+          whether the page also carries a hidden instruction written for the
+          agent — not for you.
+        </p>
+
+        <div class="task-line">
+          <span class="task-label">AGENT'S TASK</span>
+          <span class="task-text" id="agent-task"></span>
+        </div>
+
+        <div class="fetchbox">
+          <div class="fetchbox-head">
+            <span class="fb-label">FETCHED: <code>read_webpage("dailybrief.example")</code></span>
+            <button id="inj-toggle">inject instruction</button>
+          </div>
+          <pre class="fetched" id="fetched-content"></pre>
+        </div>
+
+        <div class="plan-line">
+          <span class="plan-label">AGENT'S PLANNED ACTION →</span>
+          <span class="plan-text" id="plan-text"></span>
+        </div>
+
+        <div class="callout" id="panelA-callout">
+          <span class="label" id="panelA-label">DATA, NOT INSTRUCTIONS</span>
+          <span id="panelA-body">The page is supposed to be something the agent reads about. Toggle the injection and it becomes something the agent obeys.</span>
+        </div>
+      </div>
+
+      <!-- panel B: three metrics -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Three metrics</h3>
+          <span class="note">teaching model — the real call is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Same toggle. Three numbers that only tell the truth together — the
+          real version of this comes from a real model, in the Lab below.
+        </p>
+
+        <div class="metricbars">
+          <div class="mrow">
+            <div class="mrow-label"><span>benign utility</span><span class="mrow-pct" id="m-benign-pct">92%</span></div>
+            <div class="mrow-track"><div class="mrow-fill benign" id="m-benign-fill" style="width:92%"></div></div>
+          </div>
+          <div class="mrow" id="m-attack-row">
+            <div class="mrow-label"><span>utility under attack</span><span class="mrow-pct" id="m-attack-pct">—</span></div>
+            <div class="mrow-track"><div class="mrow-fill attack" id="m-attack-fill" style="width:0%"></div></div>
+          </div>
+          <div class="mrow" id="m-asr-row">
+            <div class="mrow-label"><span>attack-success-rate</span><span class="mrow-pct" id="m-asr-pct">—</span></div>
+            <div class="mrow-track"><div class="mrow-fill asr" id="m-asr-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="metric-verdict" id="metric-verdict">No injection yet — nothing to measure.</div>
+
+        <div class="callout dated">
+          <span class="label">HONEST LABEL</span>
+          These bars are a teaching model of how injection trades utility for
+          control, not a real model's output. The Lab below is the real call
+          against a real model.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Poison the tool, not the prompt.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">ASR%, and the benign-utility it costs</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit07-injection.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's local toolchain install. It calls a local model over Ollama — no API key, no network. Save the output: <code>bash labs/unit07-injection.sh | tee log/unit07.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 7 of 16 · Next:
+      <a href="../unit08/"><strong>Tool Hijacking & MCP</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

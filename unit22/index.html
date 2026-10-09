@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 22 — MCP Supply-Chain Audit</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 22</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 22 · MCP SUPPLY-CHAIN AUDIT</div>
+      <h1>Audit the tool before you trust it.</h1>
+      <p class="sub">Poisoned descriptions, rug-pulls, and typosquats — caught before they run.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">7 MIN</span></div>
+      <h2>Two panels. First catch the bad server, then watch scale hide it.</h2>
+
+      <!-- panel A: flag the bad server -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Flag the bad server</h3>
+          <span class="note">scan, then flag</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Eight server listings, straight off a registry page. Four are clean.
+          Four hide one of three threats: a <strong>poisoned description</strong>,
+          a <strong>rug-pull</strong> update, or a <strong>typosquatted</strong>
+          name. Hit <strong>scan raw</strong> for the audit evidence, then
+          <strong>flag</strong> the ones you'd block.
+        </p>
+
+        <div class="registry-ref">
+          <span class="rr-label">KNOWN-GOOD REGISTRY</span>
+          <span class="rr-list" id="registry-list"></span>
+        </div>
+
+        <div class="svcards" id="svcards"></div>
+
+        <div class="stats" id="score-stats">
+          <div class="stat"><span class="n" id="stat-caught">0/4</span><span class="l">threats caught</span></div>
+          <div class="stat alt"><span class="n" id="stat-false">0</span><span class="l">false flags</span></div>
+        </div>
+
+        <div class="callout">
+          <span class="label">WHY THIS FIRST</span>
+          All three threat classes here show up in real incidents — ClawHub
+          alone pulled 335 malicious plugins built this way. Catch them on
+          the listing page, before any of them run.
+        </div>
+      </div>
+
+      <!-- panel B: registry scale -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Registry scale</h3>
+          <span class="note">teaching model — the real call is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          A smarter payload doesn't misbehave on call one. It waits. Drag the
+          slider to set how many calls it stays clean before it turns, and
+          watch a one-shot review's odds of ever landing on that call.
+        </p>
+
+        <div class="controls">
+          <input type="range" id="delay-slider" min="2" max="30" value="5">
+          <span class="note" id="delay-n-label">TURNS ON CALL 5</span>
+        </div>
+
+        <div class="delay-strip" id="delay-strip"></div>
+
+        <div class="readout" id="delay-readout"></div>
+
+        <div class="callout dated">
+          <span class="label">HONEST LABEL</span>
+          This bar is a teaching model of sampling odds, not a measured
+          attack. The direction is real — a longer delay shrinks a one-shot
+          reviewer's odds of landing on the bad call. The Lab below runs a
+          real static audit instead of sampling luck.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use Panel A and Panel B — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">12 MIN</span></div>
+      <h2>Run the audit for real.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">how many of the seed's planted threats you flagged correctly</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit22-mcp-audit.sh</pre>
+      <p class="cue">Run it from the course root. No model, no network — plain python3 and grep. Save the output: <code>bash labs/unit22-mcp-audit.sh | tee log/unit22.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit21/">← Mech-Interp Attack Surface</a> · Unit 22 · Next: <a href="../unit23/"><strong>Computer-Use Agent Range</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

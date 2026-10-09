@@ -1,0 +1,36 @@
+{
+  "unit": 22,
+  "title": "MCP Supply-Chain Audit",
+  "hook": "You paste one line into your agent's config — an MCP server off a registry you half-trust.\n\nIts description reads clean. Its name reads familiar. Its last version passed review.\n\nNone of that means anything. ClawHub hosted 335 malicious plugins before anyone flagged them. MCP servers have racked up 100+ CVEs since.\n\nTonight, before you add a single tool, you learn to read the manifest the way an attacker wrote it — because for some of them, one did.",
+  "mechanism": "Unit 8 attacked you through a tool your agent already trusted. This is the defender's side of that: before you add any MCP server, audit it first.\n\nThree threat classes dominate the 2026 incidents — ClawHub alone hosted 335 malicious plugins, and MCP servers have racked up 100+ CVEs. **Poisoned descriptions** hide a second instruction inside the tool's description field, sometimes in unicode you can't see. **Rug-pulls** pass review clean, then update to malicious weeks later. **Typosquats** borrow a popular server's exact description under a name one character off.\n\nA fourth trick rides on any of the three: a **delayed trigger** that behaves for N calls, then turns — so a one-shot review samples the wrong call and misses it clean.\n\nMaps to **OWASP ASI + LLM03 Supply Chain**.",
+  "technique": "Static-audit every third-party server before you trust it: scan descriptions for hidden unicode and instruction-like phrasing, pin and diff versions so a rug-pull can't update you silently, and check every name against a known-good registry so a typosquat can't borrow by looking almost right.\n\nMeasure it like a detector, not a gut feeling: seed a pile of real manifests with N planted-malicious ones, run your audit, and count how many you flag. That precision/recall number is your result.\n\nTools like **agent-scan** (formerly mcp-scan) automate the first pass. Run it before you add anything new — not after something leaks.",
+  "drills": [
+    {
+      "q": "In Panel A, how many of the 8 listed MCP servers are actually malicious — poisoned, rug-pulled, or typosquatted? (number only)",
+      "answer": "4",
+      "accept": ["four"],
+      "kind": "number",
+      "why": "web-fetch-mcp (poisoned description), slack-mcp (rug-pull), gthub-mcp and calender-mcp (typosquats) — 4 of the 8. The other 4 pass a clean audit."
+    },
+    {
+      "q": "In Panel A, which threat class does \"gthub-mcp\" show — a name one character short of a trusted server, wearing its exact description? (one word)",
+      "answer": "typosquat",
+      "accept": ["typosquatted", "typo-squat", "typo squat"],
+      "why": "\"gthub\" is missing the \"i\" from \"github\". The description was copy-pasted from the real server, so only the name gives it away — which is why you check names against a registry, not just descriptions."
+    },
+    {
+      "q": "In Panel B, set the delay slider to 10 calls. What's the one-shot review's catch odds, in percent? (number only, no % sign)",
+      "answer": "10",
+      "accept": ["10%"],
+      "kind": "number",
+      "why": "100 / 10 = 10%. A one-shot review samples one call at random; a payload that waits 10 calls to turn has a 90% chance of looking clean on review day. The longer the delay, the worse the odds get."
+    }
+  ],
+  "lab": "unit22-mcp-audit.sh runs a static audit against a built-in seed of 10 MCP server manifests — some clean, some planted with the same three threat classes from Panel A: hidden-unicode poisoning, typosquatted names, and version-drift rug-pulls.\n\nIt checks each manifest three ways: scan the description for zero-width unicode, diff the current description against the one that was first reviewed, and measure how close the name sits to a known-good registry list. No model needed — plain python3 and grep, fully local, runs anywhere this course does.\n\nReal tools do the same three checks at registry scale: **agent-scan** (formerly mcp-scan) is the one named in this unit's sources.\n\nYour number tonight: **N flagged correctly out of the seed** — your audit's precision and recall against planted threats you didn't write yourself.",
+  "sources": [
+    { "kind": "REPO", "title": "agent-scan (was mcp-scan)", "who": "Snyk / Invariant", "url": "https://github.com/snyk/agent-scan", "why": "Scans MCP servers for poisoned descriptions and more." },
+    { "kind": "REPO", "title": "mcp-injection-experiments", "who": "Invariant Labs", "url": "https://github.com/invariantlabs-ai/mcp-injection-experiments", "why": "Working tool-poisoning and rug-pull PoCs." },
+    { "kind": "READ", "title": "OWASP Top 10 for Agentic Apps (ASI)", "who": "OWASP GenAI", "url": "https://genai.owasp.org/", "why": "The agentic taxonomy this maps to." }
+  ],
+  "notes": "Panel A: 8 real-shaped MCP registry listings, 4 clean / 4 malicious (1 poisoned-description with genuine U+200B zero-width chars embedded in the string, 1 rug-pull with a shown version diff, 2 typosquats one edit-distance off a known-good name). SCAN reveals the audit evidence per class; FLAG commits a guess and scores live (caught/4, false flags) — toggleable, so a learner can correct a misflag. Panel B is a teaching model of one-shot-sampling odds (100/N%) against a constant 100% for a pinned version-diff audit, honestly labelled; slider capped at 30 for a renderable strip. Lab = labs/unit22-mcp-audit.sh: 10 built-in manifests (6 clean, 1 poisoned, 2 typosquat, 1 rug-pull), scored by the same three detectors re-implemented in stdlib python (no third-party packages, matches this machine's system python3). Deterministic seed -> same result every run (10/10), which is the honest point: this exercises audit correctness, not a live roll. OWASP/ATLAS tag: OWASP ASI + LLM03 Supply Chain, per the mechanism beat."
+}

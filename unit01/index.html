@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 1 — First Win + Field Map</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 01</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 01 · FIRST WIN + FIELD MAP</div>
+      <h1>Seven words, and the model folds.</h1>
+      <p class="sub">Why safety breaks, who pays when you break it, and your first cracked vault — tonight.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. First name the engine, then feel the pressure.</h2>
+
+      <!-- panel A: tag the engine -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Which engine is this attack?</h3>
+          <span class="note">click a card, then guess</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Eight real attack shapes. For each, decide: does it win by giving the
+          model a stronger reason to help (<strong>competing objectives</strong>),
+          or by hiding the request from the safety reflex
+          (<strong>mismatched generalization</strong>)? Some do both.
+        </p>
+        <div class="tagcards" id="tagcards"></div>
+        <div class="tag-quiz" id="tag-quiz"></div>
+        <div class="callout">
+          <span class="label">WHY THIS FIRST</span>
+          Every one of the twelve attack families in this course is a flavour of
+          these two engines. Tag enough of them and the attacks stop looking
+          like tricks and start looking like one of two moves.
+        </div>
+      </div>
+
+      <!-- panel B: stack the pressure -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Stack the pressure</h3>
+          <span class="note">teaching model — the real call is the Lab</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Start with a bare request a model would refuse. Switch on techniques and
+          watch the <strong>refusal odds</strong> fall as pressure stacks. Each
+          toggle is a documented move; the engine it pulls is labelled.
+        </p>
+        <div class="stacker" id="stacker"></div>
+        <div class="refuse-wrap">
+          <div class="refuse-label">
+            <span>model's refusal odds</span>
+            <span class="refuse-pct" id="refuse-pct">95%</span>
+          </div>
+          <div class="refuse-track"><div class="refuse-fill" id="refuse-fill"></div></div>
+          <div class="refuse-verdict" id="refuse-verdict"></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          These percentages are a teaching model of how pressure stacks, not a
+          real model's output. The <em>direction</em> is real — every toggle is a
+          published technique — but the numbers are illustrative. The Lab below
+          is the real call against a real model.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels and the map — do not guess.</h2>
+
+      <div class="panel" style="margin-bottom:22px">
+        <div class="panel-head"><h3>The field map</h3><span class="note">who pays, and the catch</span></div>
+        <div class="table-wrap">
+          <table class="pairs" id="venue-map">
+            <thead><tr><th>venue</th><th>pays</th><th>the catch</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Crack your first vault.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">how many of the three vaults you cracked</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit01-vault.sh</pre>
+      <p class="cue">Run it from the course root. It calls the <code>claude</code> CLI, so it needs no API key. Save the output: <code>bash labs/unit01-vault.sh | tee log/unit01.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      Unit 1 of 16 · Next:
+      <a href="../unit02/"><strong>Local Toolchain</strong></a> — your own models, so nothing can rate-limit you.
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

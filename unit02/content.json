@@ -1,0 +1,36 @@
+{
+  "unit": 2,
+  "title": "Local Toolchain",
+  "hook": "Every attack you fire at a hosted model leaves a receipt.\n\nIt counts against your rate limit. It passes through a safety filter you don't control. It gets logged, on someone else's server, under your name.\n\nPull the same model onto your own machine and every one of those problems disappears. No limit. No filter you can't inspect. No log but yours.\n\nTonight you don't crack anything. You build the range you'll attack from for the next fifteen units.",
+  "mechanism": "APIs rate-limit, filter, and log every probe you send. Red-teaming at scale needs a model you own — one you can hit thousands of times, and eventually fine-tune.\n\nOn Apple Silicon there is no separate VRAM. **One pool of unified memory** covers the OS, a served model, and anything you train, all at once.\n\nThat has one consequence you cannot skip: **stop a served model before you train one**, or the two fight over RAM and you hit a Metal out-of-memory crash.\n\n**4-bit quantization quarters the memory** a model needs, for a small, usually-acceptable quality cost. That is why the checklist below defaults to 4-bit.",
+  "technique": "**Pin python 3.12.** mlx-lm is untested on 3.14 — `uv python pin 3.12` makes this a one-line fix, not a system reinstall.\n\n**Pull two sizes.** A 7B instruct model for a capable target, and a 1B for cheap attacker and judge roles. You'll run the 1B thousands of times — keep it small.\n\n**Serialize, don't stack.** Never hold two big models resident at once. Stop the served model, or the whole `ollama` daemon, before you start a training run.\n\n**mlx-lm is your trainer.** It's Apple's official package — serve and fine-tune both. The third-party mlx-lm-lora only matters later, for DPO/ORPO/GRPO in Unit 14.",
+  "drills": [
+    {
+      "q": "In panel A, set model size to 32B. Which ONE quantization is the only one of the three that does NOT fit in 48 GB at that size — 16-bit, 8-bit, or 4-bit?",
+      "answer": "16-bit",
+      "accept": ["16", "16bit", "fp16", "16 bit"],
+      "why": "At 32B, 16-bit needs about 76.8 GB — over the 48 GB budget. 8-bit (~38.4 GB) and 4-bit (~19.2 GB) both fit. Quantization is the first lever, not the model size."
+    },
+    {
+      "q": "How many steps are in panel B's install checklist?",
+      "answer": "5",
+      "accept": ["five"],
+      "kind": "number",
+      "why": "Pin python 3.12, install mlx-lm, pull the two ollama models, install the attack tools, then verify. Five steps, once — every later lab assumes they're done."
+    },
+    {
+      "q": "True or false: it's safe to leave a model served in Ollama while an mlx-lm fine-tune job runs, on the same Mac, at the same time.",
+      "answer": "false",
+      "accept": ["no", "never", "unsafe"],
+      "why": "Apple Silicon has one pool of unified memory for everything. Serve and train at once and you're fighting yourself for RAM — usually ending in a Metal out-of-memory crash. Stop one before you start the other."
+    }
+  ],
+  "lab": "This lab doesn't attack anything. It audits your own machine, so every later lab has solid ground to stand on.\n\nlabs/unit02-toolchain.sh runs four checks, in order:\n\n**1. python3.12** — pinned via uv, the version mlx-lm expects.\n\n**2. ollama** — the daemon answers, and at least one model is pulled.\n\n**3. mlx-lm** — importable in python. Apple's own serve-and-train package.\n\n**4. llama-server** — the llama.cpp server binary, your fallback runtime.\n\nEach check prints green or red. A red one tells you the exact command to fix it — run that, then run the script again.\n\nYour number tonight: **how many of the four checks pass.** 4/4 means the range is built. Every lab from Unit 3 onward assumes it.",
+  "sources": [
+    { "kind": "REPO", "title": "mlx-lm", "who": "Apple ml-explore", "url": "https://pypi.org/project/mlx-lm/", "why": "The official Apple-Silicon LLM toolkit: serve + fine-tune." },
+    { "kind": "REPO", "title": "mlx-lm LoRA guide", "who": "ml-explore", "url": "https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md", "why": "How LoRA/QLoRA fine-tunes run on your Mac." },
+    { "kind": "REPO", "title": "mlx-lm-lora", "who": "Goekdeniz-Guelmez", "url": "https://github.com/Goekdeniz-Guelmez/mlx-lm-lora", "why": "Adds DPO/ORPO/GRPO on top of mlx-lm (used in Unit 14)." },
+    { "kind": "TOOL", "title": "Ollama", "who": "ollama.com", "url": "https://ollama.com/library", "why": "Pull and serve open-weight models with one command." }
+  ],
+  "notes": "Panel A: RAM estimate = size_B * (bits/8) * 1.2, honestly labelled as an estimate. Across the 8 sizes x 3 quant levels in the slider, 32B@16-bit (76.8 GB) is the ONLY combo over the 48 GB budget — that's the drill-1 answer. Panel B is a 5-step checklist (uv pin, mlx-lm install, ollama pull x2, attack-tool install, verify) with a progress bar; no real commands run on the page, it only tracks the learner's own progress. Lab = labs/unit02-toolchain.sh: 4 read-only checks (python3.12, ollama daemon+model, mlx_lm import, llama-server binary), no network calls. Written 2026-10-08."
+}

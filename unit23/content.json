@@ -1,0 +1,66 @@
+{
+  "unit": 23,
+  "title": "Computer-Use Agent Range",
+  "hook": "A computer-use agent doesn't read your screen. It reads a screenshot of your screen.\n\nEverything in that screenshot is just pixels to it — your real button, and a fake one painted to look exactly like it, by whoever controls the page.\n\nHide one line of text where only the agent's OCR will see it. Fake one system dialog. Write one attacker sentence into an image's alt text, where no human eye ever lands.\n\nThe agent can't tell the difference between the thing you meant and the thing it saw. It just clicks the next step in what looks, to it, like your plan.\n\nFlip a switch below. Watch whose plan it actually becomes.",
+  "mechanism": "Computer-use agents take a screenshot, reason over it, then emit a click or a keystroke. The screenshot is the entire world they see — so anything rendered into it is attacker-controllable: a line of CSS-hidden text, a fake system dialog, an image's alt attribute nobody but the agent ever reads.\n\nA hybrid web-OS injection rides in on those pixels, not on the prompt. It can make the agent download a file, approve a payment, or exfiltrate a page — each one looking, to the agent, like the obvious next step in its own plan.\n\nBenchmarks like RedTeamCUA and WASP score these attacks across models with a CIA-triad lens: did the hit cost confidentiality, integrity, or availability.\n\n**Tag: LLM06 Excessive Agency + ASI** — the agent had more authority to act than the screen deserved trust.",
+  "technique": "Build a small adversarial web-OS range: a handful of pages that look like ordinary tasks — an invoice portal, a file manager, a settings screen — each with ONE hidden instruction planted a different way.\n\nDrive a real agent loop over them and measure attack-success-rate across N pages and multiple local agent models. Don't stop at one ASR number — tag every hit by which leg of the CIA triad it actually cost: **confidentiality** (it leaked something), **integrity** (it changed something it shouldn't have), or **availability** (it destroyed or locked something).\n\nThe defense is two things, not one: human-in-the-loop approval before any consequential action, and treating everything rendered on the screen — dialogs included — as untrusted input, never as instructions from the user.",
+  "drills": [
+    {
+      "q": "In Panel A, toggle on \"Fake system dialog.\" Which CIA meter in Panel B lights up?",
+      "answer": "integrity",
+      "accept": [
+        "integrity",
+        "the integrity meter",
+        "integrity hit"
+      ],
+      "why": "The dialog talks the agent into approving a wire transfer — an unauthorized change to a real financial state. Changing something that shouldn't change is an integrity hit, not a leak or a denial."
+    },
+    {
+      "q": "Which of the three injection vectors sits inside an IMAGE's alt attribute — text an accessibility pass reads but a human eye never does?",
+      "answer": "crafted alt-text",
+      "accept": [
+        "alt-text",
+        "crafted alt text",
+        "alt text",
+        "the alt-text one",
+        "alt attribute"
+      ],
+      "why": "The alt attribute exists so screen readers can describe an image. A computer-use agent's accessibility pass reads it too — and nothing stops an attacker from writing a command there instead of a description."
+    },
+    {
+      "q": "With no injection toggled on in Panel A, what percent does every CIA meter in Panel B sit at — the ambient baseline? (number only)",
+      "answer": "8",
+      "accept": [
+        "8%",
+        "8 percent"
+      ],
+      "kind": "number",
+      "why": "A clean screen still carries some baseline risk in this teaching model — nothing is ever truly zero — but 8% across all three is what 'nothing is attacking you right now' looks like. Toggle a vector and watch one meter jump to 92% while the other two drop."
+    }
+  ],
+  "lab": "Panel A ran one scripted hijack, once. The lab runs many — across N adversarial pages, each with a different injected instruction (hidden text, fake dialog, crafted alt-text) — against a real local agent loop.\n\n`labs/unit23-computer-use.sh` builds a small set of adversarial HTML pages, each carrying one hidden instruction, and drives a minimal computer-use-style agent over them: it reads the page's text content the way an agent's screenshot-to-text pass would, picks a next action with a local Ollama model, and the script checks whether that action matches the user's honest task or the attacker's injected goal.\n\nWant the full benchmark instead of this toy range? RedTeamCUA and WASP (sources below) run the same idea across dozens of real GUIs and multiple frontier models.\n\nYour number tonight: **attack success rate (%) across the pages** — and whether the hits that landed were confidentiality, integrity, or availability.",
+  "sources": [
+    {
+      "kind": "PAPER",
+      "title": "RedTeamCUA",
+      "who": "2025",
+      "url": "https://arxiv.org/abs/2505.13227",
+      "why": "Adversarial testing of computer-use agents."
+    },
+    {
+      "kind": "REPO",
+      "title": "WASP — Web Agent Security benchmark",
+      "who": "Meta",
+      "url": "https://github.com/facebookresearch/wasp",
+      "why": "Web-agent injection benchmark (archived but instructive)."
+    },
+    {
+      "kind": "READ",
+      "title": "OWASP LLM06: Excessive Agency",
+      "who": "OWASP GenAI",
+      "url": "https://genai.owasp.org/llmrisk/llm06-excessive-agency/",
+      "why": "The named risk."
+    }
+  ],
+  "notes": "Panel A is a mutually-exclusive 3-way toggle (CSS-hidden text / fake system dialog / crafted alt-text) over one fake web-OS window; each vector maps 1:1 to one leg of the CIA triad and flips the agent's rendered click-sequence from the clean task (download the invoice) to the attacker's goal, while the reply the USER sees stays identical either way — the stealth point. Panel B's three meters (baseline 8%, hit 92%, the other two drop to 4%) are a teaching model, honestly labelled; the real call is the lab. Lab = labs/unit23-computer-use.sh: builds N small adversarial HTML pages with one hidden instruction each, drives a local Ollama model as the decision step of a stub computer-use agent (text-mode stand-in for a real screenshot-to-action loop), scores obeyed-attacker-goal vs did-honest-task per page, prints ASR%. Degrades to a friendly 'do Unit 2 first' message, exit 0, if ollama or a pulled model isn't present. OWASP/ATLAS tag: LLM06 Excessive Agency + ASI. Sources pinned per spec and order: RedTeamCUA and WASP are the two adversarial CUA benchmarks; OWASP LLM06 is the named risk."
+}

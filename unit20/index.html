@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 20 — Classical Adversarial ML</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 20</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 20 · CLASSICAL ADVERSARIAL ML</div>
+      <h1>The grounding every pro has and most LLM courses skip.</h1>
+      <p class="sub">FGSM, PGD, and why a perturbation that fools one model fools the next.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. First flip a label by hand, then watch it transfer.</h2>
+
+      <!-- panel A: FGSM in 2D -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · FGSM in 2D</h3>
+          <span class="note">drag epsilon</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          A tiny linear classifier, two hardcoded weights, one point. The boundary
+          splits the plane into <strong style="color:var(--green)">class A</strong>
+          and <strong style="color:var(--red)">class B</strong>. Drag epsilon and
+          the point steps toward the corner of its own epsilon box — in the
+          direction of the model's gradient <strong>sign</strong>, nothing else.
+        </p>
+
+        <div class="controls" style="flex-direction:column;align-items:stretch;gap:10px">
+          <div class="fit-row"><span>epsilon (perturbation budget)</span><span class="fit-val" id="eps-val">0</span></div>
+          <input type="range" id="eps-slider" min="0" max="90" step="1" value="0">
+        </div>
+
+        <div class="fgsm-canvases">
+          <canvas id="canvasA" width="560" height="280"></canvas>
+        </div>
+        <div class="verdict-line" id="verdictA">model A says: <strong>class A</strong> — correct</div>
+
+        <div class="callout">
+          <span class="label">WHY THIS FIRST</span>
+          FGSM is one line of math: step every coordinate by
+          <code>epsilon · sign(gradient)</code>. No training, no search — the
+          point just walks straight to a corner of the epsilon box. That one
+          line is the ancestor of every gradient attack in this course.
+        </div>
+      </div>
+
+      <!-- panel B: transfer -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Transfer</h3>
+          <span class="note">same perturbation, a model you never touched</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Same point, same move — fired blind at a second classifier with a
+          <strong>differently angled</strong> boundary. No gradient from this
+          model was ever computed. Watch whether its label flips anyway.
+        </p>
+
+        <div class="fgsm-canvases">
+          <canvas id="canvasB" width="560" height="280"></canvas>
+        </div>
+        <div class="verdict-line" id="verdictB">model B says: <strong>class A</strong> — correct</div>
+
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          Both boundaries, both weights, and the gradient step are exact math
+          from hardcoded numbers — nothing here is a trained model, and nothing
+          is randomised. It's a toy built to make the mechanism tangible. The
+          real transfer number, on a real pair of models, is the Lab below.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Craft on one model. Test on another.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">transfer ASR (%) at a fixed epsilon</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit20-adversarial-ml.sh</pre>
+      <p class="cue">Run it from the course root. First run downloads MNIST (~11 MB) — nothing after that needs network. Needs <code>torch</code>, <code>torchvision</code>, and ART; if they're missing the script prints the one <code>pip install</code> line and stops cleanly. Save the output: <code>bash labs/unit20-adversarial-ml.sh | tee log/unit20.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit19/">← Data Extraction, Membership & Stealing</a> · Unit 20 · Next: <a href="../unit21/"><strong>Mech-Interp Attack Surface</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

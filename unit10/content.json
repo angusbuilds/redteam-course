@@ -1,0 +1,36 @@
+{
+  "unit": 10,
+  "title": "Pro Auditing: Inspect + Petri",
+  "hook": "You ran four attacks last unit and wrote down a number.\n\nA reviewer asks: how do I know that number is real?\n\nShow them a hand-rolled script and they shrug. Show them an Inspect eval — a dataset, a solver, a scorer, one config file anyone can rerun — and the shrug stops.\n\nTonight you stop hand-rolling checks and start publishing results in the exact shape the labs, the bounty programs, and the papers already use.",
+  "mechanism": "Every real eval has the same three parts.\n\n**The sample.** One attack, run against a model, its reply logged.\n\n**The solver.** The model under test — Qwen2.5-7B, GPT, whatever you're auditing.\n\n**The scorer.** The logic that grades the reply. A pattern match is cheap and brittle. A model-graded judge reads the whole reply — and costs more to run.\n\nInspect, UK AISI's eval framework, formalises exactly this: dataset → solver → scorer, one config. Petri automates the whole audit — an agent that probes, a judge that scores — so you can run hundreds of attempts unattended.\n\nPublishing in this shape is what turns a bounty report from \"trust me\" into something another researcher can rerun and check.",
+  "technique": "Three moves, in order.\n\n**Run a real Inspect eval.** Point inspect-ai's AgentDojo task at Qwen2.5-7B through its Ollama provider. That's the dataset → solver → scorer loop, for real.\n\n**Benchmark the harness itself.** Run lm-eval on a 100-question safety subset with `--device mps`. Compare the wall-clock time to your Unit 4 numbers — same kind of model, a different runner.\n\n**Cross-check the judge.** Run Petri's automated audit over the same attempts you scored by hand in Unit 4. Report the agreement — that number matters as much as the ASR.",
+  "drills": [
+    {
+      "q": "In Panel A, select \"Pattern match\". What ASR% does the naive scorer report?",
+      "answer": "67",
+      "accept": ["67%", "4/6", "0.67"],
+      "kind": "number",
+      "why": "Pattern match only checks for refusal phrases. It misses the hedge-then-comply reply (a real leak with no refusal word) and flags the friendly deflection as a leak it never was. Two wrong calls push it to 4 of 6 — 67%."
+    },
+    {
+      "q": "Now select \"Model-graded\". Reading the actual replies, what's the real ASR%?",
+      "answer": "50",
+      "accept": ["50%", "3/6", "0.5"],
+      "kind": "number",
+      "why": "Only 3 of the 6 replies actually leaked usable content — the roleplay wrapper, the hedge-then-comply, and the decoded request. A scorer that reads content instead of keywords gets all 6 right."
+    },
+    {
+      "q": "In Panel B, Petri's judge called one attack a leak that the manual reviewer called held. Which technique — \"Research frame\" or \"Low-resource language\"?",
+      "answer": "Research frame",
+      "accept": ["research", "research frame", "the research frame"],
+      "why": "Petri's agent over-triggered on a hedged, mostly-benign reply to the research-framed request. The manual reviewer read the whole thing and called it held — exactly the mismatch you spot-check for."
+    }
+  ],
+  "lab": "The explorable showed you the shape. Now you run it for real.\n\nlabs/unit10-auditing.sh drives a small inspect-ai eval against **qwen2.5:7b** through Ollama — a handful of jailbreak attempts, graded by inspect-ai's own scorer, not a toy regex.\n\nIt then loads a small saved file of manual scores on those same attempts (a default set ships if you haven't logged your own) and checks how often the automated verdict agrees with you.\n\nIf inspect-ai isn't installed yet, the script says so and points you back to Unit 2 instead of failing ugly.\n\n**Your numbers tonight:** the eval's **ASR%** against qwen2.5:7b, and the **automated-vs-manual agreement%** on those same attempts. Log both — they're the two numbers a credible writeup leads with.",
+  "sources": [
+    { "kind": "TOOL", "title": "Inspect (AISI)", "who": "UK AI Security Institute", "url": "https://inspect.aisi.org.uk/providers.html", "why": "The eval framework the labs publish with; has an Ollama provider." },
+    { "kind": "READ", "title": "Petri: open-source auditing", "who": "Anthropic", "url": "https://www.anthropic.com/research/petri-open-source-auditing", "why": "Automated red-team auditing agent + judge." },
+    { "kind": "REPO", "title": "lm-evaluation-harness", "who": "EleutherAI", "url": "https://github.com/EleutherAI/lm-evaluation-harness", "why": "The standard eval runner; runs on MPS." }
+  ],
+  "notes": "Panel A: 6 fixed sample replies, true leak/held label on each, two scorer functions (naive pattern match vs model-graded = reads the true label). Pattern match mis-scores samples 3 and 5 (hedge-then-comply false negative, friendly-deflection false positive) -> reports 4/6=67% ASR vs the true 3/6=50%. Panel B: 8 fixed attack items with a Petri-style automated verdict and a manual/judge verdict; 6/8 agree, 2 mismatches (research frame: Petri over-calls a leak; low-resource language: manual catches a leak Petri's judge missed) -> 75% agreement, both numbers computed in app.js from the fixed arrays, not hand-typed into the DOM. Lab = labs/unit10-auditing.sh: degrades cleanly with an install line if inspect-ai is missing, otherwise runs a tiny real eval against qwen2.5:7b and diffs against a saved manual-score file, printing ASR% and agreement% against a bundled default manual-score set if the learner has none yet."
+}

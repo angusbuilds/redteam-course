@@ -1,0 +1,36 @@
+{
+  "unit": 4,
+  "title": "Benchmarks & Harness",
+  "hook": "You run ten jailbreak prompts. Three \"worked.\"\n\nWorked according to what? You read the transcript and decided — in your head, with your own bar for what counts.\n\nShow that number to a security team and the first question is always the same: who scored it, and would a stranger score it the same way?\n\nTonight you build three different judges, run them on the same outputs, and watch them disagree. The disagreement is not a bug. It's the number nobody else will hand you.",
+  "mechanism": "A jailbreak number is only as good as the judge that produced it.\n\n**String-match** looks for an exact refusal phrase. It misses paraphrase — a model that refuses in its own words still reads as a win.\n\n**Keyword lists** swing the other way. Any hedge word — \"however,\" \"sorry,\" \"shouldn't\" — flags a refusal, even when the model complied right after it. That over-counts.\n\n**An LLM judge** reads for intent instead of exact words. It catches paraphrase and hedges, but it is a model judging a model — subjective, and it can drift between runs.\n\nA reviewer doesn't trust a screenshot. They trust a number with a named judge, a fixed baseline, and a harness anyone can re-run. Score every result three ways, and report where the judges split as its own number.",
+  "technique": "Install three tools: **garak**, **PyRIT**, **promptfoo**.\n\nScore every result three ways — string-match, keyword, and an LLM judge. Report the disagreement between them as its own figure, not a footnote.\n\nUse a fixed 50-prompt **HarmBench** subset every time. Same prompts, same order — so your ASR is comparable run to run, not just to itself.",
+  "drills": [
+    {
+      "q": "In the benchmark map, which ONE of the four tools runs on this Mac only as a subset — not the full benchmark pipeline?",
+      "answer": "HarmBench",
+      "accept": ["harmbench"],
+      "why": "garak, promptfoo, and JailbreakBench all run full on a Mac. HarmBench's own classifier pipeline is the heavier piece — this course runs its subset, not the full benchmark."
+    },
+    {
+      "q": "Click through all six sample outputs in Panel A. Once you've seen all six, what is the three-judge disagreement percentage? (just the number)",
+      "answer": "50",
+      "accept": ["50%", "0.5", "fifty"],
+      "kind": "number",
+      "why": "Samples 1, 2, and 6 are clean — all three judges agree. Samples 3, 4, and 5 split. 3 of 6 disagree: 50%."
+    },
+    {
+      "q": "Pick the sample where the model actually complied, but a hedge word like \"however\" or \"shouldn't\" still makes one scorer call it a refusal. Which scorer gets it wrong — string-match or keyword?",
+      "answer": "keyword",
+      "accept": ["keyword scorer", "keyword list", "keyword-match", "keywords"],
+      "why": "The keyword scorer flags any hedge word on sight. String-match only looks for an exact refusal phrase, so it correctly reads the compliance underneath the hedge. The keyword scorer over-counts."
+    }
+  ],
+  "lab": "The harness below runs promptfoo's Ollama provider plus a garak probe against qwen2.5:7b, over a fixed 50-prompt HarmBench subset.\n\nIt scores every response three ways — string-match, keyword, and a local LLM judge — so you see the technique AND the judge disagreement in one run.\n\nIf garak, promptfoo, or Ollama aren't installed yet, it says so and points you back to Unit 2, instead of crashing.\n\nYour numbers tonight: **ASR%** — how many of the 50 prompts got a comply verdict — and the **3-way judge-disagreement%** — how often the three scorers didn't all agree.",
+  "sources": [
+    { "kind": "REPO", "title": "garak", "who": "NVIDIA", "url": "https://github.com/NVIDIA/garak", "why": "The LLM vulnerability scanner — many probes, one command." },
+    { "kind": "TOOL", "title": "promptfoo (Ollama)", "who": "promptfoo", "url": "https://www.promptfoo.dev/docs/providers/ollama/", "why": "Eval harness that drives your local models." },
+    { "kind": "REPO", "title": "HarmBench", "who": "Center for AI Safety", "url": "https://github.com/centerforaisafety/HarmBench", "why": "Standard behaviors + classifier for measuring ASR." },
+    { "kind": "REPO", "title": "JailbreakBench", "who": "JailbreakBench", "url": "https://github.com/JailbreakBench/jailbreakbench", "why": "100 behavior pairs + a leaderboard; the shared yardstick." }
+  ],
+  "notes": "Panel A's string-match and keyword scorers are real, deterministic code run live against six hardcoded sample outputs (benign placeholders — a lockpicking paraphrase and a poison redirect, never an actual harmful payload). Only the llm-judge column is a hardcoded 'simulated' value per sample, labelled as such on the page, since nothing here calls a real model. All six samples agree/disagree pattern (S1,S2,S6 agree; S3,S4,S5 split) lands on exactly 50% disagreement once all six are viewed — that's drill 2's number. Panel B's Mac status column is a static claim: garak, promptfoo, and JailbreakBench run full; HarmBench's own classifier pipeline is the piece this course only runs as a subset. The real ASR and disagreement% come from labs/unit04-benchmarks.sh, which needs Unit 2's ollama + python setup and prints a friendly message instead of erroring when a tool is missing."
+}

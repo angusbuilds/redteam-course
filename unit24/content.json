@@ -1,0 +1,36 @@
+{
+  "unit": 24,
+  "title": "Unbounded Consumption & Weight Poisoning",
+  "hook": "A chatbot that answers in one line can also be told: write forever.\n\nAsk it to count to a thousand, spelled out, then do it backwards too.\n\nIt tries. Tokens stack up. Someone's bill climbs with every one.\n\nNobody hacked anything. Every word typed was legal. The invoice is real.\n\nThat's one risk tonight. The other hides in a file, not a prompt: open the wrong model checkpoint, and code runs before you've asked it a single question.",
+  "mechanism": "Two under-taught risks, filed under OWASP's LLM Top 10.\n\nUnbounded Consumption (LLM10). A request crafted to maximize compute — huge outputs, recursive tool calls, context stuffing — runs the victim's bill up or denies service outright. LLMjacking goes further: instead of running up your own bill, an attacker steals someone else's cloud-AI quota and runs it up on their dime.\n\nSupply chain (LLM03). Models ship as files, and the classic pickle format executes arbitrary code the moment it is loaded — not when you run it, when you open it. A poisoned checkpoint, or a typosquatted model-hub package, runs code the instant someone loads it. Safetensors exists because of this: tensor bytes only, no deserialization step, no exec path.\n\nTag: LLM10 Unbounded Consumption + LLM03 Supply Chain.",
+  "technique": "Consumption: measure the cost-amplification factor — tokens (or compute) your crafted request burns, divided by what a normal request burns. Stack output-size, recursion, tool-loop, and context-stuffing moves and watch it compound, multiplicatively, not additively.\n\nSupply chain: demonstrate, safely and locally, that loading a pickled artifact executes code — and that safetensors doesn't. Never try this against a checkpoint you didn't make yourself.\n\nDefenders answer both with the boring stuff: rate limits and per-request output caps that actually bite, and a hard policy of refusing pickle — safetensors or nothing, for every model you load.",
+  "drills": [
+    {
+      "q": "In the Cost bomb panel, turn on ONLY \"max-tokens output\". What is the amplification ×? (number only)",
+      "answer": "6",
+      "accept": ["6x", "6×", "x6"],
+      "kind": "number",
+      "why": "Max-tokens output alone carries a ×6 multiplier in the panel. Nothing else is stacked, so the amplification is just that one move's number."
+    },
+    {
+      "q": "Turn ALL FOUR cost moves on together. What is the total amplification ×? (number only)",
+      "answer": "360",
+      "accept": ["360x", "360×"],
+      "kind": "number",
+      "why": "6 × 4 × 5 × 3 = 360. The moves stack multiplicatively, not additively — that compounding is the whole reason a handful of cheap, individually-legal moves adds up to a denial-of-wallet, or a stolen cloud-AI quota if it's LLMjacking instead of your own prompt."
+    },
+    {
+      "q": "In the Poisoned weights panel, pick pickle and click load checkpoint. Which ONE of the two formats actually ran code on load — pickle or safetensors?",
+      "answer": "pickle",
+      "accept": ["pkl", "the pickle one", "pickle format"],
+      "why": "Pickling a Python object stores how to rebuild it — including a call to run on unpickling. Safetensors stores tensor bytes and a JSON header only; there is no step where it runs anything, by design."
+    }
+  ],
+  "lab": "unit24-consumption-supply.sh measures a crafted request's token/cost amplification against a baseline, over a real local model through `ollama` — then runs a tiny local pickle-load demo next to a safetensors load, so you see code-execution-on-load with your own eyes instead of taking the mechanism's word for it.\n\nThe crafted request stacks what Panel A stacks: a huge requested output and forced repetition, inside one safe, legal prompt. No real tool-loop here — that needs an agent harness, and you already built one in Unit 7.\n\nThe pickle demo never ships a usable payload. It fires one harmless printed marker to prove the point, then loads the same shape of file as safetensors and shows nothing fires.\n\nYour number tonight: **the cost-amplification factor (×)** — your crafted request's cost over the baseline's.",
+  "sources": [
+    { "kind": "READ", "title": "OWASP LLM10: Unbounded Consumption", "who": "OWASP GenAI", "url": "https://genai.owasp.org/llmrisk/llm10-unbounded-consumption/", "why": "The named risk." },
+    { "kind": "READ", "title": "OWASP LLM03: Supply Chain", "who": "OWASP GenAI", "url": "https://genai.owasp.org/llmrisk/llm03-supply-chain/", "why": "Model-weight and package poisoning." },
+    { "kind": "REPO", "title": "safetensors", "who": "Hugging Face", "url": "https://github.com/huggingface/safetensors", "why": "Why the industry moved off pickle." }
+  ],
+  "notes": "Panel A stacks 4 illustrative cost-crafting moves (×6/×4/×5/×3, multiplicative, honestly labelled as a teaching model) into one amplification readout; max = ×360 with all four on. Panel B is a simulated loader — pickle shows a printed marker firing on load (the __reduce__ mechanism, no real payload shape), safetensors shows nothing firing; both callouts point to the Lab as the real, local version. Lab = labs/unit24-consumption-supply.sh: times/sizes a crafted vs baseline ollama request for the real amplification ×, then runs a stdlib-only pickle vs safetensors demo (no third-party deps required for the pickle half; the safetensors half degrades with a pip-install message if that package isn't present). Degrades to a friendly 'do Unit 2 first' message, exit 0, if ollama isn't running or the model isn't pulled. Verified 2026-10-08: `sh -n` clean; ollama present but no server/model running on this machine, so the baseline-vs-crafted branch was confirmed via its graceful-degradation path, not a live model run."
+}

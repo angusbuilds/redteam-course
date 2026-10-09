@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 24 — Unbounded Consumption & Weight Poisoning</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/redteam.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="rail">
+    <div class="unit-no">UNIT 24</div>
+    <ol>
+      <li><a href="#hook">Hook</a></li>
+      <li><a href="#explore">Explorable</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#technique">Technique</a></li>
+      <li><a href="#drill">Drill</a></li>
+      <li><a href="#lab">Lab</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <header class="top">
+      <div class="kicker">UNIT 24 · UNBOUNDED CONSUMPTION & WEIGHT POISONING</div>
+      <h1>Two quiet ones: burn their budget, or poison the weights they load.</h1>
+      <p class="sub">Cost-exhaustion and LLMjacking, plus pickle and model-hub poisoning.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="beat" id="hook">
+      <div class="beat-tag"><span>HOOK</span><span class="bar"></span><span class="mins">30 SEC</span></div>
+      <div data-slot="hook"></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="beat" id="explore">
+      <div class="beat-tag"><span>EXPLORABLE</span><span class="bar"></span><span class="mins">6 MIN</span></div>
+      <h2>Two panels. One runs up a bill, one runs code it was never asked to.</h2>
+
+      <!-- panel A: cost bomb -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>A · Cost bomb</h3>
+          <span class="note">stack moves, watch the bill</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          Nothing below is illegal and nothing is a jailbreak. Every move is a
+          perfectly polite request — it just asks for a lot more compute than
+          a normal one. Stack them and watch the <strong>amplification
+          factor</strong> over a plain request.
+        </p>
+        <div class="stacker" id="cost-stack"></div>
+        <div class="amp-wrap">
+          <div class="amp-label">
+            <span>cost amplification vs a normal request</span>
+            <span class="amp-value" id="amp-value">1×</span>
+          </div>
+          <div class="amp-track"><div class="amp-fill" id="amp-fill"></div></div>
+          <div class="amp-verdict" id="amp-verdict"></div>
+        </div>
+        <div class="callout">
+          <span class="label">HONEST LABEL</span>
+          These multipliers are a teaching model of how cost-crafting moves
+          stack, not a real model's bill. The <em>direction</em> is real —
+          every move is a documented shape of OWASP's Unbounded Consumption
+          (LLM10) risk. The Lab below runs the real request against a real
+          local model and times it for real.
+        </div>
+      </div>
+
+      <!-- panel B: poisoned weights -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>B · Poisoned weights</h3>
+          <span class="note">pick a format, then load it</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          A model checkpoint is just a file. Pick how it's packaged, then hit
+          load and watch what the loader actually does with it.
+        </p>
+
+        <div class="fmt-toggle">
+          <button type="button" id="fmt-pickle" class="fmt-btn">pickle (.bin / .pt)</button>
+          <button type="button" id="fmt-safetensors" class="fmt-btn">safetensors</button>
+        </div>
+
+        <div class="loadbox">
+          <div class="loadbox-head">
+            <span class="lb-label">LOADER <span id="lb-format">— pick a format above</span></span>
+            <button type="button" id="load-btn">load checkpoint</button>
+          </div>
+          <pre class="loadlog" id="load-log">(nothing loaded yet)</pre>
+        </div>
+
+        <div class="exec-flag" id="exec-flag"></div>
+
+        <div class="callout dated">
+          <span class="label">HONEST LABEL</span>
+          This loader is simulated — an obvious placeholder, not a working
+          exploit. The Lab below runs the real thing, locally: a tiny pickle
+          file that really executes code on load, next to a safetensors file
+          that can't.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="beat" id="mechanism">
+      <div class="beat-tag"><span>MECHANISM</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <div data-slot="mechanism"></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="beat" id="technique">
+      <div class="beat-tag"><span>TECHNIQUE</span><span class="bar"></span><span class="mins">1 MIN</span></div>
+      <div data-slot="technique"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="beat" id="drill">
+      <div class="beat-tag"><span>DRILL</span><span class="bar"></span><span class="mins">2 MIN</span></div>
+      <h2>Three questions. Use the panels above — do not guess.</h2>
+      <div id="drills"></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="beat" id="lab">
+      <div class="beat-tag"><span>LAB</span><span class="bar"></span><span class="mins">15 MIN</span></div>
+      <h2>Price the bomb, then watch pickle actually run code.</h2>
+      <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">the cost-amplification factor (×) of a crafted request over a baseline</span></div>
+      <div data-slot="lab"></div>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit24-consumption-supply.sh</pre>
+      <p class="cue">Run it from the course root, after Unit 2's local toolchain install. It calls a local model over Ollama and your own python3 — no API key, no network. Save the output: <code>bash labs/unit24-consumption-supply.sh | tee log/unit24.txt</code></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="beat" id="sources">
+      <div class="beat-tag"><span>SOURCES</span><span class="bar"></span><span class="mins">READ LATER</span></div>
+      <h2>Go deeper, when you want to.</h2>
+      <div class="sources" id="sources-list"></div>
+    </section>
+
+    <footer class="next">
+      <a href="../unit23/">← Computer-Use Agent Range</a> · Unit 24 · Next: <a href="../unit25/"><strong>Governance, Scoring & Disclosure</strong></a>
+    </footer>
+
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

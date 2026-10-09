@@ -1,0 +1,35 @@
+{
+  "unit": 20,
+  "title": "Classical Adversarial ML",
+  "hook": "A model looks at a photo of a panda. It says panda — 99% sure.\n\nAdd one pattern of noise. Too small for your eye to catch.\n\nSame photo. Same model. Now it says gibbon. Still 99% sure.\n\nThere's no prompt here. No persona, no jailbreak text, no roleplay frame. It's 2014 — a decade before anyone said \"LLM safety\" — and the trick is called FGSM: the oldest move in adversarial ML.\n\nEvery gradient attack since, including the one that hits LLMs in Unit 14, is this same idea wearing a bigger model. Tonight you build it by hand, flip a label yourself, and watch the same perturbation fool a model it was never even aimed at.",
+  "mechanism": "Before LLMs, adversarial examples were images. FGSM adds a tiny step in the direction of the loss gradient's **sign**; PGD iterates that step inside an epsilon ball. The perturbation is imperceptible but flips the classifier.\n\nMITRE ATLAS tags this whole technique class **Evasion** — flipping a model's output at inference time, no retraining, no access to its weights required.\n\nThe deep point: these transfer. An example crafted against your own surrogate often fools a black-box model you never touched, because models trained on similar data learn similar decision boundaries. That transfer property is why white-box work on open weights matters for closed targets.",
+  "technique": "**Craft on a model you own, test on another.** Train (or download) a small surrogate, generate adversarial examples against it, then fire the exact same examples at a second model with a different architecture.\n\n**Measure the cross-architecture transfer success rate** at a fixed perturbation budget epsilon — the percent of the surrogate's successful attacks that also fool the second model, with zero gradient queries to it.\n\nThe **Adversarial Robustness Toolbox (ART)** gives you FGSM and PGD out of the box, wrapping any PyTorch model in a couple of lines. This grounding is what makes the LLM gradient attacks in Unit 14 click — same math, a token embedding instead of a pixel grid.",
+  "drills": [
+    {
+      "q": "Drag epsilon to its maximum, 90. How many of the two panels now show a flipped (misclassified) label — 0, 1, or 2?",
+      "answer": "2",
+      "accept": ["two", "both"],
+      "kind": "number",
+      "why": "By epsilon 90 both boundaries have been crossed. The perturbation was only ever crafted against model A, and it still flips model B — that's transfer: an attack built on a surrogate works black-box on a model you never touched."
+    },
+    {
+      "q": "FGSM's step direction comes from the loss gradient. Does it use the gradient's exact value, or just its sign?",
+      "answer": "sign",
+      "accept": ["just the sign", "sign only", "the sign"],
+      "why": "That's the S in FGSM. Every coordinate moves by exactly +epsilon or -epsilon, which is why the perturbed point jumps straight to a corner of the epsilon box instead of sliding along a smooth diagonal."
+    },
+    {
+      "q": "In Panel B, whose gradient computed the step that moved the point — model A's, or model B's?",
+      "answer": "model a",
+      "accept": ["a", "model a's", "panel a", "a's gradient", "model a's gradient"],
+      "why": "Panel B never contributes a gradient. The attacker only ever touches model A, the white-box surrogate, and fires that same fixed perturbation blind at B. When B's boundary falls too, zero queries were spent on B to make it happen."
+    }
+  ],
+  "lab": "unit20-adversarial-ml.sh runs FGSM and PGD with ART, for real, on two small torchvision models trained on MNIST.\n\nIt trains model A (surrogate) and model B (a different architecture — wider, shallower) on a quick subset so the mechanism proves out fast; point it at the full training set for the number that goes in your log. Then it finds test images both models already classify correctly, crafts FGSM adversarial examples against model A only, and checks how many of those examples also flip model B — never touched, never queried.\n\nNeeds `torch`, `torchvision`, and `adversarial-robustness-toolbox`. If any are missing, the script prints the one pip line and stops cleanly instead of throwing a traceback.\n\nYour number tonight: **transfer ASR at a fixed epsilon** — the percent of model A's successful adversarial examples that also fool model B. Zero is a real result too; it means your two architectures disagree more than most pairs do, and that disagreement is worth a line in your log.",
+  "sources": [
+    { "kind": "PAPER", "title": "Explaining and Harnessing Adversarial Examples (FGSM)", "who": "Goodfellow et al · 1412.6572", "url": "https://arxiv.org/abs/1412.6572", "why": "Where adversarial examples began." },
+    { "kind": "PAPER", "title": "Towards Deep Learning Models Resistant to Attacks (PGD)", "who": "Madry et al · 1706.06083", "url": "https://arxiv.org/abs/1706.06083", "why": "PGD and adversarial training." },
+    { "kind": "REPO", "title": "Adversarial Robustness Toolbox (ART)", "who": "Trusted-AI", "url": "https://github.com/Trusted-AI/adversarial-robustness-toolbox", "why": "The toolkit the lab uses." }
+  ],
+  "notes": "Panel A is exact math on hardcoded weights — a 2D linear classifier, boundary line through two fixed points, FGSM step = epsilon * sign(w). Boundary A passes through (60,240)-(500,40) [w=(5,11), b=-2940]; the shared point (120,100) starts at v=-1240, flips at epsilon=77.5. Panel B reuses the SAME perturbed point (always epsilon * sign(w_A), never w_B's own gradient) against a differently angled boundary through (245.45,0)-(118.18,280) [w=(11,5), b=-2700]; v0=-880, flips at epsilon=55 — transfer succeeds, and earlier than the white-box flip, which is the honest surprise worth pointing out. Nothing in either panel is simulated or random; the only illustrative-but-real-math numbers are the hardcoded weights themselves, labelled as a toy in the HONEST LABEL callout. ATLAS tag (Evasion) is stated in the mechanism. Lab = labs/unit20-adversarial-ml.sh: trains two small CNNs (different depth/width) on an MNIST subset, wraps both in ART PyTorchClassifier, crafts FGSM (and a PGD comparison) against model A, scores transfer ASR on model B. Confirmed 2026-10-08 on this machine (no torch/torchvision/ART installed): `sh -n` is clean and the script correctly takes the degrade path, printing the single pip line and exiting 0 — the real training/attack code is written but unexercised here."
+}
