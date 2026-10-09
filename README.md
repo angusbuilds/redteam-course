@@ -12,7 +12,7 @@
 ![Runs offline](https://img.shields.io/badge/Runs-offline%20on%20your%20Mac-6ee7a8?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-4cc9f0?style=for-the-badge)
 ![Validate](https://img.shields.io/github/actions/workflow/status/angusbuilds/redteam-course/validate.yml?style=for-the-badge&label=links)
-[![OWASP coverage](https://img.shields.io/badge/OWASP%20LLM%20Top--10-9%2F10%20labs-6ee7a8?style=for-the-badge)](SCORECARD.md)
+[![OWASP coverage](https://img.shields.io/badge/OWASP%20LLM%20Top--10-10%2F10%20labs-6ee7a8?style=for-the-badge)](SCORECARD.md)
 ![Level](https://img.shields.io/badge/Start-brand%20new-ff7a6b?style=for-the-badge)
 
 ![Built with Claude](https://img.shields.io/badge/Built%20with-Claude-8B5CF6?style=for-the-badge&logo=anthropic&logoColor=white)

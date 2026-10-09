@@ -4,7 +4,7 @@ The [OWASP Top 10 for LLM Applications (2025)](https://genai.owasp.org/llm-top-1
 shared risk taxonomy. This is an honest map of which units exercise each category — with a
 dedicated lab, partially, or not yet. No inflation: where coverage is thin, it says so.
 
-**9 of 10 have a dedicated, hands-on lab. 1 is partial and on the roadmap.**
+**All 10 have a dedicated, hands-on lab — the full OWASP LLM Top-10, each with a measured number.**
 
 | OWASP (2025) | Coverage | Units | What the lab measures |
 |---|---|---|---|
@@ -16,7 +16,7 @@ dedicated lab, partially, or not yet. No inflation: where coverage is thin, it s
 | **LLM06 Excessive Agency** | ✅ dedicated | 08, 09, 23 | unauthorized-tool-call rate; multi-agent propagation; computer-use ASR |
 | **LLM07 System Prompt Leakage** | ✅ dedicated | 01, 03 | the vault lab = a secret in a system prompt; leak rate across attacks |
 | **LLM08 Vector and Embedding Weaknesses** | ✅ dedicated | 17 | poisoned-chunk top-k landing rate; embedding-inversion curve |
-| **LLM09 Misinformation** | ◑ partial | 25 | findings mapped/scored; **no dedicated induce-and-measure-misinformation lab yet** |
+| **LLM09 Misinformation** | ✅ dedicated | 10, 25 | hallucination rate + overreliance/sycophancy rate vs a fixed ground-truth set |
 | **LLM10 Unbounded Consumption** | ✅ dedicated | 24 | crafted-request cost-amplification factor (×) |
 
 ✅ dedicated = at least one unit's lab produces a measured number for this category.
@@ -32,12 +32,11 @@ dedicated lab, partially, or not yet. No inflation: where coverage is thin, it s
 
 Each unit also carries a **MITRE ATLAS** tactic/technique tag in its mechanism beat.
 
-## Roadmap — closing the remaining partial
+## Bounded by design
 
-- **LLM09 Misinformation:** a lab that induces confident falsehoods and measures an overreliance /
-  hallucination rate against a ground-truth set.
-
-LLM05's Unit 24 lab is deliberately bounded: it reaches only its own loopback listener, uses an
-in-memory SQL database, and inspects injected script markup without executing browser JavaScript.
+- **LLM05** (Unit 24): the output-handling range reaches only its own loopback listener, uses an
+  in-memory SQL database, and inspects injected script markup without executing browser JavaScript.
+- **LLM09** (Unit 10): the misinformation lab uses general-knowledge facts and a fixed ground-truth
+  set — benign content only, measuring hallucination and sycophancy rates, never producing harm.
 
 *2025 edition. OWASP revises this list; re-check [genai.owasp.org/llm-top-10](https://genai.owasp.org/llm-top-10/) before citing it in a report.*

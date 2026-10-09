@@ -37,6 +37,19 @@ header.top .kicker { color: var(--accent); }
 /* "nothing italic" for a dyslexic reader: emphasis is weight + colour, not slant */
 .beat em, .panel em, .top .sub em, .callout em { font-style: normal; font-weight: 600; color: var(--text); }
 
+/* shareable proof card (injected into the lab beat) */
+.proofcard { margin-top: 20px; padding: 16px; border: 1px dashed var(--line); border-radius: 10px; }
+.pc-head { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+.pc-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.pc-input { flex: 1; min-width: 220px; }
+.pc-make { white-space: nowrap; }
+.pc-canvas { width: 100%; max-width: 480px; margin-top: 14px; border: 1px solid var(--line); border-radius: 8px; }
+.pc-dl {
+  display: inline-block; margin-top: 10px; font: 600 13px var(--mono);
+  color: var(--bg); background: var(--accent); padding: 7px 14px; border-radius: 7px; text-decoration: none;
+}
+a.pc-dl:hover { filter: brightness(1.08); }
+
 .sources { display: grid; gap: 10px; }
 
 .source-card {

@@ -144,6 +144,8 @@
       <div data-slot="lab"></div>
       <pre class="cmd"><span class="prompt">$ </span>bash labs/unit07-injection.sh</pre>
       <p class="cue">Run it from the course root, after Unit 2's local toolchain install. It calls a local model over Ollama — no API key, no network. Save the output: <code>bash labs/unit07-injection.sh | tee log/unit07.txt</code></p>
+      <pre class="cmd"><span class="prompt">$ </span>bash labs/unit07-agentdojo.sh</pre>
+      <p class="cue">Benchmark-grade option: <code>pip install agentdojo</code> first, then this runs a small fixed subset of AgentDojo's real suites against the same local model and reports AgentDojo's own metrics — a number comparable to its published leaderboard, not just to itself.</p>
     </section>
 
     <!-- 7 -->

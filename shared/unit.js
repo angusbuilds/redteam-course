@@ -131,6 +131,76 @@ export function scrollspy() {
 
   // safety net: if an observer never fires (headless, odd viewports), reveal all after a beat
   setTimeout(() => document.querySelectorAll('section.beat').forEach((s) => s.classList.add('in')), 1200)
+
+  // shareable proof card — wrapped so it can never break the page/gate
+  try { proofCardWidget() } catch (_) {}
+}
+
+// Injects a "share your result" widget into the lab beat of every unit. The
+// learner types the number their lab printed; we render a dark, accent-coloured
+// card to a canvas and offer it as a PNG download. All client-side, no backend.
+function proofCardWidget() {
+  const lab = document.querySelector('#lab')
+  if (!lab || !document.createElement('canvas').getContext) return
+
+  const unitNo = (document.querySelector('.rail .unit-no')?.textContent || 'UNIT').trim()
+  const title = (document.querySelector('header.top h1')?.textContent || 'Breaking Models').trim()
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#f0b429'
+
+  const box = document.createElement('div')
+  box.className = 'proofcard'
+  box.innerHTML = `
+    <div class="pc-head">Made your number? Turn it into a shareable card.</div>
+    <div class="pc-row">
+      <input type="text" class="pc-input" maxlength="40" placeholder="your result — e.g. 1/3 cracked, ASR 42%" aria-label="Your result for this unit">
+      <button class="pc-make" type="button">Make card</button>
+    </div>
+    <canvas class="pc-canvas" width="1200" height="630" hidden></canvas>
+    <a class="pc-dl" hidden download>Download PNG</a>`
+  lab.appendChild(box)
+
+  const input = box.querySelector('.pc-input')
+  const canvas = box.querySelector('.pc-canvas')
+  const dl = box.querySelector('.pc-dl')
+
+  function draw() {
+    const result = (input.value || 'figure it out').slice(0, 40)
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = '#12110f'; ctx.fillRect(0, 0, 1200, 630)
+    ctx.fillStyle = accent; ctx.fillRect(0, 0, 14, 630)
+    ctx.textBaseline = 'top'
+    ctx.fillStyle = '#6b655d'; ctx.font = '600 24px ui-monospace, Menlo, monospace'
+    ctx.fillText('BREAKING MODELS · AI RED-TEAM COURSE', 70, 70)
+    ctx.fillStyle = accent; ctx.font = '600 28px ui-monospace, Menlo, monospace'
+    ctx.fillText(unitNo, 70, 150)
+    ctx.fillStyle = '#e8e4dc'; ctx.font = '700 60px -apple-system, system-ui, sans-serif'
+    wrap(ctx, title, 70, 200, 1060, 66)
+    ctx.fillStyle = '#9a938a'; ctx.font = '400 26px -apple-system, system-ui, sans-serif'
+    ctx.fillText('my result', 70, 430)
+    ctx.fillStyle = accent; ctx.font = '700 72px ui-monospace, Menlo, monospace'
+    ctx.fillText(result, 70, 470)
+    ctx.fillStyle = '#6b655d'; ctx.font = '400 22px ui-monospace, Menlo, monospace'
+    ctx.fillText('github.com/angusbuilds/redteam-course', 70, 575)
+    canvas.hidden = false
+    canvas.toBlob((blob) => {
+      if (!blob) return
+      dl.href = URL.createObjectURL(blob)
+      dl.download = `breaking-models-${unitNo.toLowerCase().replace(/\s+/g, '')}.png`
+      dl.hidden = false
+    }, 'image/png')
+  }
+  box.querySelector('.pc-make').addEventListener('click', draw)
+}
+
+function wrap(ctx, text, x, y, maxW, lh) {
+  const words = String(text).split(' ')
+  let line = ''
+  for (const w of words) {
+    const test = line ? line + ' ' + w : w
+    if (ctx.measureText(test).width > maxW && line) { ctx.fillText(line, x, y); line = w; y += lh }
+    else line = test
+  }
+  if (line) ctx.fillText(line, x, y)
 }
 
 // v = {url, title, author, why}. A link card, never an iframe: embeds spray
