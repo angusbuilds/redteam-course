@@ -69,6 +69,13 @@
       "who": "BitterSecurity · 5.7k★",
       "url": "https://github.com/BitterSecurity/Decepticon",
       "why": "The production-shaped multi-agent kill-chain. Study its architecture as the exemplar for where agent attacks go."
+    },
+    {
+      "kind": "REPO",
+      "title": "T3MP3ST",
+      "who": "Pliny the Liberator",
+      "url": "https://github.com/elder-plinius/T3MP3ST",
+      "why": "Autonomous red-teaming — a second take on the multi-agent attack loop."
     }
   ],
   "notes": "Panel A is a 5-agent DAG (Scheduler, Researcher, Coder, Reviewer, Deployer): sched -> research,coder; research,coder -> reviewer; reviewer -> deploy. Max depth 3 hops, all 5 infected — a teaching model of swarm propagation, honestly labelled as such in the callout. Panel B is a 5-doc store (4 legit + 1 poisoned) retrieved by shared tags, not a real embedding model — insert the poisoned doc, then click the query that shares its tags to watch it resurface in the assembled-context box; the poison doc's text uses the reserved example.test domain, never a live address. Lab = labs/unit09-multiagent.sh: three tiny local experiments (mailbox relay, sqlite doc resurface, hidden-text HTML read) over Ollama; degrades to a 'do Unit 2 first' message if ollama/python3/sqlite3 aren't ready yet."

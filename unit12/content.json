@@ -82,6 +82,13 @@
       "who": "andyrdt (Arditi et al.)",
       "url": "https://github.com/andyrdt/refusal_direction",
       "why": "The reference code for the paper this unit reproduces."
+    },
+    {
+      "kind": "REPO",
+      "title": "0BL1T3R4TUS",
+      "who": "elder-plinius",
+      "url": "https://github.com/elder-plinius/OBLITERATUS",
+      "why": "A refusal-removal toolkit — the abliteration you just did by hand, operationalized."
     }
   ],
   "notes": "Panel A is a teaching scatter: illustrative 2D activations, harmful vs harmless, with the mean-difference arrow drawn between centroids. Panel B is a teaching toggle: flipping Orthogonalize collapses the red points toward blue and drops a simulated refusal meter from 90% to 10% — both numbers are illustrative, honestly labelled, not from a real model. The real call is labs/unit12-abliteration.sh, which looks for mlx_lm or transformers, runs real hook-based extraction + orthogonalization on Qwen2.5-1.5B when a backend is present, and degrades to a 'do Unit 2 first' message otherwise. Confirmed 2026-10-08: this machine has no third-party python packages, so the script correctly takes the degrade path — the real extraction/hook code is written but unexercised here."

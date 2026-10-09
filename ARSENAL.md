@@ -93,6 +93,30 @@ Mac column: ✅ runs on a 48 GB Apple-Silicon Mac · ◑ runs with caveats (Dock
 
 ---
 
+## Pliny's arsenal
+
+[Pliny the Liberator](https://pliny.gg/) (TIME100 AI) built the most-studied public jailbreak toolkit
+in the field. Study the **shapes**, not the payloads — and only ever against authorized targets (see
+[SECURITY.md](SECURITY.md)). The red-team tools:
+
+| Tool | What it is | Unit |
+|------|-----------|------|
+| [L1B3RT4S](https://github.com/elder-plinius/L1B3RT4S) | the per-provider jailbreak-shape library (21k★) | 3 |
+| [0BL1T3R4TUS](https://github.com/elder-plinius/OBLITERATUS) | an LLM refusal-removal toolkit — the abliteration idea, operationalized | 12 |
+| [CL4R1T4S](https://github.com/elder-plinius/CL4R1T4S) | system-prompt extraction (maps to OWASP LLM07 System Prompt Leakage) | 1, 3 |
+| [T3MP3ST](https://github.com/elder-plinius/T3MP3ST) | autonomous red-teaming | 5, 9 |
+| [P4RS3LT0NGV3](https://elder-plinius.github.io/P4RS3LT0NGV3/) | Pliny's prompt-engineering / attack-craft guide | 3 |
+| [ST3GG](https://ste.gg) | steganography toolkit — encoding/obfuscation (mismatched-generalization) attacks | 3 |
+| [V3SP3R](https://github.com/elder-plinius/V3SP3R) | a hardware-hacking companion | — |
+| [BASI community](https://discord.gg/basi) | the red-team Discord hub — writeups, competitions, people | 26 |
+
+The wider ecosystem (study/reference, authorized use only): **G0DM0D3** (godmod3.ai),
+**L34KHVB** (leakhub.ai, leaked-prompt archive), **PL1NY.TV** (pliny.tv), **BT6** (bt6.gg, an
+independent AI red team), and the generative-art projects **3NTH34**, **GL4SS**, **GL0SS0P3TR43**.
+Pliny's methods are cited across 11 arXiv papers — this is mainstream red-team practice, not fringe.
+
+---
+
 ## Where this goes next
 
 Candidate units pulled from the survey, not yet built:
