@@ -1,0 +1,30 @@
+name: Validate course
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check course links
+        run: |
+          python3 -m http.server 8901 --bind 127.0.0.1 > /tmp/course-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8901/ >/dev/null; then
+              break
+            fi
+            sleep 0.25
+          done
+          curl --silent --fail http://127.0.0.1:8901/ >/dev/null
+          node scripts/check-links.mjs http://127.0.0.1:8901
