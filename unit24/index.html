@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 24 — Unbounded Consumption & Weight Poisoning</title>
+<title>Unit 24 — Output Handling, Unbounded Consumption & Supply Chain</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23ff7a6b'/><text x='8' y='12' font-size='10' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2317140d'>rt</text></svg>">
 <link rel="stylesheet" href="../shared/base.css">
 <link rel="stylesheet" href="../shared/redteam.css">
@@ -29,9 +29,9 @@
   <main>
 
     <header class="top">
-      <div class="kicker">UNIT 24 · UNBOUNDED CONSUMPTION & WEIGHT POISONING</div>
-      <h1>Two quiet ones: burn their budget, or poison the weights they load.</h1>
-      <p class="sub">Cost-exhaustion and LLMjacking, plus pickle and model-hub poisoning.</p>
+      <div class="kicker">UNIT 24 · OUTPUT HANDLING, CONSUMPTION & SUPPLY CHAIN</div>
+      <h1>Three quiet risks: trust the output, burn the budget, or load poisoned weights.</h1>
+      <p class="sub">Local SSRF, SQL injection, and HTML-sink probes, plus cost exhaustion and model-file poisoning.</p>
     </header>
 
     <!-- 1 -->
@@ -139,6 +139,23 @@
       <div data-slot="lab"></div>
       <pre class="cmd"><span class="prompt">$ </span>bash labs/unit24-consumption-supply.sh</pre>
       <p class="cue">Run it from the course root, after Unit 2's local toolchain install. It calls a local model over Ollama and your own python3 — no API key, no network. Save the output: <code>bash labs/unit24-consumption-supply.sh | tee log/unit24.txt</code></p>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>LLM output → classic web bugs</h3>
+          <span class="note">isolated local range · no dependencies</span>
+        </div>
+        <p class="muted" style="font-size:14.5px;margin:0 0 14px">
+          A toy app treats synthetic model-output probes as trusted. Probe its
+          local-only internal route, an in-memory SQL query, and an HTML preview; then
+          compare each unsafe sink with its guarded counterpart. No external
+          host is contacted, no database is written to, and the XSS probe is
+          inspected as markup rather than executed in a browser.
+        </p>
+        <div class="lab-goal"><span class="num">YOUR NUMBER →</span><span class="txt">unsafe sinks triggered / 3, and paired mitigations blocked / 3</span></div>
+        <pre class="cmd"><span class="prompt">$ </span>python3 labs/unit24-output-handling.py</pre>
+        <p class="cue">The SSRF harness rejects any destination outside its own 127.0.0.1 listener. SQL uses a throwaway in-memory database.</p>
+      </div>
     </section>
 
     <!-- 7 -->

@@ -8,11 +8,11 @@
 
 <div align="center">
 
-![Units](https://img.shields.io/badge/Units-16-f0b429?style=for-the-badge)
+![Units](https://img.shields.io/badge/Units-27-f0b429?style=for-the-badge)
 ![Runs offline](https://img.shields.io/badge/Runs-offline%20on%20your%20Mac-6ee7a8?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-4cc9f0?style=for-the-badge)
 ![Validate](https://img.shields.io/github/actions/workflow/status/angusbuilds/redteam-course/validate.yml?style=for-the-badge&label=links)
-[![OWASP coverage](https://img.shields.io/badge/OWASP%20LLM%20Top--10-8%2F10%20labs-6ee7a8?style=for-the-badge)](SCORECARD.md)
+[![OWASP coverage](https://img.shields.io/badge/OWASP%20LLM%20Top--10-9%2F10%20labs-6ee7a8?style=for-the-badge)](SCORECARD.md)
 ![Level](https://img.shields.io/badge/Start-brand%20new-ff7a6b?style=for-the-badge)
 
 ![Built with Claude](https://img.shields.io/badge/Built%20with-Claude-8B5CF6?style=for-the-badge&logo=anthropic&logoColor=white)
@@ -24,10 +24,10 @@
 <br/>
 
 <p align="center"><b>From your first jailbreak tonight to your first paid finding.</b><br/>
-Sixteen labs you run on your own machine. Every unit ends with a number you produced yourself.</p>
+Twenty-seven labs you run on your own machine — brand-new to expert. Every unit ends with a number you produced yourself.</p>
 
 <div align="center">
-  <img src="assets/home.png" alt="The course home — the 16-unit ladder" width="85%">
+  <img src="assets/home.png" alt="The course home — the 27-unit ladder" width="85%">
 </div>
 
 ---
@@ -58,7 +58,7 @@ uv python install 3.12 && uv venv          # the training toolchain (mlx-lm)
 
 The "learn AI security" space is full of playlists and slide decks. That's not what this is.
 
-**This is sixteen labs.** You attack real models, on your own hardware, and you measure every hit
+**This is twenty-seven labs.** You attack real models, on your own hardware, and you measure every hit
 with a real number — an attack-success rate, a refusal rate, a loss curve, an exfiltration rate.
 Nothing here is a vibe or a screenshot. By the end you have a portfolio of measured findings and
 one real bug-bounty submission.
@@ -84,8 +84,8 @@ leaks, the two hardened ones hold — and that gap is the whole course.
 **Built for how you learn.** Short lines, numbers in columns, an interactive explorable in every
 unit instead of a wall of text.
 
-**Honest about the wall.** Fourteen of sixteen units run fully offline; the two that need a frontier
-API or a rented GPU-hour say so before you reach them.
+**Honest about the wall.** Almost every unit runs fully offline on your own machine; the few that
+touch a hosted API or a rented GPU-hour say so before you reach them.
 
 ---
 
@@ -99,7 +99,12 @@ API or a rented GPU-hour say so before you reach them.
 
 ## 🪜 The ladder
 
-**16 units · 5 phases · zero to first paid finding.**
+**27 units · 7 phases · brand-new to expert, zero to first paid finding.**
+
+### Phase 0 — Foundations
+| # | Unit | You walk out with |
+|---|------|-------------------|
+| 00 | Start Here | the mental model, the law, and 10 attacks tagged by OWASP category |
 
 ### Phase A — Get in the game
 | # | Unit | You walk out with |
@@ -136,6 +141,20 @@ API or a rented GPU-hour say so before you reach them.
 | # | Unit | You walk out with |
 |---|------|-------------------|
 | 16 | First Paid Submission | one scoped, written, submitted finding |
+
+### Phase F — The Expert Track
+| # | Unit | You walk out with |
+|---|------|-------------------|
+| 17 | RAG & Vector-Store Exploitation | poisoned-chunk top-k landing rate |
+| 18 | Multimodal Jailbreaks | image/typographic jailbreak ASR |
+| 19 | Data Extraction, Membership & Stealing | extraction rate · MIA AUC · clone agreement |
+| 20 | Classical Adversarial ML | FGSM/PGD transfer ASR at fixed ε (via ART) |
+| 21 | Mech-Interp Attack Surface | the exact layer+head behind a behavior |
+| 22 | MCP Supply-Chain Audit | poisoned/rug-pull/typosquat servers flagged |
+| 23 | Computer-Use Agent Range | web-OS injection ASR across pages |
+| 24 | Unbounded Consumption, Weight & Output | cost-amplification × · SSRF/SQL/XSS sinks |
+| 25 | Governance, Scoring & Disclosure | OWASP/ATLAS/NIST map + an AIVSS score |
+| 26 | CTF Gauntlet + Careers | gauntlet levels solved + a cert/career map |
 
 **Three capstones:** a submitted bounty report · a full injection chain against your own honeypot · a before/after refusal-rate delta from your own fine-tune.
 
