@@ -1,7 +1,14 @@
-// Course home — renders the 16-unit ladder (grouped into phases) and the
+// Course home — renders the 27-unit ladder (grouped into phases) and the
 // dated "where the money is" venue table.
 
 const PHASES = [
+  {
+    name: 'Phase 0 · Foundations',
+    sub: 'the mental model, the law, and the words every unit after it uses',
+    units: [
+      { n: 0, slug: 'unit00', title: 'Start Here', hook: 'one page before Unit 1: what you are attacking, and the one rule' },
+    ],
+  },
   {
     name: 'Phase A · Get in the game',
     sub: 'a win tonight, then the toolchain to keep winning',
@@ -46,6 +53,22 @@ const PHASES = [
     sub: 'convert your logs into one accepted finding',
     units: [
       { n: 16, slug: 'unit16', title: 'First Paid Submission', hook: 'scope it, write it, submit it — the whole point' },
+    ],
+  },
+  {
+    name: 'Phase F · The expert track',
+    sub: 'ten more ways in — the surfaces the frontier labs are still fighting over',
+    units: [
+      { n: 17, slug: 'unit17', title: 'RAG & Vector-Store Exploitation', hook: 'poison the one chunk the bot will fetch' },
+      { n: 18, slug: 'unit18', title: 'Multimodal Jailbreaks', hook: 'hide the attack inside a picture the eye barely reads' },
+      { n: 19, slug: 'unit19', title: 'Data Extraction, Membership & Stealing', hook: 'make a model leak its training data — then prove it' },
+      { n: 20, slug: 'unit20', title: 'Classical Adversarial ML', hook: 'a whisper of noise that flips the label — FGSM, PGD' },
+      { n: 21, slug: 'unit21', title: 'Mech-Interp Attack Surface', hook: 'find the one head behind a behavior, then lean on it' },
+      { n: 22, slug: 'unit22', title: 'MCP Supply-Chain Audit', hook: 'read the manifest the way an attacker wrote it' },
+      { n: 23, slug: 'unit23', title: 'Computer-Use Agent Range', hook: 'the agent reads a screenshot — poison what it sees' },
+      { n: 24, slug: 'unit24', title: 'Output Handling, Unbounded Consumption & Supply Chain', hook: 'make it answer forever — and make it cost a fortune' },
+      { n: 25, slug: 'unit25', title: 'Governance, Scoring & Disclosure', hook: 'a finding is not real until it is scored and disclosed right' },
+      { n: 26, slug: 'unit26', title: 'CTF Gauntlet + Careers', hook: 'a stranger checks your skill — gauntlet, then the career map' },
     ],
   },
 ]

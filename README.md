@@ -152,7 +152,7 @@ touch a hosted API or a rented GPU-hour say so before you reach them.
 | 21 | Mech-Interp Attack Surface | the exact layer+head behind a behavior |
 | 22 | MCP Supply-Chain Audit | poisoned/rug-pull/typosquat servers flagged |
 | 23 | Computer-Use Agent Range | web-OS injection ASR across pages |
-| 24 | Unbounded Consumption, Weight & Output | cost-amplification × · SSRF/SQL/XSS sinks |
+| 24 | Output Handling, Unbounded Consumption & Supply Chain | cost-amplification × · SQL/XSS/SSRF sinks |
 | 25 | Governance, Scoring & Disclosure | OWASP/ATLAS/NIST map + an AIVSS score |
 | 26 | CTF Gauntlet + Careers | gauntlet levels solved + a cert/career map |
 

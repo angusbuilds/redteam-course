@@ -41,6 +41,6 @@
   </g>
 
   <!-- the point -->
-  <text x="28" y="170" fill="#e8e4dc" font-size="14">Fourteen of sixteen units run fully offline on your Mac. Every unit ends with a number you produced:</text>
+  <text x="28" y="170" fill="#e8e4dc" font-size="14">Twenty-four of twenty-seven units run fully offline on your Mac. Every unit ends with a number you produced:</text>
   <text x="28" y="194" fill="#6ee7a8" font-size="14" font-weight="700">attack-success rate · refusal rate · loss curve · exfiltration rate · minutes-to-first-finding</text>
 </svg>

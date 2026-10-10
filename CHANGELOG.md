@@ -2,6 +2,25 @@
 
 All notable changes to this course. Dates are absolute.
 
+## [0.2.0] — 2026-10-09
+
+**All 27 units, brand-new to expert.** Two new phases wrap the ladder: Phase 0
+(Foundations) and Phase F (the expert track).
+
+### Added
+- **Phase 0 — Foundations** (unit 00): the mental model, the one rule, and ten attacks tagged by OWASP category before Unit 1.
+- **Phase F — The Expert Track** (units 17–26): RAG & vector-store poisoning · multimodal jailbreaks · training-data extraction and model stealing · classical adversarial ML (FGSM/PGD via ART) · mech-interp attack surface · MCP supply-chain audits · computer-use agent ranges · output handling & unbounded consumption · governance and disclosure · CTF gauntlet + careers. Each ships the same seven beats and a lab that prints one number.
+- **OWASP LLM Top-10 coverage: 10/10 dedicated** — the LLM05 output-handling lab (unit 24: SQL/XSS/SSRF sinks on a local range) and the unit 10 misinformation lab close the last two gaps. See SCORECARD.md.
+- **AgentDojo benchmark lab** (unit 07) alongside the injection lab.
+- **Shareable proof cards** — every lab's number can be exported as a card.
+- **Arsenal: Pliny's toolkit** — L1B3RT4S, 0BL1T3R4TUS, CL4R1T4S, T3MP3ST, P4RS3LT0NGV3, BASILISK and friends mapped to their units.
+- **CI gates on every push/PR** — link validation plus a headless render gate (zero console errors) via `scripts/verify.mjs`; OG preview image.
+
+### Changed
+- **Rigor pass on every ASR/refusal lab** — N ≥ 30 trials, dual-judge disagreement reported alongside the number, rubric scoring instead of substring matching.
+- Home page renders the full 27-unit ladder (was 16).
+- Unit 24 retitled to match its scope: Output Handling, Unbounded Consumption & Supply Chain.
+
 ## [0.1.0] — 2026-10-08
 
 The first full release: **all 16 units, zero to first paid finding.**
