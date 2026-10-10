@@ -17,6 +17,8 @@ jobs:
           node-version: 22
       - uses: browser-actions/setup-chrome@v2
         id: setup-chrome
+      - name: Check course structure and lab scripts
+        run: node scripts/check-content.mjs
       - name: Check links and render every page
         env:
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
@@ -33,3 +35,23 @@ jobs:
           curl --silent --fail http://127.0.0.1:8901/ >/dev/null
           node scripts/check-links.mjs http://127.0.0.1:8901
           node scripts/verify.mjs http://127.0.0.1:8901
+
+  pages:
+    # Deploy the course to GitHub Pages — only from main, only when the gates pass.
+    needs: links
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

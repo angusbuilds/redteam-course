@@ -31,11 +31,16 @@ every unit.
 Before a change lands, it must pass what the whole course was built with:
 
 ```bash
-./start.sh                                  # serve on :8901
-node scripts/verify.mjs http://localhost:8901  # Chrome: all course pages, no console errors
+node scripts/check-content.mjs                  # every unit complete, every lab parses, ladder in sync
+./start.sh                                     # serve on :8901
+node scripts/verify.mjs http://localhost:8901   # Chrome: all course pages, no console errors
 node scripts/check-links.mjs                   # every link resolves
-sh -n labs/unitNN-*.sh                         # the lab parses
 ```
+
+CI runs all three on every push and PR, then deploys `main` to
+[GitHub Pages](https://angusbuilds.github.io/redteam-course/). `check-content.mjs` also enforces
+the shape the README promises: 7 beats per unit, 3 drills each with an answer, every referenced
+lab on disk, and a real MITRE ATLAS technique ID (`AML.T…`) in every mechanism beat.
 
 No console errors, no dead links, no simulated number dressed up as a measurement. If a value is
 illustrative, the UI says so.

@@ -30,7 +30,9 @@ dedicated lab, partially, or not yet. No inflation: where coverage is thin, it s
 - **Governance & reporting** — unit 25 maps every finding to OWASP LLM / MITRE ATLAS / NIST AI RMF and scores it with AIVSS.
 - **Practice & career** — unit 26 (CTF gauntlet, cert landscape, portfolio).
 
-Each unit also carries a **MITRE ATLAS** tactic/technique tag in its mechanism beat.
+Each unit's mechanism beat ends with its **MITRE ATLAS** technique IDs alongside the OWASP
+category — pulled from the [current ATLAS matrix](https://atlas.mitre.org) — so every finding
+you write ships in the vocabulary reports expect. (Unit 00 introduces the tagging scheme itself.)
 
 ## Bounded by design
 

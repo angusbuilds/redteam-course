@@ -34,7 +34,8 @@ Twenty-seven labs you run on your own machine — brand-new to expert. Every uni
 
 ## ⚡ Start here
 
-You need nothing installed for Unit 1. Just serve the course and open it:
+**[Read it online →](https://angusbuilds.github.io/redteam-course/)** — the whole course, no install.
+(To run the labs you still want it on your machine:)
 
 ```bash
 git clone https://github.com/angusbuilds/redteam-course.git

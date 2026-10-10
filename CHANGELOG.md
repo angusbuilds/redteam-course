@@ -20,6 +20,21 @@ All notable changes to this course. Dates are absolute.
 - **Rigor pass on every ASR/refusal lab** — N ≥ 30 trials, dual-judge disagreement reported alongside the number, rubric scoring instead of substring matching.
 - Home page renders the full 27-unit ladder (was 16).
 - Unit 24 retitled to match its scope: Output Handling, Unbounded Consumption & Supply Chain.
+- **Every unit's mechanism beat now ends with its MITRE ATLAS technique IDs** (real `AML.T…` codes
+  from the current matrix — LLM Prompt Injection `AML.T0051`, RAG Poisoning `AML.T0070`, AI Supply
+  Chain Rug Pull `AML.T0109`, …) alongside the OWASP category, so findings ship in the vocabulary
+  reports expect. Unit 00 introduces the tagging scheme.
+
+### Added (CI & delivery)
+- **`scripts/check-content.mjs` — a structural gate**: every unit complete (7 beats, 3 drills with
+  answers, sources with URLs), every referenced lab on disk, every lab script parseable, home ladder
+  in sync with the unit dirs, and an ATLAS ID in every mechanism beat. Runs in CI before the render
+  gate. Verified to catch breakage (negative-tested against a thinned drill set).
+- **GitHub Pages deployment** — every green push to `main` deploys the course to
+  https://angusbuilds.github.io/redteam-course/. `verify.mjs` is now subpath-aware (verified
+  against a `/redteam-course/` prefix locally before shipping).
+- **Social preview** — OpenGraph/Twitter meta and a canonical URL on the home page; README links
+  the live site.
 
 ## [0.1.0] — 2026-10-08
 

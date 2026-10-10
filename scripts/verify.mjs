@@ -127,7 +127,10 @@ try {
   let failures = 0
   for (const page of pages) {
     errors.length = 0
-    await command('Page.navigate', { url: new URL(page, base).href })
+    // base may carry a path prefix (e.g. GitHub Pages /redteam-course), so
+    // resolve pages against the base directory, not the origin.
+    const baseDir = base.endsWith('/') ? base : `${base}/`
+    await command('Page.navigate', { url: new URL(page.replace(/^\//, ''), baseDir).href })
     const ready = await waitForReady(command, waitMs)
     await delay(500)
     if (!ready) errors.push(`NOT_READY: window.__ready was not true within ${waitMs}ms`)
