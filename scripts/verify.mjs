@@ -147,12 +147,24 @@ try {
     console.log(`all pages render cleanly (${pages.length} pages)`)
   }
 } finally {
+  // Ask Chrome to shut itself down first — SIGTERM to the browser process leaves
+  // child processes (renderers, crashpad) writing into the profile dir briefly,
+  // which races the rmSync below with ENOTEMPTY on Linux runners.
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    await new Promise((resolve) => {
+      const done = () => resolve()
+      socket.addEventListener('close', done, { once: true })
+      socket.addEventListener('error', done, { once: true })
+      socket.send(JSON.stringify({ id: -1, method: 'Browser.close' }))
+      setTimeout(done, 2000)
+    })
+  }
   socket?.close()
   if (chrome.exitCode === null) {
     chrome.kill('SIGTERM')
     await once(chrome, 'exit')
   }
-  rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
+  rmSync(profile, { recursive: true, force: true, maxRetries: 50, retryDelay: 200 })
 }
 
 async function waitForDevTools(profilePath, process) {
