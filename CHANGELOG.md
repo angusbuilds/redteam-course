@@ -26,6 +26,10 @@ All notable changes to this course. Dates are absolute.
   reports expect. Unit 00 introduces the tagging scheme.
 
 ### Added (CI & delivery)
+- **`labs/unit01-vault-substrates.sh`** — the Unit 1 vaults re-run on any local model
+  (`MODEL=… N=3`): same guard text, different brain. Measured on llama3.2:1b: the hardened
+  vaults that a frontier model holds leak at small scale — through completion pressure *and*
+  through refusals that quote the secret they deny. Guard strength tracks substrate capability.
 - **`scripts/check-content.mjs` — a structural gate**: every unit complete (7 beats, 3 drills with
   answers, sources with URLs), every referenced lab on disk, every lab script parseable, home ladder
   in sync with the unit dirs, and an ATLAS ID in every mechanism beat. Runs in CI before the render
